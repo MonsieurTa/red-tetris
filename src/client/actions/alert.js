@@ -1,4 +1,4 @@
-export const ALERT_POP = 'ALERT_POP'
+export const ALERT_POP = 'alert/pop'
 
 export const alert = (message) => {
   return {
