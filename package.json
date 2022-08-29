@@ -10,10 +10,11 @@
     "srv-dev": "DEBUG=tetris:* babel-watch -w src src/server/main.js",
     "srv-dist": "DEBUG=tetris:* babel src --out-dir dist",
     "test": "mocha --require @babel/register --reporter spec",
-    "coverage": "NODE_ENV=test nyc --include src --all -r text -r lcov -r text --require babel-core/register mocha "
+    "coverage": "NODE_ENV=test nyc --include src --all -r text -r lcov -r text --require @babel/register mocha "
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.5",
+    "debug": "^4.3.4",
     "http-status-codes": "^2.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,8 +37,12 @@
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.23.0",
+    "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "webpack": "^5.74.0",
