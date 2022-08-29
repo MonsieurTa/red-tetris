@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/client/index.js',
+  entry: './src/client/index.jsx',
 
   output: {
     path: path.join(__dirname, 'build'),
@@ -10,9 +10,13 @@ module.exports = {
 
   module: {
     rules: [{
-      test: /\.js$/,
+      test: /\.(js|jsx)$/,
       exclude: /node_modules/,
       loader: 'babel-loader',
     }],
+  },
+
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
   },
 };
