@@ -1,34 +1,38 @@
 {
-  "ecmaFeatures": {
-    "arrowFunctions": true,
-    "binaryLiterals": false,
-    "blockBindings": true,
-    "classes": true,
-    "defaultParams": true,
-    "destructuring": true,
-    "forOf": true,
-    "generators": true,
-    "modules": false,
-    "objectLiteralComputedProperties": true,
-    "objectLiteralDuplicateProperties": false,
-    "objectLiteralShorthandMethods": true,
-    "objectLiteralShorthandProperties": true,
-    "octalLiterals": false,
-    "regexUFlag": false,
-    "regexYFlag": false,
-    "restParams": true,
-    "spread": true,
-    "superInFunctions": true,
-    "templateStrings": true,
-    "unicodePointEscapes": true,
-    "globalReturn": false,
-    "jsx": true
+  "parserOptions": {    
+    "ecmaFeatures": {
+      "arrowFunctions": true,
+      "binaryLiterals": false,
+      "blockBindings": true,
+      "classes": true,
+      "defaultParams": true,
+      "destructuring": true,
+      "forOf": true,
+      "generators": true,
+      "modules": false,
+      "objectLiteralComputedProperties": true,
+      "objectLiteralDuplicateProperties": false,
+      "objectLiteralShorthandMethods": true,
+      "objectLiteralShorthandProperties": true,
+      "octalLiterals": false,
+      "regexUFlag": false,
+      "regexYFlag": false,
+      "restParams": true,
+      "spread": true,
+      "superInFunctions": true,
+      "templateStrings": true,
+      "unicodePointEscapes": true,
+      "globalReturn": false,
+      "jsx": true
+    }
   },
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "es6": true
   },
-  "parser": "babel-eslint",
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parser": "@babel/eslint-parser",
   "plugins": [
     "react"
   ],
@@ -111,7 +115,7 @@
     "no-self-compare": 1, //disallow comparisons where both sides are exactly the same
     "no-sequences": 1, //disallow use of the comma operator
     "no-throw-literal": 1, //restrict what can be thrown as an exception
-    "no-unused-expressions": [1, { allowShortCircuit: true, allowTernary: true }], //disallow usage of expressions in statement position
+    "no-unused-expressions": [1, { "allowShortCircuit": true, "allowTernary": true }], //disallow usage of expressions in statement position
     "no-useless-call": 1, //disallow unnecessary .call() and .apply()
     "no-useless-concat": 1, //disallow unnecessary concatenation of literals or template literals
     "no-void": 0, //disallow use of the void operator
@@ -136,10 +140,10 @@
     "no-undef": 1, //disallow use of undeclared variables unless mentioned in a /*global */ block (recommended)
     "no-undefined": 1, //disallow use of undefined variable
     "no-unused-vars": [1, { "vars": "local", "args": "after-used" }], //disallow declaration of variables that are not used in the code (recommended)
-    "no-use-before-define": 1, //disallow use of variables before they are defined
+    "no-use-before-define": "off", //disallow use of variables before they are defined
 
     /* Node.js */
-    "callback-return": 1, //enforce return after a callback
+    "callback-return": "off", //enforce return after a callback
     "global-require": 1, //enforce require() on top-level module scope
     "handle-callback-err": 1, //enforce error handling in callbacks
     "no-mixed-requires": 1, //disallow mixing regular variable and require declarations
@@ -267,13 +271,13 @@
     "react/no-did-mount-set-state": 1, //Prevent usage of setState in componentDidUpdate
     "react/no-did-update-set-state": 1, //Prevent usage of setState in componentDidUpdate
     "react/no-direct-mutation-state": 1, //Prevent direct mutation of this.state
-    "react/no-multi-comp": 1, //Prevent multiple component definition per file
+    "react/no-multi-comp": "off", //Prevent multiple component definition per file
     "react/no-set-state": 0, //Prevent usage of setState
     "react/no-unknown-property": 1, //Prevent usage of unknown DOM property
     "react/prefer-es6-class": 1, //Use ES6 Class instead of Reacy.createClass
-    "react/prop-types": 1, //Prevent missing props validation in a React component definition
+    "react/prop-types": "off", //Prevent missing props validation in a React component definition
     "react/react-in-jsx-scope": 1, //Prevent missing React when using JSX
-    "react/require-extension": 1, //Restrict file extensions that may be required
+    "react/require-extension": "off", //Restrict file extensions that may be required
     "react/self-closing-comp": 1, //Prevent extra closing tags for components without children
     "react/sort-comp": 1, //Enforce component methods order
     "react/wrap-multilines": 0 //Prevent missing parentheses around multiline JSX

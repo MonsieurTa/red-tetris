@@ -1,11 +1,11 @@
-var path = require('path');
+const path = require('path');
 
 module.exports = {
   entry: './src/client/index.js',
 
   output: {
     path: path.join(__dirname, 'build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
 
   module: {
@@ -14,5 +14,5 @@ module.exports = {
       exclude: /node_modules/,
       loader: 'babel-loader',
     }],
-  }
+  },
 };

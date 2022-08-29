@@ -4,12 +4,10 @@ import alertReducer from './features/alerts/alertSlice'
 
 // Create the root reducer separately so we can extract the RootState type
 const rootReducer = combineReducers({
-  alert: alertReducer
+  alert: alertReducer,
 })
 
-export const setupStore = preloadedState => {
-  return configureStore({
-    reducer: rootReducer,
-    preloadedState
-  })
-}
+export const setupStore = preloadedState => configureStore({
+  reducer: rootReducer,
+  preloadedState,
+})
