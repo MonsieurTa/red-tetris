@@ -1,3 +1,5 @@
-export const ping = () => ({
+const ping = () => ({
   type: 'server/ping',
-})
+});
+
+export default { ping };
