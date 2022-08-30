@@ -1,7 +1,8 @@
-import chai from "chai"
+import chai from 'chai';
+import { describe, it } from 'mocha';
 
-chai.should()
+chai.should();
 
-describe('Fake react test', function(){
-  it('works', () => {})
-})
+describe('Fake react test', () => {
+  it('works', () => {});
+});

@@ -1,35 +1,39 @@
-import chai from "chai"
-import { Server } from 'socket.io'
+// with { "type": "module" } in your package.json
+import { io as Client } from 'socket.io-client';
+import { assert } from 'chai';
+import {
+  after,
+  before,
+  describe,
+  it,
+} from 'mocha';
 
-import alertReducer from '../src/client/features/alerts/alertSlice'
-import { ping } from '../src/client/actions/server'
-import params from '../params'
+import createServer from '../src/server/index';
+import params, { HOST, PORT } from '../params';
 
-import { startServer, configureTestStore } from './helpers/server'
-import { createSlice } from "@reduxjs/toolkit"
+describe('Socket', () => {
+  let testServer;
+  let clientSocket;
 
-chai.should()
+  before((done) => {
+    createServer(params.server).then((server) => {
+      testServer = server;
+      clientSocket = new Client(`http://${HOST}:${PORT}`);
+      clientSocket.on('connect', done);
+    });
+  });
 
-describe('Fake server test', () => {
-  let tetrisServer
+  after(() => {
+    testServer.stop();
+    clientSocket.close();
+  });
 
-  before(cb => startServer(params.server, (err, server) => {
-    tetrisServer = server
-    cb()
-  }))
+  it('should pong', (done) => {
+    clientSocket.on('action', ({ type }) => {
+      assert.equal(type, 'pong');
+      done();
+    });
 
-  after((done) => { tetrisServer.stop(done) })
-
-  it('client should pong', (done) => {
-    const initialState = {}
-
-    const { reducer } = createSlice({ name: 'server', initialState: {} })
-
-    const socket = new Server({ path: params.server.url })
-    const store =  configureTestStore(reducer, socket, initialState, {
-      'server/ping': () => done()
-    })
-
-    store.dispatch(ping())
+    clientSocket.emit('action', { type: 'server/ping' });
   });
 });
