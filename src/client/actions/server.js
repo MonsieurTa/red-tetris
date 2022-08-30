@@ -1,4 +1,4 @@
-const ping = () => ({
+export const ping = () => ({
   type: 'server/ping',
 });
 

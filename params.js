@@ -1,5 +1,5 @@
-const HOST = '0.0.0.0';
-const PORT = 3004;
+export const HOST = '0.0.0.0';
+export const PORT = 3004;
 
 const params = {
   server: {
@@ -9,4 +9,4 @@ const params = {
   },
 };
 
-module.exports = params;
+export default params;
