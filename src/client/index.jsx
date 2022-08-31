@@ -7,7 +7,7 @@ import { createLogger } from 'redux-logger';
 
 import thunk from 'redux-thunk';
 
-import { rootReducer } from './store';
+import { rootReducer } from './redux/store';
 import App from './containers/app';
 import { alert } from './actions/alert';
 

@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import alertReducer from './features/alerts/alertSlice';
+import alertReducer from './reducers/alert';
 
 // Create the root reducer separately so we can extract the RootState type
 export const rootReducer = combineReducers({
