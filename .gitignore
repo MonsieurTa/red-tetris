@@ -1,6 +1,8 @@
 *~
 *.swp
 *.swo
+.nyc_output
+coverage
 log
 tmp
 node_modules
