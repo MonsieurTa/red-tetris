@@ -1,8 +1,9 @@
 import { Server } from 'socket.io';
-
-const findOrCreateGame = () => null;
+import { getRedTetrisSingleton } from '../entities';
 
 const registerSocketIoHandlers = (socket) => {
+  const redTetris = getRedTetrisSingleton();
+
   socket.on('action', (action) => {
     if (action.type === 'server/ping') {
       socket.emit('action', { type: 'pong' });
@@ -10,26 +11,19 @@ const registerSocketIoHandlers = (socket) => {
   });
 
   socket.on('game:join', ({ id, playerName }) => {
-    const game = findOrCreateGame(id);
+    const game = redTetris.findOrCreateGame(id);
 
     try {
       game.addPlayer(playerName);
-      socket.emit('game:join', { type: 'game/join', gameId: game.id });
+      socket.emit('game:join', { type: 'game/join', gameId: game.id, playerName });
     } catch (e) {
-      socket.emit('game:join', { type: 'game/join', gameId: null });
+      socket.emit('game:join', { type: 'game/join', gameId: null, error: e.msg });
     }
   });
 };
 
-const createSocketIoServer = (httpServer, { loginfo }) => {
+const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
   const io = new Server(httpServer);
-
-  const stop = () => {
-    io.close();
-    httpServer.close(() => httpServer.unref());
-
-    loginfo('Engine stopped.');
-  };
 
   io.on('connection', (socket) => {
     loginfo(`Socket connected: ${socket.id}`);
@@ -37,7 +31,7 @@ const createSocketIoServer = (httpServer, { loginfo }) => {
     registerSocketIoHandlers(socket);
   });
 
-  return { io, stop };
+  return io;
 };
 
 export default createSocketIoServer;

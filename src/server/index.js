@@ -14,11 +14,11 @@ const createServer = (params) => {
     registerHttpHandlers(httpServer);
 
     httpServer.listen({ host, port }, () => {
-      loginfo(`tetris listen on ${params.url}`);
+      loginfo(`tetris listen on http://${host}:${port}`);
 
-      const { io: serverSocket, stop } = createSocketIoServer(httpServer, { loginfo });
+      const serverSocket = createSocketIoServer(httpServer, { loginfo });
 
-      resolve({ httpServer, serverSocket, stop });
+      resolve({ httpServer, serverSocket });
     });
   });
 };
