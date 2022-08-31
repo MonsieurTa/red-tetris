@@ -1,5 +1,3 @@
-// with { "type": "module" } in your package.json
-import { io as Client } from 'socket.io-client';
 import { assert } from 'chai';
 import {
   after,
@@ -7,26 +5,21 @@ import {
   describe,
   it,
 } from 'mocha';
+import { createTestServer } from './helpers/server';
 
-import createServer from '../src/server/index';
-import params, { HOST, PORT } from '../params';
-
-describe('Socket', () => {
-  let testServer;
+describe('Fake server test', () => {
   let clientSocket;
+  let stop;
 
   before((done) => {
-    createServer(params.server).then((server) => {
-      testServer = server;
-      clientSocket = new Client(`http://${HOST}:${PORT}`);
-      clientSocket.on('connect', done);
+    createTestServer().then((testServer) => {
+      clientSocket = testServer.clientSocket;
+      stop = testServer.stop;
+      done();
     });
   });
 
-  after(() => {
-    testServer.stop();
-    clientSocket.close();
-  });
+  after(() => stop());
 
   it('should pong', (done) => {
     clientSocket.on('action', ({ type }) => {

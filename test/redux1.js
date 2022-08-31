@@ -3,7 +3,7 @@ import chai, { expect } from 'chai';
 import { describe, it } from 'mocha';
 import configureTestStore from './helpers/server';
 
-import alertReducer from '../src/client/features/alerts/alertSlice';
+import alertReducer from '../src/client/redux/reducers/alert';
 import { ALERT_POP } from '../src/client/actions/alert';
 
 const MESSAGE = 'message';
