@@ -50,16 +50,17 @@
     "react"
   ],
   "rules": {
-    "react/prop-types": "off",
-    "no-use-before-define": "off",
-    "no-underscore-dangle": "off",
     "implicit-arrow-linebreak": "off",
+    // "no-undef": "off",
+    "no-underscore-dangle": "off",
+    "no-use-before-define": "off",
     "react/function-component-definition": [
       2,
       {
         "namedComponents": "arrow-function",
         "unnamedComponents": "arrow-function"
       }
-    ]
+    ],
+    "react/prop-types": "off"
   }
 }
