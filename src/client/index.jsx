@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactDom from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
-import { applyMiddleware } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-import createLogger from 'redux-logger';
+import { createLogger } from 'redux-logger';
 
 import thunk from 'redux-thunk';
 
@@ -17,15 +16,19 @@ const initialState = {};
 const store = configureStore({
   reducer: rootReducer,
   preloadedState: initialState,
-  middleware: applyMiddleware(thunk, createLogger()),
+  middleware: [thunk, createLogger()],
 });
 
-ReactDom.render(
-  (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  ), document.getElementById('tetris'),
+const Root = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
 );
+
+const root = createRoot(
+  document.getElementById('tetris'),
+);
+
+root.render(<Root />);
 
 store.dispatch(alert('Soon, will be here a fantastic Tetris ...'));
