@@ -5,16 +5,27 @@ class RedTetris {
     this._games = new Map();
   }
 
-  findOrCreateGame(id) {
-    const game = this._games.get(id);
+  findGame(id) {
+    return this._games.get(id);
+  }
+
+  createGame(id, { host, maxPlayers = 2 } = {}) {
+    const game = this.findGame(id);
 
     if (game) {
       return game;
     }
 
-    const newGame = new Game(id);
+    const newGame = new Game({ id, maxPlayers });
+    newGame.host = host;
+    newGame.addPlayer(host);
+
     this._games.set(id, newGame);
     return newGame;
+  }
+
+  reset() {
+    this._games = new Map();
   }
 }
 
