@@ -1,6 +1,6 @@
 const MAX_PLAYERS = 2;
 
-class Game {
+class Room {
   constructor({ id, maxPlayers = MAX_PLAYERS }) {
     this._id = id;
     this._host = null;
@@ -48,4 +48,4 @@ class Game {
   }
 }
 
-export default Game;
+export default Room;

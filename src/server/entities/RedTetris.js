@@ -1,31 +1,31 @@
-import Game from './Game';
+import Room from './Room';
 
 class RedTetris {
   constructor() {
-    this._games = new Map();
+    this._rooms = new Map();
   }
 
-  findGame(id) {
-    return this._games.get(id);
+  findRoom(id) {
+    return this._rooms.get(id);
   }
 
-  createGame(id, { host, maxPlayers = 2 } = {}) {
-    const game = this.findGame(id);
+  createRoom(id, { host, maxPlayers = 2 } = {}) {
+    const game = this.findRoom(id);
 
     if (game) {
       return game;
     }
 
-    const newGame = new Game({ id, maxPlayers });
+    const newGame = new Room({ id, maxPlayers });
     newGame.host = host;
     newGame.addPlayer(host);
 
-    this._games.set(id, newGame);
+    this._rooms.set(id, newGame);
     return newGame;
   }
 
   reset() {
-    this._games = new Map();
+    this._rooms = new Map();
   }
 }
 

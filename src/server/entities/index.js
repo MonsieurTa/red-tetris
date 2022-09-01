@@ -2,7 +2,7 @@ import RedTetris from './RedTetris';
 
 let redTetris = null;
 
-export const getRedTetrisSingleton = () => {
+export const getGameSingleton = () => {
   if (!redTetris) {
     redTetris = new RedTetris();
   }
@@ -10,4 +10,4 @@ export const getRedTetrisSingleton = () => {
   return redTetris;
 };
 
-export { default as Game } from './Game';
+export { default as Room } from './Room';

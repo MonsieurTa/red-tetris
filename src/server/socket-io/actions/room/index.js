@@ -14,13 +14,13 @@ const ERRORS = {
   ERR_WRONG_HOST: 'ERR_WRONG_HOST',
 };
 
-const gameActions = {
+const roomActions = {
   create: {
-    ok: (gameId, isHost) => ({ type: 'game/create', gameId, isHost }),
+    ok: (gameId, isHost) => ({ type: 'room/create', gameId, isHost }),
   },
   join: {
     added: (gameId, playerName) => ({
-      type: 'game/join', gameId, playerName, status: JOIN_STATUS.ADDED,
+      type: 'room/join', gameId, playerName, status: JOIN_STATUS.ADDED,
     }),
   },
   start: {
@@ -29,13 +29,13 @@ const gameActions = {
   },
   error: {
     alreadyAdded: (gameId, playerName) => ({
-      type: 'game/join', gameId, playerName, error: ERRORS.ERR_ALREADY_ADDED,
+      type: 'room/join', gameId, playerName, error: ERRORS.ERR_ALREADY_ADDED,
     }),
     isEmpty: (gameId) => ({ type: 'game/start', gameId, error: ERRORS.ERR_IS_EMPTY }),
-    isFull: (gameId) => ({ type: 'game/join', gameId, error: ERRORS.ERR_IS_FULL }),
-    notFound: (gameId) => ({ type: 'game/join', gameId, error: ERRORS.ERR_NOT_FOUND }),
+    isFull: (gameId) => ({ type: 'room/join', gameId, error: ERRORS.ERR_IS_FULL }),
+    notFound: (gameId) => ({ type: 'room/join', gameId, error: ERRORS.ERR_NOT_FOUND }),
     wrongHost: (gameId) => ({ type: 'game/start', gameId, error: ERRORS.ERR_WRONG_HOST }),
   },
 };
 
-export default gameActions;
+export default roomActions;

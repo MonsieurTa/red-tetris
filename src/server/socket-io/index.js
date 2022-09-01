@@ -1,10 +1,10 @@
 import { Server } from 'socket.io';
 
-import { getRedTetrisSingleton } from '../entities';
-import * as gameListeners from './listeners/game';
+import { getGameSingleton } from '../entities';
+import * as roomListeners from './listeners/room';
 
 const registerSocketIoHandlers = (socket) => {
-  const redTetris = getRedTetrisSingleton();
+  const redTetris = getGameSingleton();
 
   socket.on('action', (action) => {
     if (action.type === 'server/ping') {
@@ -12,9 +12,9 @@ const registerSocketIoHandlers = (socket) => {
     }
   });
 
-  socket.on('game:create', gameListeners.onCreate(redTetris, socket));
-  socket.on('game:join', gameListeners.onJoin(redTetris, socket));
-  socket.on('game:start', gameListeners.onStart(redTetris, socket));
+  socket.on('room:create', roomListeners.onCreate(redTetris, socket));
+  socket.on('room:join', roomListeners.onJoin(redTetris, socket));
+  socket.on('game:start', roomListeners.onStart(redTetris, socket));
 };
 
 const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
