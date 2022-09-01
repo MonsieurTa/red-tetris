@@ -1,4 +1,4 @@
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import {
   after,
   afterEach,
@@ -6,10 +6,11 @@ import {
   describe,
   it,
 } from 'mocha';
+import { getRedTetrisSingleton } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
 
-describe('Game', () => {
+describe('Game joining', () => {
   let testServer;
   let clientSocket;
 
@@ -25,19 +26,6 @@ describe('Game', () => {
 
   after(() => testServer.stop());
 
-  it('should create game with host', (done) => {
-    clientSocket.on('game:create', (arg) => {
-      expect(arg).to.eql({
-        type: 'game/create',
-        gameId: '1234',
-        isHost: true,
-      });
-      done();
-    });
-
-    clientSocket.emit('game:create', { gameId: '1234', playerName: 'Bruce Wayne' });
-  });
-
   it('should not join an inexistant game', (done) => {
     clientSocket.on('game:join', (arg) => {
       expect(arg).to.eql({
@@ -52,6 +40,8 @@ describe('Game', () => {
   });
 
   it('should not join if game is full', (done) => {
+    getRedTetrisSingleton().createGame('1234', { host: 'Bruce Wayne', maxPlayers: 1 });
+
     clientSocket.on('game:join', (arg) => {
       expect(arg).to.eql({
         type: 'game/join',
@@ -61,7 +51,22 @@ describe('Game', () => {
       done();
     });
 
-    clientSocket.emit('game:create', { gameId: '1234', playerName: 'Bruce Wayne', maxPlayers: 1 });
+    clientSocket.emit('game:join', { gameId: '1234', playerName: 'Clark Kent' });
+  });
+
+  it('should not join if already added', (done) => {
+    getRedTetrisSingleton().createGame('1234', { host: 'Bruce Wayne', maxPlayers: 3 }).addPlayer('Clark Kent');
+
+    clientSocket.on('game:join', (arg) => {
+      expect(arg).to.eql({
+        type: 'game/join',
+        gameId: '1234',
+        playerName: 'Clark Kent',
+        error: 'ERR_ALREADY_ADDED',
+      });
+      done();
+    });
+
     clientSocket.emit('game:join', { gameId: '1234', playerName: 'Clark Kent' });
   });
 });
