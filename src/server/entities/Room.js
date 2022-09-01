@@ -1,12 +1,16 @@
+import Game from './Game';
+
 const MAX_PLAYERS = 2;
 
 class Room {
   constructor({ id, maxPlayers = MAX_PLAYERS }) {
-    this._id = id;
     this._host = null;
+
+    this._id = id;
     this._players = new Set();
     this._maxPlayers = maxPlayers;
-    this._running = false;
+
+    this._game = new Game();
   }
 
   addPlayer(playerName) {
@@ -43,8 +47,8 @@ class Room {
     return this._players.size >= this._maxPlayers;
   }
 
-  get running() {
-    return this._running;
+  get game() {
+    return this._game;
   }
 }
 
