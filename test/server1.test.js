@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import {
   after,
+  afterEach,
   before,
   describe,
   it,
@@ -8,18 +9,20 @@ import {
 import { createTestServer } from './helpers/server';
 
 describe('Fake server test', () => {
+  let testServer;
   let clientSocket;
-  let stop;
 
   before((done) => {
-    createTestServer().then((testServer) => {
-      clientSocket = testServer.clientSocket;
-      stop = testServer.stop;
+    createTestServer().then((server) => {
+      clientSocket = server.clientSocket;
+      testServer = server;
       done();
     });
   });
 
-  after(() => stop());
+  afterEach(() => testServer.engine.reset());
+
+  after(() => testServer.stop());
 
   it('should pong', (done) => {
     clientSocket.on('action', ({ type }) => {

@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import params from '../../params';
 import createSocketIoServer from '../../src/server/socket-io';
+import { getRedTetrisSingleton } from '../../src/server/entities';
 
 export const createTestServer = () => new Promise((resolve) => {
   let { port } = params.server;
@@ -18,6 +19,7 @@ export const createTestServer = () => new Promise((resolve) => {
       httpServer,
       serverSocket,
       clientSocket,
+      engine: getRedTetrisSingleton(),
       stop: () => {
         httpServer.close(() => httpServer.unref());
         serverSocket.close();
