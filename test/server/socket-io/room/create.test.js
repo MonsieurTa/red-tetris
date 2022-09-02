@@ -7,9 +7,11 @@ import {
   it,
 } from 'mocha';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
+import Player from '../../../../src/server/entities/Player';
 
 import { createTestServer } from '../../../helpers/server';
 
+let redTetris;
 let testServer;
 let clientSocket;
 
@@ -18,6 +20,7 @@ describe('Room creation', () => {
     createTestServer().then((server) => {
       clientSocket = server.clientSocket;
       testServer = server;
+      redTetris = getRedTetrisSingleton();
       done();
     });
   });
@@ -35,7 +38,7 @@ describe('Room creation', () => {
       });
       done();
     });
-
+    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
     clientSocket.emit('room:create', { roomId: '1234', playerName: 'Bruce Wayne' });
   });
 
@@ -48,6 +51,15 @@ describe('Room creation', () => {
         roomId: '1234',
         isHost: false,
       });
+      done();
+    });
+    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
+    clientSocket.emit('room:create', { roomId: '1234', playerName: 'Clark Kent' });
+  });
+
+  it('should respond with an error', (done) => {
+    clientSocket.on('room:create', (arg) => {
+      expect(arg).to.eql({ error: 'NotRegistered' });
       done();
     });
 

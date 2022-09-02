@@ -1,5 +1,6 @@
 class Player {
-  constructor(name) {
+  constructor(socketId, name) {
+    this._socketId = socketId;
     this._name = name;
     this._alive = true;
     this._current_sequence = 0;

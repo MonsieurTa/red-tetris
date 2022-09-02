@@ -35,7 +35,7 @@ describe('Room joining', () => {
       });
       done();
     });
-
+    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
     clientSocket.emit('room:join', { roomId: '1234', playerName: 'Bruce Wayne' });
   });
 
@@ -50,7 +50,7 @@ describe('Room joining', () => {
       });
       done();
     });
-
+    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
     clientSocket.emit('room:join', { roomId: '1234', playerName: 'Clark Kent' });
   });
 
@@ -66,7 +66,17 @@ describe('Room joining', () => {
       });
       done();
     });
+    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
+    clientSocket.emit('room:join', { roomId: '1234', playerName: 'Clark Kent' });
+  });
 
+  it('should respond with an error if not registered', (done) => {
+    getRedTetrisSingleton().createRoom('1234', { host: 'Bruce Wayne', maxPlayers: 3 });
+
+    clientSocket.on('room:join', (arg) => {
+      expect(arg).to.eql({ error: 'NotRegistered' });
+      done();
+    });
     clientSocket.emit('room:join', { roomId: '1234', playerName: 'Clark Kent' });
   });
 });

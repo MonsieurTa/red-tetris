@@ -25,11 +25,11 @@ describe('Fake server test', () => {
   after(() => testServer.stop());
 
   it('should pong', (done) => {
-    clientSocket.on('action', ({ type }) => {
+    clientSocket.on('ping', ({ type }) => {
       assert.equal(type, 'pong');
       done();
     });
 
-    clientSocket.emit('action', { type: 'server/ping' });
+    clientSocket.emit('ping', { type: 'server/ping' });
   });
 });
