@@ -2,9 +2,8 @@ const MAX_PLAYERS = 2;
 
 class Room {
   constructor({ id, host, maxPlayers = MAX_PLAYERS }) {
-    this._host = host;
-
     this._id = id;
+    this._host = host;
     this._playerIds = new Set();
     this._maxPlayers = maxPlayers;
   }

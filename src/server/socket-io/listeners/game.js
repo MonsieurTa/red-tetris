@@ -25,7 +25,7 @@ export const onStart = (redTetris, socket, io) => ({ playerId, roomId }) => {
   const players = room.playerIds.map((id) => redTetris.findPlayer(id));
 
   players.forEach((player) => {
-    const game = new Game({ id: `${room.id}#${player.id}`, pieceGenerator });
+    const game = new Game({ id: [room.id, player.id].join('#'), pieceGenerator });
     redTetris.storeGame(game);
 
     io.to(player.socketId).emit('game:start', gameActions.start(game.id));
