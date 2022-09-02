@@ -13,17 +13,16 @@ export const createTestServer = () => new Promise((resolve) => {
 
   const resolver = (_host, _port) => {
     const serverSocket = createSocketIoServer(httpServer);
-    const clientSocket = new Client(`http://${_host}:${_port}`);
 
     resolve({
+      host: _host,
+      port: _port,
       httpServer,
       serverSocket,
-      clientSocket,
       engine: getRedTetrisSingleton(),
       stop: () => {
         httpServer.close(() => httpServer.unref());
         serverSocket.close();
-        clientSocket.close();
       },
     });
   };

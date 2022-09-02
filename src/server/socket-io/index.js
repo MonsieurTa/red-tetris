@@ -27,7 +27,7 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
     });
 
     socket.on('red-tetris:register', ({ name }) => {
-      const newPlayer = new Player(name);
+      const newPlayer = new Player(socket.id, name);
       redTetris.register(socket.id, newPlayer);
     });
 
@@ -48,7 +48,7 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
     socket.on('room:create', roomListeners.onCreate(redTetris, socket));
     socket.on('room:join', roomListeners.onJoin(redTetris, socket));
 
-    socket.on('game:start', gameListeners.onStart(redTetris, socket));
+    socket.on('game:start', gameListeners.onStart(redTetris, socket, io));
   });
 
   return io;

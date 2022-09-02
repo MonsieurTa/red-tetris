@@ -1,3 +1,5 @@
+import { io as Client } from 'socket.io-client';
+
 import { assert } from 'chai';
 import {
   after,
@@ -14,7 +16,7 @@ describe('Fake server test', () => {
 
   before((done) => {
     createTestServer().then((server) => {
-      clientSocket = server.clientSocket;
+      clientSocket = new Client(`http://${server.host}:${server.port}`);
       testServer = server;
       done();
     });
@@ -30,6 +32,7 @@ describe('Fake server test', () => {
       done();
     });
 
+    clientSocket.emit('red-tetris:register', { name: 'Clark Kent' });
     clientSocket.emit('ping', { type: 'server/ping' });
   });
 });

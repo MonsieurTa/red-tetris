@@ -1,30 +1,26 @@
-import Game from './Game';
-
 const MAX_PLAYERS = 2;
 
 class Room {
-  constructor({ id, maxPlayers = MAX_PLAYERS }) {
-    this._host = null;
+  constructor({ id, host, maxPlayers = MAX_PLAYERS }) {
+    this._host = host;
 
     this._id = id;
-    this._players = new Set();
+    this._playerIds = new Set();
     this._maxPlayers = maxPlayers;
-
-    this._game = new Game();
   }
 
-  addPlayer(playerName) {
+  addPlayerId(playerId) {
     if (this.isFull) return;
 
-    if (this._players.size === 0) {
-      this._host = playerName;
+    if (this._playerIds.size === 0) {
+      this._host = playerId;
     }
 
-    this._players.add(playerName);
+    this._playerIds.add(playerId);
   }
 
-  isPresent(playerName) {
-    return this._players.has(playerName);
+  isPresent(playerId) {
+    return this._playerIds.has(playerId);
   }
 
   get id() {
@@ -40,15 +36,11 @@ class Room {
   }
 
   get isEmpty() {
-    return this._players.size === 0;
+    return this._playerIds.size === 0;
   }
 
   get isFull() {
-    return this._players.size >= this._maxPlayers;
-  }
-
-  get game() {
-    return this._game;
+    return this._playerIds.size >= this._maxPlayers;
   }
 }
 

@@ -1,3 +1,5 @@
+import { io as Client } from 'socket.io-client';
+
 import { expect } from 'chai';
 import {
   after,
@@ -6,21 +8,18 @@ import {
   describe,
   it,
 } from 'mocha';
-import { getRedTetrisSingleton } from '../../../../src/server/entities';
-import Player from '../../../../src/server/entities/Player';
+import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
 
-let redTetris;
 let testServer;
 let clientSocket;
 
 describe('Room creation', () => {
   before((done) => {
     createTestServer().then((server) => {
-      clientSocket = server.clientSocket;
+      clientSocket = new Client(`http://${server.host}:${server.port}`);
       testServer = server;
-      redTetris = getRedTetrisSingleton();
       done();
     });
   });
@@ -39,11 +38,11 @@ describe('Room creation', () => {
       done();
     });
     clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
-    clientSocket.emit('room:create', { roomId: '1234', playerName: 'Bruce Wayne' });
+    clientSocket.emit('room:create', { roomId: '1234' });
   });
 
   it('should find already created room', (done) => {
-    getRedTetrisSingleton().createRoom('1234', { host: 'Bruce Wayne' });
+    getRedTetrisSingleton().addRoom(new Room({ id: '1234', host: 'dummyHost' }));
 
     clientSocket.on('room:create', (arg) => {
       expect(arg).to.eql({
@@ -54,7 +53,7 @@ describe('Room creation', () => {
       done();
     });
     clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
-    clientSocket.emit('room:create', { roomId: '1234', playerName: 'Clark Kent' });
+    clientSocket.emit('room:create', { roomId: '1234' });
   });
 
   it('should respond with an error', (done) => {
@@ -63,6 +62,6 @@ describe('Room creation', () => {
       done();
     });
 
-    clientSocket.emit('room:create', { roomId: '1234', playerName: 'Clark Kent' });
+    clientSocket.emit('room:create', { roomId: '1234' });
   });
 });

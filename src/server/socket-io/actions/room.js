@@ -15,13 +15,13 @@ const roomActions = {
     ok: (roomId, isHost) => ({ type: 'room/create', roomId, isHost }),
   },
   join: {
-    added: (roomId, playerName) => ({
-      type: 'room/join', roomId, playerName, status: JOIN_STATUS.ADDED,
+    added: (roomId, name) => ({
+      type: 'room/join', roomId, name, status: JOIN_STATUS.ADDED,
     }),
   },
   error: {
-    alreadyAdded: (roomId, playerName) => ({
-      type: 'room/join', roomId, playerName, error: ERRORS.ERR_ALREADY_ADDED,
+    alreadyAdded: (roomId) => ({
+      type: 'room/join', roomId, error: ERRORS.ERR_ALREADY_ADDED,
     }),
     isEmpty: (roomId) => ({ type: 'game/start', roomId, error: ERRORS.ERR_IS_EMPTY }),
     isFull: (roomId) => ({ type: 'room/join', roomId, error: ERRORS.ERR_IS_FULL }),

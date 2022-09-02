@@ -1,8 +1,8 @@
 import Game from '../../entities/Game';
-import gameActions from '../actions/game';
 import roomActions from '../actions/room';
+import gameActions from '../actions/game';
 
-export const onStart = (redTetris, socket) => ({ roomId, host }) => {
+export const onStart = (redTetris, socket, io) => ({ roomId, host }) => {
   const room = redTetris.findRoom(roomId);
 
   if (!room) {
@@ -17,21 +17,21 @@ export const onStart = (redTetris, socket) => ({ roomId, host }) => {
 
   if (room.host !== host) {
     socket.emit('game:start', roomActions.error.wrongHost(roomId));
-    return;
   }
 
-  if (!room.game) {
-    const game = room.newGame();
-    game.startGame();
+  const pieceGenerator = redTetris.createPieceGenerator(room.id);
 
-    socket.to(room.id).emit('game:start', gameActions.start.started(roomId));
-  } else {
-    socket.emit('game:start', gameActions.start.alreadyStarted(roomId));
-  }
+  room.players.forEach((player) => {
+    const game = new Game({ pieceGenerator });
+
+    redTetris.addGame(player.socketId, game);
+    io.to(player.socketId).emit('game:start', gameActions.start(game.id));
+  });
 };
 
 export const onSequence = (redTetris, socket) => ({ roomId, index }) => {
-  const sequence = redTetris.findRoom(roomId).game.getSequence(index);
+  const { piecesBag } = redTetris.findRoom(roomId);
+  const sequence = piecesBag.deal(index);
   socket.emit('game:sequence', { type: 'game/sequence', sequence });
 };
 

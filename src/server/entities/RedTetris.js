@@ -1,5 +1,3 @@
-import Room from './Room';
-
 class RedTetris {
   constructor() {
     this._rooms = new Map();
@@ -18,23 +16,14 @@ class RedTetris {
     return this._rooms.get(id);
   }
 
-  createRoom(id, { host, maxPlayers = 2 } = {}) {
-    const game = this.findRoom(id);
-
-    if (game) {
-      return game;
-    }
-
-    const newGame = new Room({ id, maxPlayers });
-    newGame.host = host;
-    newGame.addPlayer(host);
-
-    this._rooms.set(id, newGame);
-    return newGame;
+  addRoom(room) {
+    this._rooms.set(room.id, this.findRoom(room.id) || room);
+    return room;
   }
 
   reset() {
     this._rooms = new Map();
+    this._players = new Map();
   }
 }
 

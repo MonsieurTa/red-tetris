@@ -20,6 +20,10 @@ class Player {
     this._alive = false;
   }
 
+  get id() {
+    return this._socketId;
+  }
+
   get name() {
     return this._name;
   }
