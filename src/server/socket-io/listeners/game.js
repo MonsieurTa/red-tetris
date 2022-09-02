@@ -3,7 +3,7 @@ import roomActions from '../actions/room';
 import gameActions from '../actions/game';
 import PieceGenerator from '../../entities/PieceGenerator';
 
-export const onStart = (redTetris, socket, io) => ({ roomId }) => {
+export const onStart = (redTetris, socket, io) => ({ playerId, roomId }) => {
   const room = redTetris.findRoom(roomId);
 
   if (!room) {
@@ -16,7 +16,7 @@ export const onStart = (redTetris, socket, io) => ({ roomId }) => {
     return;
   }
 
-  if (room.host !== socket.id) {
+  if (room.host !== playerId) {
     socket.emit('game:start', roomActions.error.wrongHost(roomId));
     return;
   }
@@ -28,7 +28,7 @@ export const onStart = (redTetris, socket, io) => ({ roomId }) => {
     const game = new Game({ id: `${room.id}#${player.id}`, pieceGenerator });
     redTetris.storeGame(game);
 
-    io.to(player.id).emit('game:start', gameActions.start(game.id));
+    io.to(player.socketId).emit('game:start', gameActions.start(game.id));
   });
 };
 
@@ -38,5 +38,3 @@ export const onDraw = (redTetris, socket) => ({ gameId, i = 0 }) => {
 
   socket.emit('game:draw', gameActions.draw(pieces));
 };
-
-export default onStart;

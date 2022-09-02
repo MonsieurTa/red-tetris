@@ -1,5 +1,8 @@
+import crypto from 'crypto';
+
 class Player {
-  constructor(socketId, name) {
+  constructor(name, socketId) {
+    this._id = crypto.randomUUID();
     this._socketId = socketId;
     this._name = name;
     this._alive = true;
@@ -21,6 +24,14 @@ class Player {
   }
 
   get id() {
+    return this._id;
+  }
+
+  set socketId(socketId) {
+    this._socketId = socketId;
+  }
+
+  get socketId() {
     return this._socketId;
   }
 

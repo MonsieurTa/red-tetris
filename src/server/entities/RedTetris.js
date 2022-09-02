@@ -6,8 +6,8 @@ class RedTetris {
     this._pieceGenerators = new Map();
   }
 
-  register(socketId, player) {
-    this._players.set(socketId, player);
+  register(player) {
+    this._players.set(player.id, player);
   }
 
   findPlayer(socketId) {

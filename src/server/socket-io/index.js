@@ -3,7 +3,7 @@ import { Server } from 'socket.io';
 import { getRedTetrisSingleton } from '../entities';
 import * as roomListeners from './listeners/room';
 import * as gameListeners from './listeners/game';
-import Player from '../entities/Player';
+import redTetrisListeners from './listeners/red-tetris';
 
 class NotRegistered extends Error {
   constructor(type, args) {
@@ -26,10 +26,7 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
       }
     });
 
-    socket.on('red-tetris:register', ({ name }) => {
-      const newPlayer = new Player(socket.id, name);
-      redTetris.register(socket.id, newPlayer);
-    });
+    socket.on('red-tetris:register', redTetrisListeners.onRegister(redTetris, socket));
 
     socket.on('error', (error) => {
       socket.emit(error.type, { error: error.message });
@@ -37,9 +34,11 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
 
     socket.use(([eventName, args], next) => {
       if (!['ping', 'red-tetris:register'].includes(eventName)) {
-        if (!redTetris.findPlayer(socket.id)) {
+        const player = redTetris.findPlayer(args.playerId);
+        if (!player) {
           return next(new NotRegistered(eventName, args));
         }
+        player.socketId = socket.id;
       }
 
       return next();

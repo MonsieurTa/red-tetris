@@ -1,8 +1,8 @@
 import { Room } from '../../entities';
 import roomActions from '../actions/room';
 
-export const onCreate = (redTetris, socket) => ({ roomId, maxPlayers = 2 }) => {
-  const player = redTetris.findPlayer(socket.id);
+export const onCreate = (redTetris, socket) => ({ playerId, roomId, maxPlayers = 2 }) => {
+  const player = redTetris.findPlayer(playerId);
   let room = redTetris.findRoom(roomId);
 
   if (room) {
@@ -19,8 +19,8 @@ export const onCreate = (redTetris, socket) => ({ roomId, maxPlayers = 2 }) => {
   socket.emit('room:create', roomActions.create.ok(room.id, true));
 };
 
-export const onJoin = (redTetris, socket) => ({ roomId }) => {
-  const player = redTetris.findPlayer(socket.id);
+export const onJoin = (redTetris, socket) => ({ playerId, roomId }) => {
+  const player = redTetris.findPlayer(playerId);
   const room = redTetris.findRoom(roomId);
 
   if (!room) {
