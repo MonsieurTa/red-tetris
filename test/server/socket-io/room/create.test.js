@@ -37,7 +37,7 @@ describe('Room creation', () => {
       });
       done();
     });
-    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
+    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
     clientSocket.emit('room:create', { roomId: '1234' });
   });
 
@@ -52,7 +52,7 @@ describe('Room creation', () => {
       });
       done();
     });
-    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
+    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
     clientSocket.emit('room:create', { roomId: '1234' });
   });
 

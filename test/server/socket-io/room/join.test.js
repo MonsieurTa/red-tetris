@@ -39,7 +39,7 @@ describe('Room joining', () => {
       });
       done();
     });
-    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
+    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
     clientSocket.emit('room:join', { roomId: '1234' });
   });
 
