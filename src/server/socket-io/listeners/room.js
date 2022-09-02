@@ -13,7 +13,7 @@ export const onCreate = (redTetris, socket) => ({ roomId, maxPlayers = 2 }) => {
   room = new Room({ id: roomId, host: player.id, maxPlayers });
   room.addPlayerId(player.id);
 
-  redTetris.addRoom(roomId, { host: player.id, maxPlayers });
+  redTetris.storeRoom(room);
 
   socket.join(room.id);
   socket.emit('room:create', roomActions.create.ok(room.id, true));

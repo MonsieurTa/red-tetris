@@ -35,6 +35,10 @@ class Room {
     return this._host;
   }
 
+  get playerIds() {
+    return [...this._playerIds.values()];
+  }
+
   get isEmpty() {
     return this._playerIds.size === 0;
   }

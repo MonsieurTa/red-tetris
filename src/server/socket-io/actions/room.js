@@ -25,7 +25,7 @@ const roomActions = {
     }),
     isEmpty: (roomId) => ({ type: 'game/start', roomId, error: ERRORS.ERR_IS_EMPTY }),
     isFull: (roomId) => ({ type: 'room/join', roomId, error: ERRORS.ERR_IS_FULL }),
-    notFound: (roomId) => ({ type: 'room/join', roomId, error: ERRORS.ERR_NOT_FOUND }),
+    notFound: (roomId, type = 'room/join') => ({ type, roomId, error: ERRORS.ERR_NOT_FOUND }),
     wrongHost: (roomId) => ({ type: 'game/start', roomId, error: ERRORS.ERR_WRONG_HOST }),
   },
 };

@@ -1,7 +1,8 @@
 class Game {
-  constructor({ pieceGenerator }) {
+  constructor({ id }) {
+    this._id = id;
     this._running = false;
-    this._pieceGenerator = pieceGenerator;
+    this._current_sequence = 0;
   }
 
   start() {
@@ -18,7 +19,11 @@ class Game {
 
   reset() {
     this.stop();
-    this._sequences = [];
+    this._current_sequence = 0;
+  }
+
+  get id() {
+    return this._id;
   }
 }
 

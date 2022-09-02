@@ -1,4 +1,6 @@
-import { expect } from 'chai';
+import { io as Client } from 'socket.io-client';
+
+// import { expect } from 'chai';
 import {
   after,
   afterEach,
@@ -7,15 +9,16 @@ import {
   it,
 } from 'mocha';
 
+import { assert, expect } from 'chai';
 import { createTestServer } from '../../../helpers/server';
 
 let testServer;
 let clientSocket;
 
-describe('Room creation', () => {
+describe('Game starting', () => {
   before((done) => {
     createTestServer().then((server) => {
-      clientSocket = server.clientSocket;
+      clientSocket = new Client(`http://${server.host}:${server.port}`);
       testServer = server;
       done();
     });
@@ -26,16 +29,14 @@ describe('Room creation', () => {
   after(() => testServer.stop());
 
   it('should start a game', (done) => {
-    clientSocket.on('room:create', (arg) => {
-      expect(arg).to.eql({
-        type: 'room/create',
-        roomId: '1234',
-        isHost: true,
-      });
+    clientSocket.on('game:start', ({ type, gameId }) => {
+      assert.equal(type, 'game/start');
+      expect(gameId.startsWith('1234')).to.be.true;
       done();
     });
 
     clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne ' });
-    clientSocket.emit('room:create', { roomId: '1234', playerName: 'Bruce Wayne' });
+    clientSocket.emit('room:create', { roomId: '1234' });
+    clientSocket.emit('game:start', { roomId: '1234' });
   });
 });

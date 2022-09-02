@@ -42,7 +42,7 @@ describe('Room creation', () => {
   });
 
   it('should find already created room', (done) => {
-    getRedTetrisSingleton().addRoom(new Room({ id: '1234', host: 'dummyHost' }));
+    getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummyHost' }));
 
     clientSocket.on('room:create', (arg) => {
       expect(arg).to.eql({
