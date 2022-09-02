@@ -2,7 +2,7 @@ import RedTetris from './RedTetris';
 
 let redTetris = null;
 
-export const getGameSingleton = () => {
+export const getRedTetrisSingleton = () => {
   if (!redTetris) {
     redTetris = new RedTetris();
   }

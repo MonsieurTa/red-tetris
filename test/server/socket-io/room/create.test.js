@@ -6,7 +6,7 @@ import {
   describe,
   it,
 } from 'mocha';
-import { getGameSingleton } from '../../../../src/server/entities';
+import { getRedTetrisSingleton } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
 
@@ -30,27 +30,27 @@ describe('Room creation', () => {
     clientSocket.on('room:create', (arg) => {
       expect(arg).to.eql({
         type: 'room/create',
-        gameId: '1234',
+        roomId: '1234',
         isHost: true,
       });
       done();
     });
 
-    clientSocket.emit('room:create', { gameId: '1234', playerName: 'Bruce Wayne' });
+    clientSocket.emit('room:create', { roomId: '1234', playerName: 'Bruce Wayne' });
   });
 
   it('should find already created room', (done) => {
-    getGameSingleton().createRoom('1234', { host: 'Bruce Wayne' });
+    getRedTetrisSingleton().createRoom('1234', { host: 'Bruce Wayne' });
 
     clientSocket.on('room:create', (arg) => {
       expect(arg).to.eql({
         type: 'room/create',
-        gameId: '1234',
+        roomId: '1234',
         isHost: false,
       });
       done();
     });
 
-    clientSocket.emit('room:create', { gameId: '1234', playerName: 'Clark Kent' });
+    clientSocket.emit('room:create', { roomId: '1234', playerName: 'Clark Kent' });
   });
 });

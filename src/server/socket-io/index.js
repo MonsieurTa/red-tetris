@@ -1,11 +1,11 @@
 import { Server } from 'socket.io';
 
-import { getGameSingleton } from '../entities';
+import { getRedTetrisSingleton } from '../entities';
 import * as roomListeners from './listeners/room';
 import * as gameListeners from './listeners/game';
 
 const registerSocketIoHandlers = (socket) => {
-  const redTetris = getGameSingleton();
+  const redTetris = getRedTetrisSingleton();
 
   socket.on('action', (action) => {
     if (action.type === 'server/ping') {
