@@ -32,10 +32,11 @@ export const onStart = (redTetris, socket, io) => ({ roomId }) => {
   });
 };
 
-export const onSequence = (redTetris, socket) => ({ roomId, index }) => {
-  const { piecesBag } = redTetris.findRoom(roomId);
-  const sequence = piecesBag.deal(index);
-  socket.emit('game:sequence', { type: 'game/sequence', sequence });
+export const onDraw = (redTetris, socket) => ({ gameId, i = 0 }) => {
+  const game = redTetris.findGame(gameId);
+  const pieces = game.draw(i);
+
+  socket.emit('game:draw', gameActions.draw(pieces));
 };
 
 export default onStart;

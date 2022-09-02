@@ -2,6 +2,7 @@ class RedTetris {
   constructor() {
     this._rooms = new Map();
     this._players = new Map();
+    this._games = new Map();
     this._pieceGenerators = new Map();
   }
 
@@ -22,8 +23,12 @@ class RedTetris {
     return room;
   }
 
+  findGame(gameId) {
+    return this._games.get(gameId);
+  }
+
   storeGame(game) {
-    this._rooms.set(game.id, this.findRoom(game.id) || game);
+    this._games.set(game.id, this.findGame(game.id) || game);
     return game;
   }
 

@@ -7,10 +7,10 @@ import {
 import PieceGenerator, { DEFAULT_SEQUENCE, FIRST_SEQUENCE, SEQUENCE_SIZE } from '../../../src/server/entities/PieceGenerator';
 
 describe('Piece generator', () => {
-  it('should deal one sequence', (done) => {
+  it('should draw one sequence', (done) => {
     const generator = new PieceGenerator();
 
-    const sequence = generator.deal(0);
+    const sequence = generator.draw(0);
 
     expect(sequence.length).to.equal(7);
     done();
@@ -21,7 +21,7 @@ describe('Piece generator', () => {
     const generator = new PieceGenerator();
 
     for (let i = 0; i < 1000; i += 1) {
-      const sequence = generator.deal(0);
+      const sequence = generator.draw(0);
       generator.reset(0);
       expect(expectedPieces.has(sequence[0])).to.be.true;
     }
@@ -32,7 +32,7 @@ describe('Piece generator', () => {
     const expectedPieces = new Set(DEFAULT_SEQUENCE.split(''));
     const generator = new PieceGenerator();
 
-    const sequence = generator.deal(0);
+    const sequence = generator.draw(0);
 
     expect(expectedPieces.size).to.equal(SEQUENCE_SIZE);
 

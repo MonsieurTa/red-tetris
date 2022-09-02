@@ -42,13 +42,14 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
         }
       }
 
-      next();
+      return next();
     });
 
     socket.on('room:create', roomListeners.onCreate(redTetris, socket));
     socket.on('room:join', roomListeners.onJoin(redTetris, socket));
 
     socket.on('game:start', gameListeners.onStart(redTetris, socket, io));
+    socket.on('game:draw', gameListeners.onDraw(redTetris, socket));
   });
 
   return io;
