@@ -11,6 +11,7 @@ import {
 import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
+import registerPlayer from '../../../helpers/socket-io';
 
 let testServer;
 let clientSocket;
@@ -28,32 +29,43 @@ describe('Room creation', () => {
 
   after(() => testServer.stop());
 
-  it('should create room with host', (done) => {
-    clientSocket.on('room:create', (arg) => {
-      expect(arg).to.eql({
-        type: 'room/create',
-        roomId: '1234',
-        isHost: true,
-      });
-      done();
-    });
+  it('should create room with host', async () => {
     clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
-    clientSocket.emit('room:create', { roomId: '1234' });
+
+    const playerId = await registerPlayer(clientSocket);
+
+    clientSocket.emit('room:create', { playerId, roomId: '1234' });
+
+    return new Promise((resolve) => {
+      clientSocket.on('room:create', (arg) => {
+        expect(arg).to.eql({
+          type: 'room/create',
+          roomId: '1234',
+          isHost: true,
+        });
+        resolve();
+      });
+    });
   });
 
-  it('should find already created room', (done) => {
+  it('should find already created room', async () => {
     getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummyHost' }));
 
-    clientSocket.on('room:create', (arg) => {
-      expect(arg).to.eql({
-        type: 'room/create',
-        roomId: '1234',
-        isHost: false,
-      });
-      done();
-    });
     clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
-    clientSocket.emit('room:create', { roomId: '1234' });
+
+    const playerId = await registerPlayer(clientSocket);
+    clientSocket.emit('room:create', { playerId, roomId: '1234' });
+
+    return new Promise((resolve) => {
+      clientSocket.on('room:create', (arg) => {
+        expect(arg).to.eql({
+          type: 'room/create',
+          roomId: '1234',
+          isHost: false,
+        });
+        resolve();
+      });
+    });
   });
 
   it('should respond with an error', (done) => {

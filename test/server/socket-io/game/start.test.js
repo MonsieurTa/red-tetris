@@ -11,6 +11,7 @@ import {
 
 import { assert, expect } from 'chai';
 import { createTestServer } from '../../../helpers/server';
+import registerPlayer from '../../../helpers/socket-io';
 
 let testServer;
 let clientSocket;
@@ -28,19 +29,24 @@ describe('Game starting', () => {
 
   after(() => testServer.stop());
 
-  it('should start a game with one player', (done) => {
-    clientSocket.on('game:start', ({ type, gameId }) => {
-      assert.equal(type, 'game/start');
-      expect(gameId.startsWith('1234')).to.be.true;
-      done();
-    });
-
+  it('should start a game with one player', async () => {
     clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
-    clientSocket.emit('room:create', { roomId: '1234' });
-    clientSocket.emit('game:start', { roomId: '1234' });
+
+    const playerId = await registerPlayer(clientSocket);
+
+    clientSocket.emit('room:create', { playerId, roomId: '1234' });
+    clientSocket.emit('game:start', { playerId, roomId: '1234' });
+
+    return new Promise((resolve) => {
+      clientSocket.on('game:start', ({ type, gameId }) => {
+        assert.equal(type, 'game/start');
+        expect(gameId.startsWith('1234')).to.be.true;
+        resolve();
+      });
+    });
   });
 
-  it('should start a game with multiple players', (done) => {
+  it('should start a game with multiple players', async () => {
     const clarkSocket = new Client(`http://${testServer.host}:${testServer.port}`);
     const spiderManSocket = new Client(`http://${testServer.host}:${testServer.port}`);
     const ironManSocket = new Client(`http://${testServer.host}:${testServer.port}`);
@@ -50,36 +56,38 @@ describe('Game starting', () => {
     spiderManSocket.emit('red-tetris:register', { name: 'Spider Man' });
     ironManSocket.emit('red-tetris:register', { name: 'Iron Man' });
 
-    clientSocket.emit('room:create', { roomId: '1234', maxPlayers: 4 });
+    const [bruceId, clarkId, spiderManId, ironManId] = await Promise.all([
+      clientSocket,
+      clarkSocket,
+      spiderManSocket,
+      ironManSocket,
+    ].map(registerPlayer));
 
-    setTimeout(() => {
-      clarkSocket.emit('room:join', { roomId: '1234' });
-      spiderManSocket.emit('room:join', { roomId: '1234' });
-      ironManSocket.emit('room:join', { roomId: '1234' });
+    clientSocket.emit('room:create', {
+      playerId: bruceId, roomId: '1234', maxPlayers: 4,
+    });
 
-      clientSocket.emit('game:start', { roomId: '1234' });
+    clarkSocket.emit('room:join', { playerId: clarkId, roomId: '1234' });
+    spiderManSocket.emit('room:join', { playerId: spiderManId, roomId: '1234' });
+    ironManSocket.emit('room:join', { playerId: ironManId, roomId: '1234' });
 
-      const gameStartResolver = (socket) => new Promise((resolve) => {
-        socket.on('game:start', (arg) => {
-          assert.equal(arg.type, 'game/start');
-          expect(arg.gameId.startsWith('1234#')).to.be.true;
-          resolve(arg.gameId);
-        });
+    clientSocket.emit('game:start', { playerId: bruceId, roomId: '1234' });
+
+    const gameStartResolver = (socket) => new Promise((resolve) => {
+      socket.on('game:start', (arg) => {
+        assert.equal(arg.type, 'game/start');
+        expect(arg.gameId.startsWith('1234#')).to.be.true;
+        resolve(arg.gameId);
       });
+    });
 
-      const promises = [
-        clientSocket,
-        clarkSocket,
-        spiderManSocket,
-        ironManSocket,
-      ].map(gameStartResolver);
+    const gameIds = await Promise.all([
+      clientSocket,
+      clarkSocket,
+      spiderManSocket,
+      ironManSocket,
+    ].map(gameStartResolver));
 
-      Promise.all(promises)
-        .then((gameIds) => {
-          // assert gameIds uniqueness
-          assert.equal(new Set(gameIds).size, promises.length);
-          done();
-        });
-    }, 250);
+    assert.equal(new Set(gameIds).size, gameIds.length);
   });
 });
