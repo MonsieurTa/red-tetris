@@ -51,7 +51,7 @@
   ],
   "rules": {
     "implicit-arrow-linebreak": "off",
-    // "no-undef": "off",
+    "no-continue": "off",
     "no-underscore-dangle": "off",
     "no-unused-expressions": "off",
     "no-use-before-define": "off",
