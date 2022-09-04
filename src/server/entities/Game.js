@@ -26,6 +26,7 @@ class Game {
   }
 
   start() {
+    this._emit('game:start', gameActions.start(this._id));
     this._lastTick = Date.now();
   }
 

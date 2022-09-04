@@ -28,13 +28,13 @@ export const onStart = (redTetris, socket, io) => ({ playerId, roomId }) => {
     const game = new Game({
       id: [room.id, player.id].join('#'),
       pieceGenerator,
-      roomId: room.id,
-      playerId: player.id,
+      room,
+      player,
       io,
     });
-    redTetris.engine.add(game);
 
-    io.to(player.socketId).emit('game:start', gameActions.start(game.id));
+    game.start();
+    redTetris.engine.add(game);
   });
 };
 
