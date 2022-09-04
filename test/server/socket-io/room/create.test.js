@@ -11,7 +11,7 @@ import {
 import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
-import registerPlayer from '../../../helpers/socket-io';
+import { registerPlayer } from '../../../helpers/socket-io';
 
 let testServer;
 let clientSocket;
@@ -30,9 +30,7 @@ describe('Room creation', () => {
   after(() => testServer.stop());
 
   it('should create room with host', async () => {
-    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
-
-    const playerId = await registerPlayer(clientSocket);
+    const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
 
     clientSocket.emit('room:create', { playerId, roomId: '1234' });
 
@@ -51,9 +49,7 @@ describe('Room creation', () => {
   it('should find already created room', async () => {
     getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummyHost' }));
 
-    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
-
-    const playerId = await registerPlayer(clientSocket);
+    const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
     clientSocket.emit('room:create', { playerId, roomId: '1234' });
 
     return new Promise((resolve) => {

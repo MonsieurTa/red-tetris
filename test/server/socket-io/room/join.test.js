@@ -11,7 +11,7 @@ import {
 import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
-import registerPlayer from '../../../helpers/socket-io';
+import { registerPlayer } from '../../../helpers/socket-io';
 
 describe('Room joining', () => {
   let redTetris;
@@ -32,9 +32,7 @@ describe('Room joining', () => {
   after(() => testServer.stop());
 
   it('should not join an inexistant room', async () => {
-    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
-
-    const playerId = await registerPlayer(clientSocket);
+    const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
 
     clientSocket.emit('room:join', { playerId, roomId: '1234' });
 
@@ -56,9 +54,7 @@ describe('Room joining', () => {
 
     redTetris.storeRoom(room);
 
-    clientSocket.emit('red-tetris:register', { name: 'Clark Kent' });
-
-    const playerId = await registerPlayer(clientSocket);
+    const playerId = await registerPlayer(clientSocket, { name: 'Clark Kent' });
 
     clientSocket.emit('room:join', { playerId, roomId: '1234' });
 
@@ -77,9 +73,7 @@ describe('Room joining', () => {
   it('should not join if already added', async () => {
     getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummySocketId', maxPlayers: 3 }));
 
-    clientSocket.emit('red-tetris:register', { name: 'Clark Kent' });
-
-    const playerId = await registerPlayer(clientSocket);
+    const playerId = await registerPlayer(clientSocket, { name: 'Clark Kent' });
 
     clientSocket.emit('room:join', { playerId, roomId: '1234' });
 
