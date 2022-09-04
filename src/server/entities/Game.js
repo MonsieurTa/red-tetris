@@ -66,7 +66,7 @@ class Game {
   }
 
   get updatable() {
-    return Date.now() - this._lastTick >= this._gravity * 1000;
+    return (Date.now() - this._lastTick) >= (1000 / this._gravity);
   }
 }
 

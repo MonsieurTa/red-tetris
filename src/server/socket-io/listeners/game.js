@@ -1,6 +1,5 @@
 import Game from '../../entities/Game';
 import roomActions from '../actions/room';
-import gameActions from '../actions/game';
 import PieceGenerator from '../../entities/PieceGenerator';
 
 export const onStart = (redTetris, socket, io) => ({ playerId, roomId }) => {
