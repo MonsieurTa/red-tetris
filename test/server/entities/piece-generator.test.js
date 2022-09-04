@@ -10,7 +10,7 @@ describe('Piece generator', () => {
   it('should draw one sequence', (done) => {
     const generator = new PieceGenerator();
 
-    const sequence = generator.draw(0);
+    const sequence = generator.drawSequence(0);
 
     expect(sequence.length).to.equal(7);
     done();
@@ -21,9 +21,9 @@ describe('Piece generator', () => {
     const generator = new PieceGenerator();
 
     for (let i = 0; i < 1000; i += 1) {
-      const sequence = generator.draw(0);
+      const piece = generator.drawPiece(0);
       generator.reset(0);
-      expect(expectedPieces.has(sequence[0])).to.be.true;
+      expect(expectedPieces.has(piece)).to.be.true;
     }
     done();
   });
@@ -32,7 +32,7 @@ describe('Piece generator', () => {
     const expectedPieces = new Set(DEFAULT_SEQUENCE.split(''));
     const generator = new PieceGenerator();
 
-    const sequence = generator.draw(0);
+    const sequence = generator.drawSequence(0);
 
     expect(expectedPieces.size).to.equal(SEQUENCE_SIZE);
 

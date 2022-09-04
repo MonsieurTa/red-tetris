@@ -25,16 +25,17 @@ export const onStart = (redTetris, socket, io) => ({ playerId, roomId }) => {
   const players = room.playerIds.map((id) => redTetris.findPlayer(id));
 
   players.forEach((player) => {
-    const game = new Game({ id: [room.id, player.id].join('#'), pieceGenerator });
-    redTetris.storeGame(game);
+    const game = new Game({
+      id: [room.id, player.id].join('#'),
+      pieceGenerator,
+      roomId: room.id,
+      playerId: player.id,
+      io,
+    });
+    redTetris.engine.add(game);
 
     io.to(player.socketId).emit('game:start', gameActions.start(game.id));
   });
 };
 
-export const onDraw = (redTetris, socket) => ({ gameId, i = 0 }) => {
-  const game = redTetris.findGame(gameId);
-  const pieces = game.draw(i);
-
-  socket.emit('game:draw', gameActions.draw(pieces));
-};
+export default onStart;

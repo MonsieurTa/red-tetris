@@ -1,9 +1,13 @@
+import Engine from './Engine';
+
 class RedTetris {
   constructor() {
     this._rooms = new Map();
     this._players = new Map();
     this._games = new Map();
+
     this._pieceGenerators = new Map();
+    this._engine = new Engine();
   }
 
   register(player) {
@@ -38,8 +42,22 @@ class RedTetris {
   }
 
   reset() {
+    this._engine.stop();
+    this._engine = new Engine();
     this._rooms = new Map();
     this._players = new Map();
+  }
+
+  run() {
+    this._engine.run();
+  }
+
+  stop() {
+    this._engine.stop();
+  }
+
+  get engine() {
+    return this._engine;
   }
 }
 

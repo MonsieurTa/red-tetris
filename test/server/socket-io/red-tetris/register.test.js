@@ -11,6 +11,7 @@ import {
 
 import { assert } from 'chai';
 import { createTestServer } from '../../../helpers/server';
+import { getRedTetrisSingleton } from '../../../../src/server/entities';
 
 let testServer;
 let clientSocket;
@@ -24,7 +25,7 @@ describe('Red-Tetris registration', () => {
     });
   });
 
-  afterEach(() => testServer.engine.reset());
+  afterEach(() => getRedTetrisSingleton().reset());
 
   after(() => testServer.stop());
 

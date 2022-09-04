@@ -1,6 +1,7 @@
 import debug from 'debug';
 
 import http from 'http';
+import { getRedTetrisSingleton } from './entities';
 import registerHttpHandlers from './http';
 import createSocketIoServer from './socket-io';
 
@@ -17,6 +18,8 @@ const createServer = (params) => {
       loginfo(`tetris listen on http://${host}:${port}`);
 
       const serverSocket = createSocketIoServer(httpServer, { loginfo });
+
+      getRedTetrisSingleton().run();
 
       resolve({ httpServer, serverSocket });
     });

@@ -1,33 +1,71 @@
+import Piece from './Piece';
+import { DIRECTION } from './Board';
+
+import gameActions from '../socket-io/actions/game';
+
 class Game {
-  constructor({ id, pieceGenerator }) {
+  constructor({
+    id,
+    pieceGenerator,
+    room,
+    player,
+    io,
+  }) {
+    this._io = io;
+    this._room = room;
+    this._player = player;
+    this._board = null;
+
     this._id = id;
-    this._running = false;
+    this._lastTick = null;
+    this._alive = true;
+    this._gravity = 1; // falling block per second
+
     this._pieceGenerator = pieceGenerator;
+    this._currentPieceIndex = -1;
   }
 
   start() {
-    if (this._running) return;
-
-    this._running = true;
+    this._lastTick = Date.now();
   }
 
   stop() {
-    if (!this._running) return;
-
-    this._running = false;
+    this._alive = false;
   }
 
-  reset() {
-    this.stop();
-    this._current_sequence = 0;
+  update() {
+    this._lastTick = Date.now();
+
+    if (this._board.canMove(this._currentPiece, DIRECTION.DOWN)) {
+      this._currentPiece.drop();
+    } else {
+      this._board.lock(this._currentPiece);
+      this._currentPiece = this._nextPiece();
+
+      this._emit('game:board', gameActions.board(this._board.toDto()));
+    }
+    this._emit('game:current-piece', gameActions.currentPiece(this._currentPiece.toDto()));
   }
 
-  draw(i) {
-    return this._pieceGenerator.draw(i);
+  _emit(eventName, args) {
+    this._io.to(this._player.socketId).emit(eventName, args);
+  }
+
+  _nextPiece() {
+    this._currentPieceIndex += 1;
+    return new Piece(this._pieceGenerator.drawPiece(this._currentPieceIndex));
   }
 
   get id() {
     return this._id;
+  }
+
+  get alive() {
+    return this._alive;
+  }
+
+  get updatable() {
+    return Date.now() - this._lastTick >= this._gravity * 1000;
   }
 }
 

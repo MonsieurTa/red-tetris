@@ -62,12 +62,13 @@ class Pos {
 }
 
 class Piece {
-  constructor(piece, pos = new Pos()) {
+  constructor(shape, pos = new Pos()) {
     this._pos = pos;
-    this._width;
-    this._height;
 
-    this._piece = PIECES[piece];
+    this._shape = shape;
+    this._matrix = PIECES[shape];
+    this._width = this._matrix[0].length;
+    this._height = this._matrix.length;
   }
 
   drop() {
@@ -75,16 +76,46 @@ class Piece {
   }
 
   rotate() {
-    this._piece = rotate(this._piece);
-    return this._piece;
+    this._matrix = rotate(this._matrix);
+    return this._matrix;
+  }
+
+  isEmpty(x, y) {
+    return this._matrix[y][x] !== this._shape;
+  }
+
+  blocksPositions() {
+    const positions = [];
+    this._matrix.forEach((row, y) => {
+      row.forEach((_, x) => {
+        if (!this.isEmpty(x, y)) positions.push([x, y]);
+      });
+    });
+    return positions;
   }
 
   toDto() {
     return {
-      piece: this._piece,
+      matrix: this._matrix,
       x: this._pos.x,
       y: this._pos.y,
     };
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  get height() {
+    return this._height;
+  }
+
+  get shape() {
+    return this._shape;
+  }
+
+  get matrix() {
+    return this._matrix;
   }
 }
 

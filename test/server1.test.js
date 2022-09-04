@@ -9,6 +9,7 @@ import {
   it,
 } from 'mocha';
 import { createTestServer } from './helpers/server';
+import { getRedTetrisSingleton } from '../src/server/entities';
 
 describe('Fake server test', () => {
   let testServer;
@@ -22,7 +23,7 @@ describe('Fake server test', () => {
     });
   });
 
-  afterEach(() => testServer.engine.reset());
+  afterEach(() => getRedTetrisSingleton().reset());
 
   after(() => testServer.stop());
 

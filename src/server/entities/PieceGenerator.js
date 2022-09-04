@@ -39,7 +39,11 @@ class PieceGenerator {
     this._sequences = [];
   }
 
-  draw(i) {
+  drawPiece(i) {
+    return this.drawSequence(i / SEQUENCE_SIZE)[i % SEQUENCE_SIZE];
+  }
+
+  drawSequence(i) {
     while (this._sequences.length <= i) {
       this._sequences.push(generateSequence(i === 0));
     }

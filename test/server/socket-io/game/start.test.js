@@ -12,6 +12,7 @@ import {
 import { assert, expect } from 'chai';
 import { createTestServer } from '../../../helpers/server';
 import registerPlayer from '../../../helpers/socket-io';
+import { getRedTetrisSingleton } from '../../../../src/server/entities';
 
 let testServer;
 let clientSocket;
@@ -25,7 +26,7 @@ describe('Game starting', () => {
     });
   });
 
-  afterEach(() => testServer.engine.reset());
+  afterEach(() => getRedTetrisSingleton().reset());
 
   after(() => testServer.stop());
 

@@ -19,10 +19,11 @@ export const createTestServer = () => new Promise((resolve) => {
       port: _port,
       httpServer,
       serverSocket,
-      engine: getRedTetrisSingleton(),
       stop: () => {
         httpServer.close(() => httpServer.unref());
         serverSocket.close();
+
+        getRedTetrisSingleton().stop();
       },
     });
   };

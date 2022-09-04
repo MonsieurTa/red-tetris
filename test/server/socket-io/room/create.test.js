@@ -25,7 +25,7 @@ describe('Room creation', () => {
     });
   });
 
-  afterEach(() => testServer.engine.reset());
+  afterEach(() => getRedTetrisSingleton().reset());
 
   after(() => testServer.stop());
 

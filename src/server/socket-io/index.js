@@ -48,7 +48,6 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
     socket.on('room:join', roomListeners.onJoin(redTetris, socket));
 
     socket.on('game:start', gameListeners.onStart(redTetris, socket, io));
-    socket.on('game:draw', gameListeners.onDraw(redTetris, socket));
   });
 
   return io;
