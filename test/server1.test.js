@@ -8,6 +8,7 @@ import {
   describe,
   it,
 } from 'mocha';
+import { EVENTS } from '../src/shared/constants';
 import { createTestServer } from './helpers/server';
 import { getRedTetrisSingleton } from '../src/server/entities';
 
@@ -33,7 +34,7 @@ describe('Fake server test', () => {
       done();
     });
 
-    clientSocket.emit('red-tetris:register', { name: 'Clark Kent' });
+    clientSocket.emit(EVENTS.RED_TETRIS.REGISTER, { name: 'Clark Kent' });
     clientSocket.emit('ping', { type: 'server/ping' });
   });
 });

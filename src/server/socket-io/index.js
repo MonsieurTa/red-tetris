@@ -1,5 +1,7 @@
 import { Server } from 'socket.io';
 
+import { EVENTS } from '../../shared/constants';
+
 import { getRedTetrisSingleton } from '../entities';
 import * as roomListeners from './listeners/room';
 import * as gameListeners from './listeners/game';
@@ -26,14 +28,14 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
       }
     });
 
-    socket.on('red-tetris:register', redTetrisListeners.onRegister(socket));
+    socket.on(EVENTS.RED_TETRIS.REGISTER, redTetrisListeners.onRegister(socket));
 
     socket.on('error', (error) => {
       socket.emit(error.type, { error: error.message });
     });
 
     socket.use(([eventName, args], next) => {
-      if (!['ping', 'red-tetris:register'].includes(eventName)) {
+      if (!['ping', EVENTS.RED_TETRIS.REGISTER].includes(eventName)) {
         const player = redTetris.findPlayer(args.playerId);
         if (!player) {
           return next(new NotRegistered(eventName, args));
@@ -44,11 +46,11 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
       return next();
     });
 
-    socket.on('room:create', roomListeners.onCreate(socket));
-    socket.on('room:join', roomListeners.onJoin(socket));
-    socket.on('room:ready', roomListeners.onReady(socket));
+    socket.on(EVENTS.ROOM.CREATE, roomListeners.onCreate(socket));
+    socket.on(EVENTS.ROOM.JOIN, roomListeners.onJoin(socket));
+    socket.on(EVENTS.ROOM.READY, roomListeners.onReady(socket));
 
-    socket.on('game:start', gameListeners.onStart(socket));
+    socket.on(EVENTS.GAME.START, gameListeners.onStart(socket));
   });
 
   return io;

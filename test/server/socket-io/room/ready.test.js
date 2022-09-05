@@ -14,7 +14,7 @@ import {
   registerPlayer, createRoom, joinRoom, waitEvent,
 } from '../../../helpers/socket-io';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
-import { initBoard } from '../../../../src/server/entities/Board';
+import { EVENTS } from '../../../../src/shared/constants';
 
 let testServer;
 let clientSocket;
@@ -35,10 +35,10 @@ describe('Room ready', () => {
   it('should start a game with one player', async () => {
     const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
 
-    clientSocket.emit('room:create', { playerId, roomId: '1234' });
-    clientSocket.emit('room:ready', { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.READY, { playerId, roomId: '1234' });
 
-    const { type, gameId } = await waitEvent(clientSocket, 'room:ready');
+    const { type, gameId } = await waitEvent(clientSocket, EVENTS.ROOM.READY);
 
     assert.equal(type, 'room/ready');
     expect(gameId.startsWith('1234')).to.be.true;
@@ -64,13 +64,13 @@ describe('Room ready', () => {
       joinRoom(ironManSocket, { playerId: ironManId, roomId }),
     ]);
 
-    clientSocket.emit('room:ready', { playerId: bruceId, roomId });
+    clientSocket.emit(EVENTS.ROOM.READY, { playerId: bruceId, roomId });
 
     const events = await Promise.all([
-      waitEvent(clientSocket, 'room:ready'),
-      waitEvent(clarkSocket, 'room:ready'),
-      waitEvent(spiderManSocket, 'room:ready'),
-      waitEvent(ironManSocket, 'room:ready'),
+      waitEvent(clientSocket, EVENTS.ROOM.READY),
+      waitEvent(clarkSocket, EVENTS.ROOM.READY),
+      waitEvent(spiderManSocket, EVENTS.ROOM.READY),
+      waitEvent(ironManSocket, EVENTS.ROOM.READY),
     ]);
 
     events.forEach(({ type, gameId }) => {

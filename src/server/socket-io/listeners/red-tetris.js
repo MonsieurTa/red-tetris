@@ -1,3 +1,5 @@
+import { EVENTS } from '../../../shared/constants';
+
 import { getRedTetrisSingleton } from '../../entities';
 import Player from '../../entities/Player';
 import redTetrisActions from '../actions/red-tetris';
@@ -9,7 +11,7 @@ const onRegister = (socket) => ({ name }) => {
   newPlayer.socket = socket;
 
   redTetris.register(newPlayer);
-  socket.emit('red-tetris:register', redTetrisActions.register(newPlayer.id));
+  socket.emit(EVENTS.RED_TETRIS.REGISTER, redTetrisActions.register(newPlayer.id));
 };
 
 const actions = {

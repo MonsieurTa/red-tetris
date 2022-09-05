@@ -12,6 +12,7 @@ import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
 import { registerPlayer } from '../../../helpers/socket-io';
+import { EVENTS } from '../../../../src/shared/constants';
 
 describe('Room joining', () => {
   let redTetris;
@@ -34,10 +35,10 @@ describe('Room joining', () => {
   it('should not join an inexistant room', async () => {
     const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
 
-    clientSocket.emit('room:join', { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
 
     return new Promise((resolve) => {
-      clientSocket.on('room:join', (arg) => {
+      clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
         expect(arg).to.eql({
           type: 'room/join',
           roomId: '1234',
@@ -56,10 +57,10 @@ describe('Room joining', () => {
 
     const playerId = await registerPlayer(clientSocket, { name: 'Clark Kent' });
 
-    clientSocket.emit('room:join', { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
 
     return new Promise((resolve) => {
-      clientSocket.on('room:join', (arg) => {
+      clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
         expect(arg).to.eql({
           type: 'room/join',
           roomId: '1234',
@@ -75,12 +76,12 @@ describe('Room joining', () => {
 
     const playerId = await registerPlayer(clientSocket, { name: 'Clark Kent' });
 
-    clientSocket.emit('room:join', { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
 
     return new Promise((resolve) => {
       setTimeout(() => {
-        clientSocket.emit('room:join', { playerId, roomId: '1234' });
-        clientSocket.on('room:join', (arg) => {
+        clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
+        clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
           expect(arg).to.eql({
             type: 'room/join',
             roomId: '1234',
@@ -93,10 +94,10 @@ describe('Room joining', () => {
   });
 
   it('should respond with an error if not registered', (done) => {
-    clientSocket.on('room:join', (arg) => {
+    clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
       expect(arg).to.eql({ error: 'NotRegistered' });
       done();
     });
-    clientSocket.emit('room:join', { roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { roomId: '1234' });
   });
 });

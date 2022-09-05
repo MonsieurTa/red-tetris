@@ -1,16 +1,18 @@
+import { EVENTS } from '../../src/shared/constants';
+
 export const registerPlayer = (socket, { name }) => new Promise((resolve) => {
-  socket.emit('red-tetris:register', { name });
-  socket.on('red-tetris:register', ({ playerId }) => resolve(playerId));
+  socket.emit(EVENTS.RED_TETRIS.REGISTER, { name });
+  socket.on(EVENTS.RED_TETRIS.REGISTER, ({ playerId }) => resolve(playerId));
 });
 
 export const createRoom = (socket, { playerId, roomId, maxPlayers }) => new Promise((resolve) => {
-  socket.emit('room:create', { playerId, roomId, maxPlayers });
-  socket.on('room:create', (args) => resolve(args.roomId));
+  socket.emit(EVENTS.ROOM.CREATE, { playerId, roomId, maxPlayers });
+  socket.on(EVENTS.ROOM.CREATE, (args) => resolve(args.roomId));
 });
 
 export const joinRoom = (socket, { playerId, roomId }) => new Promise((resolve, reject) => {
-  socket.emit('room:join', { playerId, roomId });
-  socket.on('room:join', (args) => {
+  socket.emit(EVENTS.ROOM.JOIN, { playerId, roomId });
+  socket.on(EVENTS.ROOM.JOIN, (args) => {
     if (args.status === 'ADDED') {
       resolve(args.roomId);
     } else {
@@ -22,14 +24,12 @@ export const joinRoom = (socket, { playerId, roomId }) => new Promise((resolve, 
 export const waitEvent = (socket, eventName) =>
   new Promise((resolve) => { socket.on(eventName, resolve); });
 
-export const waitGameStart = (socket) => new Promise((resolve) => {
-  socket.on('room:ready', (args) => {
-    resolve(args);
+export const waitGameStart = (socket) =>
+  new Promise((resolve) => {
+    socket.on(EVENTS.ROOM.READY, (args) => { resolve(args); });
   });
-});
 
-export const waitBoard = (socket) => new Promise((resolve) => {
-  socket.on('game:board', (args) => {
-    resolve(args);
+export const waitBoard = (socket) =>
+  new Promise((resolve) => {
+    socket.on(EVENTS.GAME.BOARD, (args) => { resolve(args); });
   });
-});

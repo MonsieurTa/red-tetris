@@ -1,15 +1,9 @@
+import { EVENTS, INPUTS } from '../../shared/constants';
+
 import Piece, { DIRECTION } from './Piece';
 import Board from './Board';
 
 import gameActions from '../socket-io/actions/game';
-
-const GAME_ACTIONS = {
-  ROTATE: 'ROTATE',
-  MOVE_LEFT: 'MOVE_LEFT',
-  MOVE_RIGHT: 'MOVE_RIGHT',
-  DROP: 'DROP',
-  HARD_DROP: 'HARD_DROP',
-};
 
 class Game {
   constructor({
@@ -36,8 +30,8 @@ class Game {
     this._lastTick = Date.now();
     this._currentPiece = this._nextPiece();
 
-    this._emit('game:board', gameActions.board(this._board.toDto()));
-    this._emit('game:currentPiece', gameActions.currentPiece(this._currentPiece.toDto()));
+    this._emit(EVENTS.GAME.BOARD, gameActions.board(this._board.toDto()));
+    this._emit(EVENTS.GAME.CURRENT_PIECE, gameActions.currentPiece(this._currentPiece.toDto()));
   }
 
   stop() {
@@ -54,26 +48,26 @@ class Game {
       this._board.lock(this._currentPiece);
       this._currentPiece = this._nextPiece();
 
-      this._emit('game:board', gameActions.board(this._board.toDto()));
+      this._emit(EVENTS.GAME.BOARD, gameActions.board(this._board.toDto()));
     }
-    this._emit('game:currentPiece', gameActions.currentPiece(this._currentPiece.toDto()));
+    this._emit(EVENTS.GAME.CURRENT_PIECE, gameActions.currentPiece(this._currentPiece.toDto()));
   }
 
   registerUserInputListeners() {
     const { socket } = this._player;
 
-    socket.on('game:action', ({ action }) => {
+    socket.on(EVENTS.GAME.ACTION, ({ action }) => {
       const pieceCopy = this._currentPiece.copy();
       switch (action) {
-        case GAME_ACTIONS.ROTATE:
+        case INPUTS.ROTATE:
           if (!this._board.canPlace(pieceCopy.rotate())) return;
           this._currentPiece.rotate();
           break;
-        case GAME_ACTIONS.MOVE_LEFT:
+        case INPUTS.MOVE_LEFT:
           if (!this._board.canPlace(pieceCopy.move(DIRECTION.LEFT))) return;
           this._currentPiece.move(DIRECTION.LEFT);
           break;
-        case GAME_ACTIONS.MOVE_RIGHT:
+        case INPUTS.MOVE_RIGHT:
           if (!this._board.canPlace(pieceCopy.move(DIRECTION.RIGHT))) return;
           this._currentPiece.move(DIRECTION.RIGHT);
           break;

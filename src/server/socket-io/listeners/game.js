@@ -1,3 +1,5 @@
+import { EVENTS } from '../../../shared/constants';
+
 import { getRedTetrisSingleton } from '../../entities';
 import gameActions from '../actions/game';
 
@@ -7,7 +9,7 @@ export const onStart = (socket) => ({ gameId }) => {
   game.registerUserInputListeners();
   game.start();
 
-  socket.emit('game:start', gameActions.start(gameId));
+  socket.emit(EVENTS.GAME.START, gameActions.start(gameId));
 };
 
 export default onStart;

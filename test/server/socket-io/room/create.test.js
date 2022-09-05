@@ -12,6 +12,7 @@ import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
 import { registerPlayer } from '../../../helpers/socket-io';
+import { EVENTS } from '../../../../src/shared/constants';
 
 let testServer;
 let clientSocket;
@@ -32,10 +33,10 @@ describe('Room creation', () => {
   it('should create room with host', async () => {
     const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
 
-    clientSocket.emit('room:create', { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
 
     return new Promise((resolve) => {
-      clientSocket.on('room:create', (arg) => {
+      clientSocket.on(EVENTS.ROOM.CREATE, (arg) => {
         expect(arg).to.eql({
           type: 'room/create',
           roomId: '1234',
@@ -50,10 +51,10 @@ describe('Room creation', () => {
     getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummyHost' }));
 
     const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
-    clientSocket.emit('room:create', { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
 
     return new Promise((resolve) => {
-      clientSocket.on('room:create', (arg) => {
+      clientSocket.on(EVENTS.ROOM.CREATE, (arg) => {
         expect(arg).to.eql({
           type: 'room/create',
           roomId: '1234',
@@ -65,11 +66,11 @@ describe('Room creation', () => {
   });
 
   it('should respond with an error', (done) => {
-    clientSocket.on('room:create', (arg) => {
+    clientSocket.on(EVENTS.ROOM.CREATE, (arg) => {
       expect(arg).to.eql({ error: 'NotRegistered' });
       done();
     });
 
-    clientSocket.emit('room:create', { roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { roomId: '1234' });
   });
 });

@@ -12,6 +12,7 @@ import {
 import { assert } from 'chai';
 import { createTestServer } from '../../../helpers/server';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
+import { EVENTS } from '../../../../src/shared/constants';
 
 let testServer;
 let clientSocket;
@@ -30,12 +31,12 @@ describe('Red-Tetris registration', () => {
   after(() => testServer.stop());
 
   it('should register a player and respond with an id', (done) => {
-    clientSocket.on('red-tetris:register', ({ type, playerId }) => {
+    clientSocket.on(EVENTS.RED_TETRIS.REGISTER, ({ type, playerId }) => {
       assert.equal(type, 'red-tetris/register');
       assert.isNotEmpty(playerId);
       done();
     });
 
-    clientSocket.emit('red-tetris:register', { name: 'Bruce Wayne' });
+    clientSocket.emit(EVENTS.RED_TETRIS.REGISTER, { name: 'Bruce Wayne' });
   });
 });

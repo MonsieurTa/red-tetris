@@ -16,6 +16,7 @@ import {
 } from '../../../helpers/socket-io';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
 import { initBoard } from '../../../../src/server/entities/Board';
+import { EVENTS } from '../../../../src/shared/constants';
 
 let testServer;
 let clientSocket;
@@ -36,10 +37,10 @@ describe('Game starting', () => {
   it('should get initial red-tetris data', async () => {
     const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
 
-    clientSocket.emit('room:create', { playerId, roomId: '1234' });
-    clientSocket.emit('room:ready', { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.READY, { playerId, roomId: '1234' });
 
-    const roomReadyEvent = await waitEvent(clientSocket, 'room:ready');
+    const roomReadyEvent = await waitEvent(clientSocket, EVENTS.ROOM.READY);
     expect({
       type: roomReadyEvent.type,
       roomId: roomReadyEvent.roomId,
@@ -47,16 +48,16 @@ describe('Game starting', () => {
       .eql({ type: 'room/ready', roomId: '1234' });
     expect(roomReadyEvent.gameId.startsWith('1234')).to.be.true;
 
-    clientSocket.emit('game:start', { playerId, gameId: roomReadyEvent.gameId });
+    clientSocket.emit(EVENTS.GAME.START, { playerId, gameId: roomReadyEvent.gameId });
 
     const [
       gameStartEvent,
       gameBoardEvent,
       gameCurrentPieceEvent,
     ] = await Promise.all([
-      waitEvent(clientSocket, 'game:start'),
-      waitEvent(clientSocket, 'game:board'),
-      waitEvent(clientSocket, 'game:currentPiece'),
+      waitEvent(clientSocket, EVENTS.GAME.START),
+      waitEvent(clientSocket, EVENTS.GAME.BOARD),
+      waitEvent(clientSocket, EVENTS.GAME.CURRENT_PIECE),
     ]);
 
     expect(gameStartEvent).to.eql({ type: 'game/start', gameId: roomReadyEvent.gameId });

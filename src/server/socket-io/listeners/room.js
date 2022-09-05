@@ -1,4 +1,5 @@
-import { io } from 'socket.io-client';
+import { EVENTS } from '../../../shared/constants';
+
 import { getRedTetrisSingleton, Room } from '../../entities';
 import Game from '../../entities/Game';
 import PieceGenerator from '../../entities/PieceGenerator';
@@ -11,7 +12,7 @@ export const onCreate = (socket) => ({ playerId, roomId, maxPlayers = 2 }) => {
   let room = redTetris.findRoom(roomId);
 
   if (room) {
-    socket.emit('room:create', roomActions.created(room.id, false));
+    socket.emit(EVENTS.ROOM.CREATE, roomActions.created(room.id, false));
     return;
   }
 
@@ -21,7 +22,7 @@ export const onCreate = (socket) => ({ playerId, roomId, maxPlayers = 2 }) => {
   redTetris.storeRoom(room);
 
   socket.join(room.id);
-  socket.emit('room:create', roomActions.created(room.id, true));
+  socket.emit(EVENTS.ROOM.CREATE, roomActions.created(room.id, true));
 };
 
 export const onJoin = (socket) => ({ playerId, roomId }) => {
@@ -31,23 +32,23 @@ export const onJoin = (socket) => ({ playerId, roomId }) => {
   const room = redTetris.findRoom(roomId);
 
   if (!room) {
-    socket.emit('room:join', roomActions.error.notFound(roomId));
+    socket.emit(EVENTS.ROOM.JOIN, roomActions.error.notFound(roomId));
     return;
   }
   if (room.isFull) {
-    socket.emit('room:join', roomActions.error.isFull(room.id));
+    socket.emit(EVENTS.ROOM.JOIN, roomActions.error.isFull(room.id));
     return;
   }
 
   if (room.isPresent(player.id)) {
-    socket.emit('room:join', roomActions.error.alreadyAdded(room.id));
+    socket.emit(EVENTS.ROOM.JOIN, roomActions.error.alreadyAdded(room.id));
     return;
   }
 
   room.addPlayerId(player.id);
 
   socket.join(room.id);
-  socket.emit('room:join', roomActions.joined(room.id, player.name));
+  socket.emit(EVENTS.ROOM.JOIN, roomActions.joined(room.id, player.name));
 };
 
 export const onReady = (socket) => ({ playerId, roomId }) => {
@@ -56,17 +57,17 @@ export const onReady = (socket) => ({ playerId, roomId }) => {
   const room = redTetris.findRoom(roomId);
 
   if (!room) {
-    socket.emit('room:ready', roomActions.error.notFound(roomId, 'room/ready'));
+    socket.emit(EVENTS.ROOM.READY, roomActions.error.notFound(roomId, 'room/ready'));
     return;
   }
 
   if (room.isEmpty) {
-    socket.emit('room:ready', roomActions.error.isEmpty(roomId));
+    socket.emit(EVENTS.ROOM.READY, roomActions.error.isEmpty(roomId));
     return;
   }
 
   if (room.host !== playerId) {
-    socket.emit('room:ready', roomActions.error.wrongHost(roomId));
+    socket.emit(EVENTS.ROOM.READY, roomActions.error.wrongHost(roomId));
     return;
   }
 
@@ -81,7 +82,7 @@ export const onReady = (socket) => ({ playerId, roomId }) => {
       player,
     });
 
-    player.socket.emit('room:ready', roomActions.ready(roomId, game.id));
+    player.socket.emit(EVENTS.ROOM.READY, roomActions.ready(roomId, game.id));
     redTetris.storeGame(game);
   });
 };
