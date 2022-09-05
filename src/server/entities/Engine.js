@@ -15,7 +15,7 @@ class Engine {
   run() {
     this._running = true;
 
-    const loop = async () => {
+    const loop = () => {
       this._games.forEach((game) => {
         if (!game.alive || !game.updatable) return;
 
