@@ -3,15 +3,21 @@ import Board, { DIRECTION } from './Board';
 
 import gameActions from '../socket-io/actions/game';
 
+const GAME_ACTIONS = {
+  ROTATE: 'ROTATE',
+  MOVE_LEFT: 'MOVE_LEFT',
+  MOVE_RIGHT: 'MOVE_RIGHT',
+  DROP: 'DROP',
+  HARD_DROP: 'HARD_DROP',
+};
+
 class Game {
   constructor({
     id,
     pieceGenerator,
     room,
     player,
-    io,
   }) {
-    this._io = io;
     this._room = room;
     this._player = player;
     this._board = new Board();
@@ -28,7 +34,8 @@ class Game {
   start() {
     this._alive = true;
     this._lastTick = Date.now();
-    this._emit('game:start', gameActions.start(this._id));
+
+    this._emit('room:ready', gameActions.start(this._id));
     this._emit('game:board', gameActions.board(this._board.toDto()));
   }
 
@@ -39,8 +46,9 @@ class Game {
   update() {
     this._lastTick = Date.now();
 
-    if (this._board.canMove(this._currentPiece, DIRECTION.DOWN)) {
-      this._currentPiece.drop();
+    const droppedPiece = this._currentPiece.copy().move(DIRECTION.DOWN);
+    if (this._board.canPlace(droppedPiece)) {
+      this._currentPiece.move(DIRECTION.DOWN);
     } else {
       this._board.lock(this._currentPiece);
       this._currentPiece = this._nextPiece();
@@ -50,8 +58,31 @@ class Game {
     this._emit('game:current-piece', gameActions.currentPiece(this._currentPiece.toDto()));
   }
 
+  registerUserInputListeners() {
+    const { socket } = this._player;
+
+    socket.on('game:action', ({ action }) => {
+      const pieceCopy = this._currentPiece.copy();
+      switch (action) {
+        case GAME_ACTIONS.ROTATE:
+          if (!this._board.canPlace(pieceCopy.rotate())) return;
+          this._currentPiece.rotate();
+          break;
+        case GAME_ACTIONS.MOVE_LEFT:
+          if (!this._board.canPlace(pieceCopy.move(DIRECTION.LEFT))) return;
+          this._currentPiece.move(DIRECTION.LEFT);
+          break;
+        case GAME_ACTIONS.MOVE_RIGHT:
+          if (!this._board.canPlace(pieceCopy.move(DIRECTION.RIGHT))) return;
+          this._currentPiece.move(DIRECTION.RIGHT);
+          break;
+        default:
+      }
+    });
+  }
+
   _emit(eventName, args) {
-    this._io.to(this._player.socketId).emit(eventName, args);
+    this._player.socket.emit(eventName, args);
   }
 
   _nextPiece() {
@@ -67,7 +98,7 @@ class Game {
     return this._alive;
   }
 
-  get updatable() {
+  get defaultDropSchedule() {
     return (Date.now() - this._lastTick) >= (1000 / this._gravity);
   }
 }

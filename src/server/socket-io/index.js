@@ -26,7 +26,7 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
       }
     });
 
-    socket.on('red-tetris:register', redTetrisListeners.onRegister(redTetris, socket));
+    socket.on('red-tetris:register', redTetrisListeners.onRegister(socket));
 
     socket.on('error', (error) => {
       socket.emit(error.type, { error: error.message });
@@ -38,16 +38,15 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
         if (!player) {
           return next(new NotRegistered(eventName, args));
         }
-        player.socketId = socket.id;
+        player.socket = socket;
       }
 
       return next();
     });
 
-    socket.on('room:create', roomListeners.onCreate(redTetris, socket));
-    socket.on('room:join', roomListeners.onJoin(redTetris, socket));
-
-    socket.on('game:start', gameListeners.onStart(redTetris, socket, io));
+    socket.on('room:create', roomListeners.onCreate(socket));
+    socket.on('room:join', roomListeners.onJoin(socket));
+    socket.on('room:ready', roomListeners.onReady(socket));
   });
 
   return io;

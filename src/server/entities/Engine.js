@@ -17,7 +17,7 @@ class Engine {
 
     const loop = () => {
       this._games.forEach((game) => {
-        if (!game.alive || !game.updatable) return;
+        if (!game.alive || !game.defaultDropSchedule) return;
 
         game.update();
       });

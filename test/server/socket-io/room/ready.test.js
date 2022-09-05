@@ -19,7 +19,7 @@ import { initBoard } from '../../../../src/server/entities/Board';
 let testServer;
 let clientSocket;
 
-describe('Game starting', () => {
+describe('Room ready', () => {
   before((done) => {
     createTestServer().then((server) => {
       clientSocket = new Client(`http://${server.host}:${server.port}`);
@@ -36,13 +36,13 @@ describe('Game starting', () => {
     const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
 
     clientSocket.emit('room:create', { playerId, roomId: '1234' });
-    clientSocket.emit('game:start', { playerId, roomId: '1234' });
+    clientSocket.emit('room:ready', { playerId, roomId: '1234' });
 
     const [
       gameStartEvent,
       gameBoardEvent,
     ] = await Promise.all([
-      waitEvent(clientSocket, 'game:start'),
+      waitEvent(clientSocket, 'room:ready'),
       waitEvent(clientSocket, 'game:board'),
     ]);
 
@@ -73,10 +73,10 @@ describe('Game starting', () => {
       joinRoom(ironManSocket, { playerId: ironManId, roomId }),
     ]);
 
-    clientSocket.emit('game:start', { playerId: bruceId, roomId });
+    clientSocket.emit('room:ready', { playerId: bruceId, roomId });
 
     const gameStartResolver = (socket) => new Promise((resolve) => {
-      socket.on('game:start', (arg) => {
+      socket.on('room:ready', (arg) => {
         assert.equal(arg.type, 'game/start');
         expect(arg.gameId.startsWith('1234#')).to.be.true;
         resolve(arg.gameId);

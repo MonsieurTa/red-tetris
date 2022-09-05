@@ -1,3 +1,9 @@
+export const DIRECTION = {
+  DOWN: 'DOWN',
+  LEFT: 'LEFT',
+  RIGHT: 'RIGHT',
+};
+
 export const PIECES = {
   I: [
     ['.', '.', '.', '.'],
@@ -71,8 +77,28 @@ class Piece {
     this._height = this._matrix.length;
   }
 
+  copy() {
+    return new Piece(this._shape, this._pos);
+  }
+
+  move(direction = DIRECTION.DOWN) {
+    switch (direction) {
+      case DIRECTION.DOWN:
+        this._pos._y += 1;
+        break;
+      case DIRECTION.LEFT:
+        this._pos._x -= 1;
+        break;
+      case DIRECTION.RIGHT:
+        this._pos._x += 1;
+        break;
+      default:
+    }
+  }
+
   drop() {
     this._pos.y += 1;
+    return this;
   }
 
   rotate() {
@@ -88,7 +114,9 @@ class Piece {
     const positions = [];
     this._matrix.forEach((row, y) => {
       row.forEach((_, x) => {
-        if (!this.isEmpty(x, y)) positions.push([x, y]);
+        if (this.isEmpty(x, y)) return;
+
+        positions.push([this._pos.x + x, this._pos.y + y]);
       });
     });
     return positions;

@@ -1,9 +1,8 @@
 import crypto from 'crypto';
 
 class Player {
-  constructor(name, socketId) {
+  constructor(name) {
     this._id = crypto.randomUUID();
-    this._socketId = socketId;
     this._name = name;
     this._alive = true;
     this._current_sequence = 0;
@@ -27,12 +26,12 @@ class Player {
     return this._id;
   }
 
-  set socketId(socketId) {
-    this._socketId = socketId;
+  set socket(socket) {
+    this._socket = socket;
   }
 
-  get socketId() {
-    return this._socketId;
+  get socket() {
+    return this._socket;
   }
 
   get name() {
