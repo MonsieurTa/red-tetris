@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 const logerror = debug('tetris:error');
 
 const serveClientHandler = (req, res) => {
-  const file = req.url === '/bundle.js' ? '/../../build/bundle.js' : '/../../index.html';
+  const file = req.url === '/bundle.js' ? '/../../../build/bundle.js' : '/../../../index.html';
 
   fs.readFile(path.join(__dirname, file), (err, data) => {
     if (err) {

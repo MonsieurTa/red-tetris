@@ -11,7 +11,6 @@ import { rootReducer } from './redux/store';
 import socketActions from './redux/actions/socket-io';
 
 import App from './containers/app';
-import { alert } from './actions/alert';
 
 import { HOST, PORT } from '../../params';
 
@@ -43,5 +42,3 @@ const root = createRoot(
 );
 
 root.render(<Root />);
-
-store.dispatch(alert('Soon, will be here a fantastic Tetris ...'));

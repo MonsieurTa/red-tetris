@@ -56,7 +56,7 @@ describe('Game starting', () => {
     ] = await Promise.all([
       waitEvent(clientSocket, 'game:start'),
       waitEvent(clientSocket, 'game:board'),
-      waitEvent(clientSocket, 'game:current-piece'),
+      waitEvent(clientSocket, 'game:currentPiece'),
     ]);
 
     expect(gameStartEvent).to.eql({ type: 'game/start', gameId: roomReadyEvent.gameId });

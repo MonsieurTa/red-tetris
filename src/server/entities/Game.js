@@ -37,7 +37,7 @@ class Game {
     this._currentPiece = this._nextPiece();
 
     this._emit('game:board', gameActions.board(this._board.toDto()));
-    this._emit('game:current-piece', gameActions.currentPiece(this._currentPiece.toDto()));
+    this._emit('game:currentPiece', gameActions.currentPiece(this._currentPiece.toDto()));
   }
 
   stop() {
@@ -56,7 +56,7 @@ class Game {
 
       this._emit('game:board', gameActions.board(this._board.toDto()));
     }
-    this._emit('game:current-piece', gameActions.currentPiece(this._currentPiece.toDto()));
+    this._emit('game:currentPiece', gameActions.currentPiece(this._currentPiece.toDto()));
   }
 
   registerUserInputListeners() {
