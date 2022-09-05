@@ -40,7 +40,7 @@ describe('Room ready', () => {
 
     const { type, gameId } = await waitEvent(clientSocket, 'room:ready');
 
-    assert.equal(type, 'game/start');
+    assert.equal(type, 'room/ready');
     expect(gameId.startsWith('1234')).to.be.true;
   });
 
@@ -74,7 +74,7 @@ describe('Room ready', () => {
     ]);
 
     events.forEach(({ type, gameId }) => {
-      assert.equal(type, 'game/start');
+      assert.equal(type, 'room/ready');
       expect(gameId.startsWith('1234#')).to.be.true;
     });
 

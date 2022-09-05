@@ -1,5 +1,5 @@
-import Piece from './Piece';
-import Board, { DIRECTION } from './Board';
+import Piece, { DIRECTION } from './Piece';
+import Board from './Board';
 
 import gameActions from '../socket-io/actions/game';
 
@@ -27,16 +27,17 @@ class Game {
     this._alive = false;
     this._gravity = 1; // falling block per second
 
-    this._pieceGenerator = pieceGenerator;
-    this._currentPieceIndex = -1;
+    this._shapeGenerator = pieceGenerator;
+    this._currentShapeIndex = -1;
   }
 
   start() {
     this._alive = true;
     this._lastTick = Date.now();
+    this._currentPiece = this._nextPiece();
 
-    this._emit('room:ready', gameActions.start(this._id));
     this._emit('game:board', gameActions.board(this._board.toDto()));
+    this._emit('game:current-piece', gameActions.currentPiece(this._currentPiece.toDto()));
   }
 
   stop() {
@@ -86,8 +87,11 @@ class Game {
   }
 
   _nextPiece() {
-    this._currentPieceIndex += 1;
-    return new Piece(this._pieceGenerator.drawPiece(this._currentPieceIndex));
+    this._currentShapeIndex += 1;
+
+    const piece = new Piece(this._shapeGenerator.drawShape(this._currentShapeIndex));
+    piece.x = parseInt((this._board.width / 2), 10) - Math.ceil(piece.width / 2);
+    return piece;
   }
 
   get id() {

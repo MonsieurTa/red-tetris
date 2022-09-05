@@ -21,7 +21,7 @@ describe('Piece generator', () => {
     const generator = new PieceGenerator();
 
     for (let i = 0; i < 1000; i += 1) {
-      const piece = generator.drawPiece(0);
+      const piece = generator.drawShape(0);
       generator.reset(0);
       expect(expectedPieces.has(piece)).to.be.true;
     }

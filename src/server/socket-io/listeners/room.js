@@ -1,3 +1,4 @@
+import { io } from 'socket.io-client';
 import { getRedTetrisSingleton, Room } from '../../entities';
 import Game from '../../entities/Game';
 import PieceGenerator from '../../entities/PieceGenerator';
@@ -10,7 +11,7 @@ export const onCreate = (socket) => ({ playerId, roomId, maxPlayers = 2 }) => {
   let room = redTetris.findRoom(roomId);
 
   if (room) {
-    socket.emit('room:create', roomActions.create.ok(room.id, false));
+    socket.emit('room:create', roomActions.created(room.id, false));
     return;
   }
 
@@ -20,7 +21,7 @@ export const onCreate = (socket) => ({ playerId, roomId, maxPlayers = 2 }) => {
   redTetris.storeRoom(room);
 
   socket.join(room.id);
-  socket.emit('room:create', roomActions.create.ok(room.id, true));
+  socket.emit('room:create', roomActions.created(room.id, true));
 };
 
 export const onJoin = (socket) => ({ playerId, roomId }) => {
@@ -46,7 +47,7 @@ export const onJoin = (socket) => ({ playerId, roomId }) => {
   room.addPlayerId(player.id);
 
   socket.join(room.id);
-  socket.emit('room:join', roomActions.join.added(room.id, player.name));
+  socket.emit('room:join', roomActions.joined(room.id, player.name));
 };
 
 export const onReady = (socket) => ({ playerId, roomId }) => {
@@ -80,7 +81,7 @@ export const onReady = (socket) => ({ playerId, roomId }) => {
       player,
     });
 
-    game.start();
-    redTetris.engine.add(game);
+    player.socket.emit('room:ready', roomActions.ready(roomId, game.id));
+    redTetris.storeGame(game);
   });
 };

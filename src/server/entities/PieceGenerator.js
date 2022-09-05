@@ -16,6 +16,7 @@ export const shuffle = (array) => {
 
 const generateSequence = (isFirstSequence = false) => {
   const sequence = [];
+
   if (isFirstSequence) {
     sequence.push(shuffle(FIRST_SEQUENCE).pop());
   }
@@ -39,8 +40,9 @@ class PieceGenerator {
     this._sequences = [];
   }
 
-  drawPiece(i) {
-    return this.drawSequence(i / SEQUENCE_SIZE)[i % SEQUENCE_SIZE];
+  drawShape(i) {
+    const sequenceIndex = parseInt(i / SEQUENCE_SIZE, 10);
+    return this.drawSequence(sequenceIndex)[i % SEQUENCE_SIZE];
   }
 
   drawSequence(i) {

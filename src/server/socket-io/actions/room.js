@@ -11,14 +11,11 @@ const ERRORS = {
 };
 
 const roomActions = {
-  create: {
-    ok: (roomId, isHost) => ({ type: 'room/create', roomId, isHost }),
-  },
-  join: {
-    added: (roomId, name) => ({
-      type: 'room/join', roomId, name, status: JOIN_STATUS.ADDED,
-    }),
-  },
+  created: (roomId, isHost) => ({ type: 'room/create', roomId, isHost }),
+  joined: (roomId, name) => ({
+    type: 'room/join', roomId, name, status: JOIN_STATUS.ADDED,
+  }),
+  ready: (roomId, gameId) => ({ type: 'room/ready', roomId, gameId }),
   error: {
     alreadyAdded: (roomId) => ({
       type: 'room/join', roomId, error: ERRORS.ERR_ALREADY_ADDED,

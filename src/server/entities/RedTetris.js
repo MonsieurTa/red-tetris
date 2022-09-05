@@ -6,7 +6,7 @@ class RedTetris {
     this._players = new Map();
     this._games = new Map();
 
-    this._pieceGenerators = new Map();
+    this._shapeGenerators = new Map();
     this._engine = new Engine();
   }
 
@@ -33,18 +33,19 @@ class RedTetris {
 
   storeGame(game) {
     this._games.set(game.id, this.findGame(game.id) || game);
+    this._engine.add(game);
     return game;
   }
 
   storePieceGenerator(key, pieceGenerator) {
-    this._pieceGenerators.set(key, pieceGenerator);
+    this._shapeGenerators.set(key, pieceGenerator);
     return pieceGenerator;
   }
 
   reset() {
     this._engine.stop();
     this._engine = new Engine();
-    this._pieceGenerators = new Map();
+    this._shapeGenerators = new Map();
     this._rooms = new Map();
     this._players = new Map();
   }
@@ -55,10 +56,6 @@ class RedTetris {
 
   stop() {
     this._engine.stop();
-  }
-
-  get engine() {
-    return this._engine;
   }
 }
 

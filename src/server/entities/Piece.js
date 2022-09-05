@@ -1,3 +1,5 @@
+import Pos from './Pos';
+
 export const DIRECTION = {
   DOWN: 'DOWN',
   LEFT: 'LEFT',
@@ -44,29 +46,6 @@ export const PIECES = {
 
 const rotate = (matrix) => matrix[0].map((_, index) => matrix.map((row) => row[index]).reverse());
 
-class Pos {
-  constructor(x = 0, y = 0) {
-    this._x = x;
-    this._x = y;
-  }
-
-  get x() {
-    return this._x;
-  }
-
-  set x(x) {
-    this._x = x;
-  }
-
-  get y() {
-    return this._y;
-  }
-
-  set y(y) {
-    this._y = y;
-  }
-}
-
 class Piece {
   constructor(shape, pos = new Pos()) {
     this._pos = pos;
@@ -94,6 +73,7 @@ class Piece {
         break;
       default:
     }
+    return this;
   }
 
   drop() {
@@ -125,8 +105,7 @@ class Piece {
   toDto() {
     return {
       matrix: this._matrix,
-      x: this._pos.x,
-      y: this._pos.y,
+      ...this._pos.toDto(),
     };
   }
 
@@ -144,6 +123,14 @@ class Piece {
 
   get matrix() {
     return this._matrix;
+  }
+
+  set x(x) {
+    this._pos.x = x;
+  }
+
+  set y(y) {
+    this._pos.y = y;
   }
 }
 
