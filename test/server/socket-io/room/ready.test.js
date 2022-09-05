@@ -38,19 +38,10 @@ describe('Room ready', () => {
     clientSocket.emit('room:create', { playerId, roomId: '1234' });
     clientSocket.emit('room:ready', { playerId, roomId: '1234' });
 
-    const [
-      gameStartEvent,
-      gameBoardEvent,
-    ] = await Promise.all([
-      waitEvent(clientSocket, 'room:ready'),
-      waitEvent(clientSocket, 'game:board'),
-    ]);
+    const { type, gameId } = await waitEvent(clientSocket, 'room:ready');
 
-    assert.equal(gameStartEvent.type, 'game/start');
-    expect(gameStartEvent.gameId.startsWith('1234')).to.be.true;
-
-    assert.equal(gameBoardEvent.type, 'game/board');
-    expect(gameBoardEvent.board).to.eql(initBoard());
+    assert.equal(type, 'game/start');
+    expect(gameId.startsWith('1234')).to.be.true;
   });
 
   it('should start a game with multiple players', async () => {
@@ -75,21 +66,19 @@ describe('Room ready', () => {
 
     clientSocket.emit('room:ready', { playerId: bruceId, roomId });
 
-    const gameStartResolver = (socket) => new Promise((resolve) => {
-      socket.on('room:ready', (arg) => {
-        assert.equal(arg.type, 'game/start');
-        expect(arg.gameId.startsWith('1234#')).to.be.true;
-        resolve(arg.gameId);
-      });
+    const events = await Promise.all([
+      waitEvent(clientSocket, 'room:ready'),
+      waitEvent(clarkSocket, 'room:ready'),
+      waitEvent(spiderManSocket, 'room:ready'),
+      waitEvent(ironManSocket, 'room:ready'),
+    ]);
+
+    events.forEach(({ type, gameId }) => {
+      assert.equal(type, 'game/start');
+      expect(gameId.startsWith('1234#')).to.be.true;
     });
 
-    const gameIds = await Promise.all([
-      clientSocket,
-      clarkSocket,
-      spiderManSocket,
-      ironManSocket,
-    ].map(gameStartResolver));
-
+    const gameIds = events.map(({ gameId }) => gameId);
     assert.equal(new Set(gameIds).size, gameIds.length);
   });
 });
