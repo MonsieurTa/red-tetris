@@ -18,3 +18,18 @@ export const joinRoom = (socket, { playerId, roomId }) => new Promise((resolve, 
     }
   });
 });
+
+export const waitEvent = (socket, eventName) =>
+  new Promise((resolve) => { socket.on(eventName, resolve); });
+
+export const waitGameStart = (socket) => new Promise((resolve) => {
+  socket.on('game:start', (args) => {
+    resolve(args);
+  });
+});
+
+export const waitBoard = (socket) => new Promise((resolve) => {
+  socket.on('game:board', (args) => {
+    resolve(args);
+  });
+});

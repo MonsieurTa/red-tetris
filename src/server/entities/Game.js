@@ -1,5 +1,5 @@
 import Piece from './Piece';
-import { DIRECTION } from './Board';
+import Board, { DIRECTION } from './Board';
 
 import gameActions from '../socket-io/actions/game';
 
@@ -14,11 +14,11 @@ class Game {
     this._io = io;
     this._room = room;
     this._player = player;
-    this._board = null;
+    this._board = new Board();
 
     this._id = id;
     this._lastTick = null;
-    this._alive = true;
+    this._alive = false;
     this._gravity = 1; // falling block per second
 
     this._pieceGenerator = pieceGenerator;
@@ -26,8 +26,10 @@ class Game {
   }
 
   start() {
-    this._emit('game:start', gameActions.start(this._id));
+    this._alive = true;
     this._lastTick = Date.now();
+    this._emit('game:start', gameActions.start(this._id));
+    this._emit('game:board', gameActions.board(this._board.toDto()));
   }
 
   stop() {

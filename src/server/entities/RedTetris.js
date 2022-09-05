@@ -44,12 +44,13 @@ class RedTetris {
   reset() {
     this._engine.stop();
     this._engine = new Engine();
+    this._pieceGenerators = new Map();
     this._rooms = new Map();
     this._players = new Map();
   }
 
   run() {
-    this._engine.run();
+    return this._engine.run();
   }
 
   stop() {

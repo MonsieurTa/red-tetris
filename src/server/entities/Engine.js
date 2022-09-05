@@ -15,16 +15,17 @@ class Engine {
   run() {
     this._running = true;
 
-    return new Promise((resolve) => {
-      while (this._running) {
-        this._games.forEach((game) => {
-          if (!game.alive || !game.updatable) return;
+    const loop = async () => {
+      this._games.forEach((game) => {
+        if (!game.alive || !game.updatable) return;
 
-          game.update();
-        });
-      }
-      resolve();
-    });
+        game.update();
+      });
+      return new Promise((resolve) => { setTimeout(resolve, 100); })
+        .then(() => (this._running ? process.nextTick(loop) : null));
+    };
+
+    return loop();
   }
 }
 

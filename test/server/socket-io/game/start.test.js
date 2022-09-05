@@ -10,8 +10,11 @@ import {
 
 import { assert, expect } from 'chai';
 import { createTestServer } from '../../../helpers/server';
-import { registerPlayer, createRoom, joinRoom } from '../../../helpers/socket-io';
+import {
+  registerPlayer, createRoom, joinRoom, waitEvent,
+} from '../../../helpers/socket-io';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
+import { initBoard } from '../../../../src/server/entities/Board';
 
 let testServer;
 let clientSocket;
@@ -35,13 +38,19 @@ describe('Game starting', () => {
     clientSocket.emit('room:create', { playerId, roomId: '1234' });
     clientSocket.emit('game:start', { playerId, roomId: '1234' });
 
-    return new Promise((resolve) => {
-      clientSocket.on('game:start', ({ type, gameId }) => {
-        assert.equal(type, 'game/start');
-        expect(gameId.startsWith('1234')).to.be.true;
-        resolve();
-      });
-    });
+    const [
+      gameStartEvent,
+      gameBoardEvent,
+    ] = await Promise.all([
+      waitEvent(clientSocket, 'game:start'),
+      waitEvent(clientSocket, 'game:board'),
+    ]);
+
+    assert.equal(gameStartEvent.type, 'game/start');
+    expect(gameStartEvent.gameId.startsWith('1234')).to.be.true;
+
+    assert.equal(gameBoardEvent.type, 'game/board');
+    expect(gameBoardEvent.board).to.eql(initBoard());
   });
 
   it('should start a game with multiple players', async () => {
