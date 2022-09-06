@@ -3,13 +3,24 @@ import { createSlice } from '@reduxjs/toolkit';
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
   initialState: {
-    playerId: null,
-    username: null,
+    rooms: [],
+    player: null,
+    game: null,
+    board: null,
+    currentPiece: null,
   },
   reducers: {
-    register: (state, { playerId, username }) => ({ ...state, playerId, username }),
+    register: (state, { payload: player }) => ({ ...state, player }),
+
+    setRooms: (state, { payload: rooms }) => ({ ...state, rooms }),
+    join: (state) => state,
+    ready: (state) => state,
+
+    startGame: (state) => state,
+    board: (state) => state,
+    currentPiece: (state) => state,
   },
 });
 
-export const { register } = redTetrisSlice.actions;
+export const { register, setRooms } = redTetrisSlice.actions;
 export default redTetrisSlice.reducer;

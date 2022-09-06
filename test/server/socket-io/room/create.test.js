@@ -32,13 +32,13 @@ describe('Room creation', () => {
   it('should create room with host', async () => {
     const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
-    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, name: '1234' });
 
     return new Promise((resolve) => {
       clientSocket.on(EVENTS.ROOM.CREATE, (arg) => {
         expect(arg).to.eql({
           type: 'room/create',
-          roomId: '1234',
+          name: '1234',
           isHost: true,
         });
         resolve();
@@ -50,13 +50,13 @@ describe('Room creation', () => {
     getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummyHost' }));
 
     const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
-    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, name: '1234' });
 
     return new Promise((resolve) => {
       clientSocket.on(EVENTS.ROOM.CREATE, (arg) => {
         expect(arg).to.eql({
           type: 'room/create',
-          roomId: '1234',
+          name: '1234',
           isHost: false,
         });
         resolve();
@@ -70,6 +70,6 @@ describe('Room creation', () => {
       done();
     });
 
-    clientSocket.emit(EVENTS.ROOM.CREATE, { roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { name: '1234' });
   });
 });

@@ -28,23 +28,23 @@ const ACTIONS = {
       ({ type: constants.redux.RED_TETRIS.REGISTER, playerId, username }),
   },
   ROOM: {
-    created: (roomId, isHost) => ({ type: constants.redux.ROOM.CREATE, roomId, isHost }),
-    joined: (roomId, username) => ({
-      type: constants.redux.ROOM.JOIN, roomId, username, status: JOIN_STATUS.ADDED,
+    created: (name, isHost) => ({ type: constants.redux.ROOM.CREATE, name, isHost }),
+    joined: (name, username) => ({
+      type: constants.redux.ROOM.JOIN, name, username, status: JOIN_STATUS.ADDED,
     }),
-    ready: (roomId, gameId) => ({ type: constants.redux.ROOM.READY, roomId, gameId }),
+    ready: (name, gameId) => ({ type: constants.redux.ROOM.READY, name, gameId }),
 
     ERROR: {
-      alreadyAdded: (roomId) => ({
-        type: constants.redux.ROOM.JOIN, roomId, error: ERRORS.ERR_ALREADY_ADDED,
+      alreadyAdded: (name) => ({
+        type: constants.redux.ROOM.JOIN, name, error: ERRORS.ERR_ALREADY_ADDED,
       }),
-      isEmpty: (roomId) =>
-        ({ type: constants.redux.ROOM.READY, roomId, error: ERRORS.ERR_IS_EMPTY }),
-      wrongHost: (roomId) =>
-        ({ type: constants.redux.ROOM.READY, roomId, error: ERRORS.ERR_WRONG_HOST }),
-      isFull: (roomId) => ({ type: constants.redux.ROOM.JOIN, roomId, error: ERRORS.ERR_IS_FULL }),
-      notFound: (roomId, type = constants.redux.ROOM.JOIN) =>
-        ({ type, roomId, error: ERRORS.ERR_NOT_FOUND }),
+      isEmpty: (name) =>
+        ({ type: constants.redux.ROOM.READY, name, error: ERRORS.ERR_IS_EMPTY }),
+      wrongHost: (name) =>
+        ({ type: constants.redux.ROOM.READY, name, error: ERRORS.ERR_WRONG_HOST }),
+      isFull: (name) => ({ type: constants.redux.ROOM.JOIN, name, error: ERRORS.ERR_IS_FULL }),
+      notFound: (name, type = constants.redux.ROOM.JOIN) =>
+        ({ type, name, error: ERRORS.ERR_NOT_FOUND }),
     },
   },
   GAME: {

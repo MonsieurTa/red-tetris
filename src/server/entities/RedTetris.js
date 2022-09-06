@@ -22,6 +22,10 @@ class RedTetris {
     return this._rooms.get(id);
   }
 
+  findAllRooms() {
+    return [...this._rooms.values()];
+  }
+
   storeRoom(room) {
     this._rooms.set(room.id, this.findRoom(room.id) || room);
     return room;

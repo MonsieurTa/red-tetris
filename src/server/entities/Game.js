@@ -81,6 +81,10 @@ class Game {
     });
   }
 
+  toDto() {
+    return { id: this._id, alive: this._alive };
+  }
+
   _emit(eventName, args) {
     this._player.socket.emit(eventName, args);
   }

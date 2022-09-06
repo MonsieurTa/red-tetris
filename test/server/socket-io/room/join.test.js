@@ -34,13 +34,13 @@ describe('Room joining', () => {
   it('should not join an inexistant room', async () => {
     const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
-    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, name: '1234' });
 
     return new Promise((resolve) => {
       clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
         expect(arg).to.eql({
           type: 'room/join',
-          roomId: '1234',
+          name: '1234',
           error: 'ERR_NOT_FOUND',
         });
         resolve();
@@ -56,13 +56,13 @@ describe('Room joining', () => {
 
     const playerId = await registerPlayer(clientSocket, { username: 'Clark Kent' });
 
-    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, name: '1234' });
 
     return new Promise((resolve) => {
       clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
         expect(arg).to.eql({
           type: 'room/join',
-          roomId: '1234',
+          name: '1234',
           error: 'ERR_IS_FULL',
         });
         resolve();
@@ -75,15 +75,15 @@ describe('Room joining', () => {
 
     const playerId = await registerPlayer(clientSocket, { username: 'Clark Kent' });
 
-    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, name: '1234' });
 
     return new Promise((resolve) => {
       setTimeout(() => {
-        clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
+        clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, name: '1234' });
         clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
           expect(arg).to.eql({
             type: 'room/join',
-            roomId: '1234',
+            name: '1234',
             error: 'ERR_ALREADY_ADDED',
           });
           resolve();
@@ -97,6 +97,6 @@ describe('Room joining', () => {
       expect(arg).to.eql({ error: 'NotRegistered' });
       done();
     });
-    clientSocket.emit(EVENTS.ROOM.JOIN, { roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { name: '1234' });
   });
 });

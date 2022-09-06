@@ -22,6 +22,14 @@ class Player {
     this._alive = false;
   }
 
+  toDto() {
+    return {
+      id: this._id,
+      username: this._username,
+      alive: this._alive,
+    };
+  }
+
   get id() {
     return this._id;
   }

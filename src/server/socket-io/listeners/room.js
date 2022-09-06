@@ -6,34 +6,29 @@ import PieceGenerator from '../../entities/PieceGenerator';
 
 import roomActions from '../actions/room';
 
-export const onCreate = (socket) => ({ playerId, roomId, maxPlayers = 2 }) => {
+export const onCreate = (socket) => ({ playerId, name, maxPlayers = 2 }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
-  let room = redTetris.findRoom(roomId);
 
-  if (room) {
-    socket.emit(EVENTS.ROOM.CREATE, roomActions.created(room.id, false));
-    return;
-  }
-
-  room = new Room({ id: roomId, host: player.id, maxPlayers });
+  const room = new Room({ name, host: player.id, maxPlayers });
   room.addPlayerId(player.id);
 
   redTetris.storeRoom(room);
 
   socket.join(room.id);
-  socket.emit(EVENTS.ROOM.CREATE, roomActions.created(room.id, true));
+  socket.emit(EVENTS.ROOM.CREATE, { success: true });
+  socket.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
 };
 
-export const onJoin = (socket) => ({ playerId, roomId }) => {
+export const onJoin = (socket) => ({ playerId, id }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
-  const room = redTetris.findRoom(roomId);
+  const room = redTetris.findRoom(id);
 
   if (!room) {
-    socket.emit(EVENTS.ROOM.JOIN, roomActions.error.notFound(roomId));
+    socket.emit(EVENTS.ROOM.JOIN, roomActions.error.notFound(id));
     return;
   }
   if (room.isFull) {
@@ -49,31 +44,31 @@ export const onJoin = (socket) => ({ playerId, roomId }) => {
   room.addPlayerId(player.id);
 
   socket.join(room.id);
-  socket.emit(EVENTS.ROOM.JOIN, roomActions.joined(room.id, player.username));
+  socket.emit(EVENTS.ROOM.JOIN, room.toDto());
 };
 
-export const onReady = (socket) => ({ playerId, roomId }) => {
+export const onReady = (socket) => ({ playerId, id }) => {
   const redTetris = getRedTetrisSingleton();
 
-  const room = redTetris.findRoom(roomId);
+  const room = redTetris.findRoom(id);
 
   if (!room) {
-    socket.emit(EVENTS.ROOM.READY, roomActions.error.notFound(roomId, 'room/ready'));
+    socket.emit(EVENTS.ROOM.READY, roomActions.error.notFound(id, 'room/ready'));
     return;
   }
 
   if (room.isEmpty) {
-    socket.emit(EVENTS.ROOM.READY, roomActions.error.isEmpty(roomId));
+    socket.emit(EVENTS.ROOM.READY, roomActions.error.isEmpty(id));
     return;
   }
 
   if (room.host !== playerId) {
-    socket.emit(EVENTS.ROOM.READY, roomActions.error.wrongHost(roomId));
+    socket.emit(EVENTS.ROOM.READY, roomActions.error.wrongHost(id));
     return;
   }
 
   const pieceGenerator = redTetris.storePieceGenerator(room.id, new PieceGenerator());
-  const players = room.playerIds.map((id) => redTetris.findPlayer(id));
+  const players = room.playerIds.map((player) => redTetris.findPlayer(player.id));
 
   players.forEach((player) => {
     const game = new Game({
@@ -83,7 +78,7 @@ export const onReady = (socket) => ({ playerId, roomId }) => {
       player,
     });
 
-    player.socket.emit(EVENTS.ROOM.READY, roomActions.ready(roomId, game.id));
+    player.socket.emit(EVENTS.ROOM.READY, room.toDto());
     redTetris.storeGame(game);
   });
 };

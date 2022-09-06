@@ -1,7 +1,10 @@
 import { io as Client } from 'socket.io-client';
+
 import actions from '../../../shared/actions/redux';
 import EVENTS from '../../../shared/constants/socket-io';
 import constants from '../../../shared/constants';
+
+import { register, setRooms } from '../reducers/red-tetris';
 
 let socket = null;
 
@@ -25,9 +28,17 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
 
       // register all listeners here
       // ...
-      socket.on(EVENTS.RED_TETRIS.REGISTER, ({ playerId, username }) => {
-        window.localStorage.setItem('_playerId', playerId);
-        store.dispatch(actions.RED_TETRIS.register(playerId, username));
+      socket.on(EVENTS.RED_TETRIS.REGISTER, (player) => {
+        window.localStorage.setItem('_playerId', player.id);
+        store.dispatch(register(player));
+      });
+
+      socket.on(EVENTS.RED_TETRIS.ROOMS, (rooms) => {
+        store.dispatch(setRooms(rooms));
+      });
+
+      socket.on(EVENTS.ROOM.CREATE, ({ success }) => {
+        console.log(EVENTS.ROOM.CREATE, { success });
       });
 
       return null;
@@ -43,13 +54,16 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
   }
 };
 
-export const socketIoEmitterMiddleware = () => (next) => (action) => {
+export const socketIoEmitterMiddleware = (store) => (next) => (action) => {
   switch (action.type) {
     case EVENTS.RED_TETRIS.REGISTER:
       socket.emit(EVENTS.RED_TETRIS.REGISTER, { username: action.username });
       return null;
     case EVENTS.ROOM.CREATE:
-      socket.emit(EVENTS.ROOM.CREATE, { args: 'some args' });
+      socket.emit(EVENTS.ROOM.CREATE, {
+        playerId: store.getState().player.id,
+        name: action.name,
+      });
       return null;
     case EVENTS.ROOM.JOIN:
       socket.emit(EVENTS.ROOM.JOIN, { args: 'some args' });

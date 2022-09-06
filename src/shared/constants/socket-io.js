@@ -9,6 +9,7 @@ const COMMON = {
 
 const RED_TETRIS = {
   REGISTER: 'red-tetris:register',
+  ROOMS: 'red-tetris:rooms',
 };
 
 const GAME = {

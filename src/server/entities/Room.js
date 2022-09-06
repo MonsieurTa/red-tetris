@@ -1,8 +1,11 @@
+import crypto from 'crypto';
+
 const MAX_PLAYERS = 2;
 
 class Room {
-  constructor({ id, host, maxPlayers = MAX_PLAYERS }) {
-    this._id = id;
+  constructor({ name, host, maxPlayers = MAX_PLAYERS }) {
+    this._id = crypto.randomUUID();
+    this._name = name;
     this._host = host;
     this._playerIds = new Set();
     this._maxPlayers = maxPlayers;
@@ -22,6 +25,15 @@ class Room {
     return this._playerIds.has(playerId);
   }
 
+  toDto() {
+    return {
+      id: this._id,
+      host: this._host,
+      name: this._name,
+      maxPlayers: this._maxPlayers,
+    };
+  }
+
   get id() {
     return this._id;
   }
@@ -32,6 +44,10 @@ class Room {
 
   get host() {
     return this._host;
+  }
+
+  get maxPlayers() {
+    return this._maxPlayers;
   }
 
   get playerIds() {

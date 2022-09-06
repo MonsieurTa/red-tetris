@@ -11,19 +11,19 @@ const ERRORS = {
 };
 
 const roomActions = {
-  created: (roomId, isHost) => ({ type: 'room/create', roomId, isHost }),
-  joined: (roomId, username) => ({
-    type: 'room/join', roomId, username, status: JOIN_STATUS.ADDED,
+  created: (name, isHost) => ({ type: 'room/create', name, isHost }),
+  joined: (name, username) => ({
+    type: 'room/join', name, username, status: JOIN_STATUS.ADDED,
   }),
-  ready: (roomId, gameId) => ({ type: 'room/ready', roomId, gameId }),
+  ready: (name, gameId) => ({ type: 'room/ready', name, gameId }),
   error: {
-    alreadyAdded: (roomId) => ({
-      type: 'room/join', roomId, error: ERRORS.ERR_ALREADY_ADDED,
+    alreadyAdded: (name) => ({
+      type: 'room/join', name, error: ERRORS.ERR_ALREADY_ADDED,
     }),
-    isEmpty: (roomId) => ({ type: 'room/ready', roomId, error: ERRORS.ERR_IS_EMPTY }),
-    wrongHost: (roomId) => ({ type: 'room/ready', roomId, error: ERRORS.ERR_WRONG_HOST }),
-    isFull: (roomId) => ({ type: 'room/join', roomId, error: ERRORS.ERR_IS_FULL }),
-    notFound: (roomId, type = 'room/join') => ({ type, roomId, error: ERRORS.ERR_NOT_FOUND }),
+    isEmpty: (name) => ({ type: 'room/ready', name, error: ERRORS.ERR_IS_EMPTY }),
+    wrongHost: (name) => ({ type: 'room/ready', name, error: ERRORS.ERR_WRONG_HOST }),
+    isFull: (name) => ({ type: 'room/join', name, error: ERRORS.ERR_IS_FULL }),
+    notFound: (name, type = 'room/join') => ({ type, name, error: ERRORS.ERR_NOT_FOUND }),
   },
 };
 

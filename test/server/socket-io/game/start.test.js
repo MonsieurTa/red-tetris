@@ -36,15 +36,15 @@ describe('Game starting', () => {
   it('should get initial red-tetris data', async () => {
     const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
-    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
-    clientSocket.emit(EVENTS.ROOM.READY, { playerId, roomId: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, name: '1234' });
+    clientSocket.emit(EVENTS.ROOM.READY, { playerId, name: '1234' });
 
     const roomReadyEvent = await waitEvent(clientSocket, EVENTS.ROOM.READY);
     expect({
       type: roomReadyEvent.type,
-      roomId: roomReadyEvent.roomId,
+      name: roomReadyEvent.name,
     }).to
-      .eql({ type: 'room/ready', roomId: '1234' });
+      .eql({ type: 'room/ready', name: '1234' });
     expect(roomReadyEvent.gameId.startsWith('1234')).to.be.true;
 
     clientSocket.emit(EVENTS.GAME.START, { playerId, gameId: roomReadyEvent.gameId });

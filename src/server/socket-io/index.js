@@ -18,8 +18,22 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
   const io = new Server(httpServer);
   const redTetris = getRedTetrisSingleton();
 
+  const broadcastRooms = (socket) => socket.emit(
+    EVENTS.RED_TETRIS.ROOMS,
+    redTetris.findAllRooms().map((v) => v.toDto()),
+  );
+
+  (function cycleBroadcast() {
+    setTimeout(() => {
+      broadcastRooms(io.local);
+      cycleBroadcast();
+    }, 5000);
+  }());
+
   io.on('connection', (socket) => {
     loginfo(`Socket connected: ${socket.id}`);
+
+    broadcastRooms(socket);
 
     socket.on('ping', (action) => {
       if (action.type === 'server/ping') {
