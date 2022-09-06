@@ -14,6 +14,8 @@ import App from './containers/app';
 
 import { HOST, PORT } from '../../params';
 
+import './styles/index.css';
+
 const initialState = {};
 
 const store = configureStore({
