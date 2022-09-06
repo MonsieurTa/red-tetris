@@ -57,7 +57,7 @@ class Piece {
   }
 
   copy() {
-    return new Piece(this._shape, this._pos);
+    return new Piece(this._shape, this._pos.copy());
   }
 
   move(direction = DIRECTION.DOWN) {
@@ -72,12 +72,8 @@ class Piece {
         this._pos._x += 1;
         break;
       default:
+        return this;
     }
-    return this;
-  }
-
-  drop() {
-    this._pos.y += 1;
     return this;
   }
 

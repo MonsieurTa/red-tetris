@@ -3,7 +3,7 @@ import Piece, { DIRECTION } from './Piece';
 import Board from './Board';
 
 import constants from '../../shared/constants';
-import REDUX_ACTIONS from '../../shared/actions/redux';
+import EVENTS from '../../shared/constants/socket-io';
 
 class Game {
   constructor({
@@ -18,7 +18,7 @@ class Game {
     this._id = crypto.randomUUID();
     this._lastTick = null;
     this._alive = false;
-    this._gravity = 1; // falling block per second
+    this._gravity = 10; // falling block per second
 
     this._shapeGenerator = pieceGenerator;
     this._currentShapeIndex = -1;
@@ -29,11 +29,8 @@ class Game {
     this._lastTick = Date.now();
     this._currentPiece = this._nextPiece();
 
-    this._emit(constants.socketio.GAME.BOARD, REDUX_ACTIONS.GAME.board(this._board.toDto()));
-    this._emit(
-      constants.socketio.GAME.CURRENT_PIECE,
-      REDUX_ACTIONS.GAME.currentPiece(this._currentPiece.toDto()),
-    );
+    this._emit(EVENTS.GAME.BOARD, this._board.toDto());
+    this._emit(EVENTS.GAME.CURRENT_PIECE, this._currentPiece.toDto());
   }
 
   stop() {
@@ -49,19 +46,21 @@ class Game {
     } else {
       this._board.lock(this._currentPiece);
       this._currentPiece = this._nextPiece();
+      if (!this._board.canPlace(this._currentPiece)) {
+        this._alive = false;
+        return;
+      }
 
-      this._emit(constants.socketio.GAME.BOARD, REDUX_ACTIONS.GAME.board(this._board.toDto()));
+      this._emit(EVENTS.GAME.BOARD, this._board.toDto());
     }
-    this._emit(
-      constants.socketio.GAME.CURRENT_PIECE,
-      REDUX_ACTIONS.GAME.currentPiece(this._currentPiece.toDto()),
-    );
+    console.log(this._currentPiece.toDto());
+    this._emit(EVENTS.GAME.CURRENT_PIECE, this._currentPiece.toDto());
   }
 
   registerUserInputListeners() {
     const { socket } = this._player;
 
-    socket.on(constants.socketio.GAME.ACTION, ({ action }) => {
+    socket.on(EVENTS.GAME.ACTION, ({ action }) => {
       const pieceCopy = this._currentPiece.copy();
       switch (action) {
         case constants.inputs.ROTATE:

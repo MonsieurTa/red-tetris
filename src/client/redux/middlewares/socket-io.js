@@ -4,7 +4,9 @@ import actions from '../../../shared/actions/redux';
 import EVENTS from '../../../shared/constants/socket-io';
 import constants from '../../../shared/constants';
 
-import { register, setRooms, setCurrentRoom } from '../reducers/red-tetris';
+import {
+  register, setRooms, setCurrentRoom, setBoard, setCurrentPiece,
+} from '../reducers/red-tetris';
 
 let socket = null;
 
@@ -29,7 +31,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       // register all listeners here
       // ...
       socket.on(EVENTS.RED_TETRIS.REGISTER, (player) => {
-        window.localStorage.setItem('_playerId', player.id);
+        window.localStorage.setItem('_player', player);
         store.dispatch(register(player));
       });
 
@@ -42,7 +44,24 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       });
 
       socket.on(EVENTS.ROOM.JOIN, (room) => {
+        if (room.error) return;
         store.dispatch(setCurrentRoom(room));
+      });
+
+      socket.on(EVENTS.GAME.READY, (game) => {
+        store.dispatch({ type: EVENTS.GAME.START, gameId: game.id });
+      });
+
+      socket.on(EVENTS.GAME.READY, (game) => {
+        store.dispatch({ type: EVENTS.GAME.START, gameId: game.id });
+      });
+
+      socket.on(EVENTS.GAME.BOARD, ({ board }) => {
+        store.dispatch(setBoard(board));
+      });
+
+      socket.on(EVENTS.GAME.CURRENT_PIECE, (piece) => {
+        store.dispatch(setCurrentPiece(piece));
       });
 
       return null;
@@ -70,7 +89,22 @@ export const socketIoEmitterMiddleware = (store) => (next) => (action) => {
       });
       return null;
     case EVENTS.ROOM.JOIN:
-      socket.emit(EVENTS.ROOM.JOIN, { args: 'some args' });
+      socket.emit(EVENTS.ROOM.JOIN, {
+        playerId: store.getState().player.id,
+        id: action.id,
+      });
+      return null;
+    case EVENTS.ROOM.READY:
+      socket.emit(EVENTS.ROOM.READY, {
+        playerId: store.getState().player.id,
+        id: action.id,
+      });
+      return null;
+    case EVENTS.GAME.START:
+      socket.emit(EVENTS.GAME.START, {
+        playerId: store.getState().player.id,
+        gameId: action.gameId,
+      });
       return null;
     case EVENTS.GAME.ACTION:
       socket.emit(EVENTS.GAME.ACTION, { args: 'some args' });

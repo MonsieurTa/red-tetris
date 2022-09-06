@@ -74,7 +74,6 @@ export const onReady = (socket) => ({ playerId, id }) => {
   room.players.forEach((player) => {
     const game = new Game({ pieceGenerator, room, player });
 
-    player.socket.emit(EVENTS.ROOM.READY, room.toDto());
     player.socket.emit(EVENTS.GAME.READY, game.toDto());
     redTetris.storeGame(game);
   });

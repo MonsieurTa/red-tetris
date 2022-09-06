@@ -4,6 +4,10 @@ class Pos {
     this._y = y;
   }
 
+  copy() {
+    return new Pos(this._x, this._y);
+  }
+
   get x() {
     return this._x;
   }
