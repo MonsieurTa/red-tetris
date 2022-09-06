@@ -1,5 +1,10 @@
 import React from 'react';
+import { withGlobalCssPriority } from './GlobalCssPriority';
 
-const App = () => <span>yolo</span>;
+const App = () => (
+  <div>
+    yolo
+  </div>
+);
 
-export default App;
+export default withGlobalCssPriority(App);

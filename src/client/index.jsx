@@ -40,7 +40,7 @@ const Root = () => {
 };
 
 const root = createRoot(
-  document.getElementById('tetris'),
+  document.getElementById('root'),
 );
 
 root.render(<Root />);
