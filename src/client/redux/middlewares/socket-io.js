@@ -41,6 +41,10 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         store.dispatch(setCurrentRoom(room));
       });
 
+      socket.on(EVENTS.ROOM.JOIN, (room) => {
+        store.dispatch(setCurrentRoom(room));
+      });
+
       return null;
     case constants.redux.WEBSOCKET.DISCONNECT:
       if (socket) {

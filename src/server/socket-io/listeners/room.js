@@ -44,7 +44,10 @@ export const onJoin = (socket) => ({ playerId, id }) => {
   room.addPlayer(player);
 
   socket.join(room.id);
-  socket.emit(EVENTS.ROOM.JOIN, room.toDto());
+  socket.emit(EVENTS.ROOM.JOIN, {
+    room: room.toDto(),
+    players: room.players.map((v) => v.toDto()),
+  });
 };
 
 export const onReady = (socket) => ({ playerId, id }) => {

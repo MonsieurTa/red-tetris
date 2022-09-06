@@ -30,7 +30,7 @@ class Room {
       id: this._id,
       host: this._host.toDto(),
       name: this._name,
-      playerCount: this.players.length,
+      playersCount: this.players.length,
       capacity: this._capacity,
       isFull: this.isFull,
     };

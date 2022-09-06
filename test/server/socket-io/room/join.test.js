@@ -33,6 +33,24 @@ describe('Room joining', () => {
 
   after(() => testServer.stop());
 
+  it('should join a room', async () => {
+    const dummyPlayer = new Player('Bruce Wayne');
+    const room = new Room({ name: '1234', host: dummyPlayer, capacity: 3 });
+    room.addPlayer(dummyPlayer);
+    getRedTetrisSingleton().storeRoom(room);
+
+    const player = await registerPlayer(clientSocket, { username: 'Clark Kent' });
+
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
+
+    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+
+    assert.equal(event.room.name, '1234');
+    assert.equal(event.room.playersCount, 2);
+
+    assert.equal(event.players.length, 2);
+  });
+
   it('should not join an inexistant room', async () => {
     const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
