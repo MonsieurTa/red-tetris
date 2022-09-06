@@ -16,12 +16,12 @@ const ERRORS = {
 
 const ACTIONS = {
   WEBSOCKET: {
-    connect: () => ({ type: constants.redux.WEB_SOCKET.CONNECT }),
-    connected: () => ({ type: constants.redux.WEB_SOCKET.CONNECTED }),
-    connecting: () => ({ type: constants.redux.WEB_SOCKET.CONNECTING }),
-    connectError: () => ({ type: constants.redux.WEB_SOCKET.CONNECT_ERROR }),
-    disconnect: () => ({ type: constants.redux.WEB_SOCKET.DISCONNECT }),
-    disconnected: () => ({ type: constants.redux.WEB_SOCKET.DISCONNECTED }),
+    connect: () => ({ type: constants.redux.WEBSOCKET.CONNECT }),
+    connected: () => ({ type: constants.redux.WEBSOCKET.CONNECTED }),
+    connecting: () => ({ type: constants.redux.WEBSOCKET.CONNECTING }),
+    connectError: () => ({ type: constants.redux.WEBSOCKET.CONNECT_ERROR }),
+    disconnect: () => ({ type: constants.redux.WEBSOCKET.DISCONNECT }),
+    disconnected: () => ({ type: constants.redux.WEBSOCKET.DISCONNECTED }),
   },
   RED_TETRIS: {
     register: (playerId) => ({ type: constants.redux.RED_TETRIS.REGISTER, playerId }),
