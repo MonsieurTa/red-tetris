@@ -33,8 +33,13 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
       socket.emit(error.type, { error: error.message });
     });
 
+    socket.on('disconnect', () => {
+      loginfo(`Socket disconnected: ${socket.id}`);
+      // remove player
+    });
+
     socket.use(([eventName, args], next) => {
-      if (!['ping', EVENTS.RED_TETRIS.REGISTER].includes(eventName)) {
+      if (!['error', 'disconnect', 'ping', EVENTS.RED_TETRIS.REGISTER].includes(eventName)) {
         const player = redTetris.findPlayer(args.playerId);
         if (!player) {
           return next(new NotRegistered(eventName, args));

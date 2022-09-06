@@ -11,6 +11,7 @@ const App = () => {
   const onClick = () => {
     dispatch({ type: EVENTS.RED_TETRIS.REGISTER, username });
   };
+
   return (
     <div>
       <div className="flex flex-col w-96 gap-y-2">

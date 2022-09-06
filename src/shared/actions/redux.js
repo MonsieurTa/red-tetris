@@ -24,7 +24,8 @@ const ACTIONS = {
     disconnected: () => ({ type: constants.redux.WEBSOCKET.DISCONNECTED }),
   },
   RED_TETRIS: {
-    register: (playerId) => ({ type: constants.redux.RED_TETRIS.REGISTER, playerId }),
+    register: (playerId, username) =>
+      ({ type: constants.redux.RED_TETRIS.REGISTER, playerId, username }),
   },
   ROOM: {
     created: (roomId, isHost) => ({ type: constants.redux.ROOM.CREATE, roomId, isHost }),

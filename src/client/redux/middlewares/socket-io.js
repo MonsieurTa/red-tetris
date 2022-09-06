@@ -13,12 +13,22 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       }
       socket = new Client(action.host);
 
-      socket.on('connect', () => store.dispatch(actions.WEBSOCKET.connected()));
-      socket.on('connect_error', () => store.dispatch(actions.WEBSOCKET.connectError()));
-      socket.on('disconnect', () => store.dispatch(actions.WEBSOCKET.disconnected()));
+      socket.on(EVENTS.COMMON.CONNECT, () => store.dispatch(actions.WEBSOCKET.connected()));
+      socket.on(
+        EVENTS.COMMON.CONNECT.CONNECT_ERROR,
+        () => store.dispatch(actions.WEBSOCKET.connectError()),
+      );
+      socket.on(
+        EVENTS.COMMON.CONNECT.DISCONNECT,
+        () => store.dispatch(actions.WEBSOCKET.disconnected()),
+      );
 
       // register all listeners here
       // ...
+      socket.on(EVENTS.RED_TETRIS.REGISTER, ({ playerId, username }) => {
+        window.localStorage.setItem('_playerId', playerId);
+        store.dispatch(actions.RED_TETRIS.register(playerId, username));
+      });
 
       return null;
     case constants.redux.WEBSOCKET.DISCONNECT:

@@ -2,9 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
-  initialState: {},
+  initialState: {
+    playerId: null,
+    username: null,
+  },
   reducers: {
-    register: (state) => state,
+    register: (state, { playerId, username }) => ({ ...state, playerId, username }),
   },
 });
 
