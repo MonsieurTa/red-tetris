@@ -1,4 +1,4 @@
-const WEB_SOCKET = {
+const WEBSOCKET = {
   CONNECT: 'web-socket/connect',
   CONNECTED: 'web-socket/connected',
   CONNECTING: 'web-socket/connecting',
@@ -25,7 +25,7 @@ const ROOM = {
 };
 
 export default {
-  WEB_SOCKET,
+  WEBSOCKET,
   RED_TETRIS,
   GAME,
   ROOM,

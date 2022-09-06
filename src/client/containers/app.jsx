@@ -1,6 +1,7 @@
 import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import EVENTS from '../../shared/constants/socket-io';
 import { withGlobalCssPriority } from './GlobalCssPriority';
 
 const App = () => {
@@ -8,8 +9,7 @@ const App = () => {
   const [username, setUsername] = useState('');
 
   const onClick = () => {
-    console.log({ dispatch });
-    dispatch({ type: 'red-tetris/register', name: username });
+    dispatch({ type: EVENTS.RED_TETRIS.REGISTER, username });
   };
   return (
     <div>

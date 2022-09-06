@@ -13,9 +13,9 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       }
       socket = new Client(action.host);
 
-      socket.on('connect', () => store.dispatch(actions.webSocket.connected()));
-      socket.on('connect_error', () => store.dispatch(actions.webSocket.connectError()));
-      socket.on('disconnect', () => store.dispatch(actions.webSocket.disconnected()));
+      socket.on('connect', () => store.dispatch(actions.WEBSOCKET.connected()));
+      socket.on('connect_error', () => store.dispatch(actions.WEBSOCKET.connectError()));
+      socket.on('disconnect', () => store.dispatch(actions.WEBSOCKET.disconnected()));
 
       // register all listeners here
       // ...
@@ -35,7 +35,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
 
 export const socketIoEmitterMiddleware = () => (next) => (action) => {
   switch (action.type) {
-    case constants.redux.RED_TETRIS.REGISTER:
+    case EVENTS.RED_TETRIS.REGISTER:
       socket.emit(EVENTS.RED_TETRIS.REGISTER, { username: action.username });
       return null;
     case EVENTS.ROOM.CREATE:
