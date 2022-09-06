@@ -17,7 +17,7 @@ export const onCreate = (socket) => ({ playerId, name, maxPlayers = 2 }) => {
   redTetris.storeRoom(room);
 
   socket.join(room.id);
-  socket.emit(EVENTS.ROOM.CREATE, { success: true });
+  socket.emit(EVENTS.ROOM.CREATE, room.toDto());
   socket.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
 };
 
@@ -69,8 +69,8 @@ export const onReady = (socket) => ({ playerId, id }) => {
 
   const pieceGenerator = redTetris.storePieceGenerator(room.id, new PieceGenerator());
   const players = room.playerIds.map((player) => redTetris.findPlayer(player.id));
-
   players.forEach((player) => {
+    console.log({ room, player });
     const game = new Game({
       id: [room.id, player.id].join('#'),
       pieceGenerator,

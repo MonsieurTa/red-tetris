@@ -17,6 +17,7 @@ import {
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
 import { initBoard } from '../../../../src/server/entities/Board';
 import EVENTS from '../../../../src/shared/constants/socket-io';
+
 let testServer;
 let clientSocket;
 
@@ -34,12 +35,15 @@ describe('Game starting', () => {
   after(() => testServer.stop());
 
   it('should get initial red-tetris data', async () => {
-    const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
-    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, name: '1234' });
-    clientSocket.emit(EVENTS.ROOM.READY, { playerId, name: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
+    const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
+
+    clientSocket.emit(EVENTS.ROOM.READY, { playerId: player.id, id: room.id });
 
     const roomReadyEvent = await waitEvent(clientSocket, EVENTS.ROOM.READY);
+    console.log({ roomReadyEvent });
     expect({
       type: roomReadyEvent.type,
       name: roomReadyEvent.name,
