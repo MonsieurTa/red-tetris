@@ -12,7 +12,7 @@ import {
 import { assert } from 'chai';
 import { createTestServer } from '../../../helpers/server';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
-import { EVENTS } from '../../../../src/shared/constants/socket-io';
+import EVENTS from '../../../../src/shared/constants/socket-io';
 let testServer;
 let clientSocket;
 

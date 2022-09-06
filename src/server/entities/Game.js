@@ -1,8 +1,8 @@
-import { EVENTS, INPUTS } from '../../shared/constants/socket-io';
 import Piece, { DIRECTION } from './Piece';
 import Board from './Board';
 
-import gameActions from '../socket-io/actions/game';
+import constants from '../../shared/constants';
+import REDUX_ACTIONS from '../../shared/actions/redux';
 
 class Game {
   constructor({
@@ -29,8 +29,11 @@ class Game {
     this._lastTick = Date.now();
     this._currentPiece = this._nextPiece();
 
-    this._emit(EVENTS.GAME.BOARD, gameActions.board(this._board.toDto()));
-    this._emit(EVENTS.GAME.CURRENT_PIECE, gameActions.currentPiece(this._currentPiece.toDto()));
+    this._emit(constants.socketio.GAME.BOARD, REDUX_ACTIONS.GAME.board(this._board.toDto()));
+    this._emit(
+      constants.socketio.GAME.CURRENT_PIECE,
+      REDUX_ACTIONS.GAME.currentPiece(this._currentPiece.toDto()),
+    );
   }
 
   stop() {
@@ -47,26 +50,29 @@ class Game {
       this._board.lock(this._currentPiece);
       this._currentPiece = this._nextPiece();
 
-      this._emit(EVENTS.GAME.BOARD, gameActions.board(this._board.toDto()));
+      this._emit(constants.socketio.GAME.BOARD, REDUX_ACTIONS.GAME.board(this._board.toDto()));
     }
-    this._emit(EVENTS.GAME.CURRENT_PIECE, gameActions.currentPiece(this._currentPiece.toDto()));
+    this._emit(
+      constants.socketio.GAME.CURRENT_PIECE,
+      REDUX_ACTIONS.GAME.currentPiece(this._currentPiece.toDto()),
+    );
   }
 
   registerUserInputListeners() {
     const { socket } = this._player;
 
-    socket.on(EVENTS.GAME.ACTION, ({ action }) => {
+    socket.on(constants.socketio.GAME.ACTION, ({ action }) => {
       const pieceCopy = this._currentPiece.copy();
       switch (action) {
-        case INPUTS.ROTATE:
+        case constants.inputs.ROTATE:
           if (!this._board.canPlace(pieceCopy.rotate())) return;
           this._currentPiece.rotate();
           break;
-        case INPUTS.MOVE_LEFT:
+        case constants.inputs.MOVE_LEFT:
           if (!this._board.canPlace(pieceCopy.move(DIRECTION.LEFT))) return;
           this._currentPiece.move(DIRECTION.LEFT);
           break;
-        case INPUTS.MOVE_RIGHT:
+        case constants.inputs.MOVE_RIGHT:
           if (!this._board.canPlace(pieceCopy.move(DIRECTION.RIGHT))) return;
           this._currentPiece.move(DIRECTION.RIGHT);
           break;

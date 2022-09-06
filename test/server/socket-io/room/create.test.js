@@ -12,7 +12,7 @@ import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
 import { registerPlayer } from '../../../helpers/socket-io';
-import { EVENTS } from '../../../../src/shared/constants/socket-io';
+import EVENTS from '../../../../src/shared/constants/socket-io';
 let testServer;
 let clientSocket;
 

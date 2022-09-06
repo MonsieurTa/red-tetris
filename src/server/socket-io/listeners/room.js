@@ -1,7 +1,9 @@
-import { EVENTS } from '../../../shared/constants/socket-io';
+import EVENTS from '../../../shared/constants/socket-io';
+
 import { getRedTetrisSingleton, Room } from '../../entities';
 import Game from '../../entities/Game';
 import PieceGenerator from '../../entities/PieceGenerator';
+
 import roomActions from '../actions/room';
 
 export const onCreate = (socket) => ({ playerId, roomId, maxPlayers = 2 }) => {

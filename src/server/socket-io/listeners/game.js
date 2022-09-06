@@ -1,6 +1,7 @@
-import { EVENTS } from '../../../shared/constants/socket-io';
+import EVENTS from '../../../shared/constants/socket-io';
+
 import { getRedTetrisSingleton } from '../../entities';
-import gameActions from '../actions/game';
+import REDUX_ACTIONS from '../../../shared/actions/redux';
 
 export const onStart = (socket) => ({ gameId }) => {
   const game = getRedTetrisSingleton().findGame(gameId);
@@ -8,7 +9,7 @@ export const onStart = (socket) => ({ gameId }) => {
   game.registerUserInputListeners();
   game.start();
 
-  socket.emit(EVENTS.GAME.START, gameActions.start(gameId));
+  socket.emit(EVENTS.GAME.START, REDUX_ACTIONS.GAME.start(gameId));
 };
 
 export default onStart;

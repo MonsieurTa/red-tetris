@@ -1,0 +1,7 @@
+export default {
+  ROTATE: 'ROTATE',
+  MOVE_LEFT: 'MOVE_LEFT',
+  MOVE_RIGHT: 'MOVE_RIGHT',
+  DROP: 'DROP',
+  HARD_DROP: 'HARD_DROP',
+};

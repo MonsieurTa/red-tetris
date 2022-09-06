@@ -2,33 +2,22 @@ import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
-import { configureStore } from '@reduxjs/toolkit';
-import { createLogger } from 'redux-logger';
-import thunk from 'redux-thunk';
-
-import { socketIoListenerMiddleware, socketIoEmitterMiddleware } from './redux/middlewares/socket-io';
-import { rootReducer } from './redux/store';
-import socketActions from './redux/actions/socket-io';
+import REDUX_ACTIONS from '../shared/actions/redux';
 
 import App from './containers/app';
 
 import { HOST, PORT } from '../../params';
 
 import './styles/index.css';
+import setupStore from './redux/store';
 
-const initialState = {};
-
-const store = configureStore({
-  reducer: rootReducer,
-  preloadedState: initialState,
-  middleware: [socketIoListenerMiddleware, socketIoEmitterMiddleware, thunk, createLogger()],
-});
+const store = setupStore();
 
 const Root = () => {
   useEffect(() => {
-    store.dispatch(socketActions.connect(`http://${HOST}:${PORT}`));
+    store.dispatch(REDUX_ACTIONS.WEBSOCKET.connect(`http://${HOST}:${PORT}`));
     return () => {
-      store.dispatch(socketActions.disconnect());
+      store.dispatch(REDUX_ACTIONS.WEBSOCKET.disconnect());
     };
   }, []);
 

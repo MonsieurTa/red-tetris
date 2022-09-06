@@ -1,30 +1,34 @@
-export const RED_TETRIS = {
+const COMMON = {
+  CONNECT: 'connect',
+  CONNECTED: 'connected',
+  CONNECTING: 'connecting',
+  CONNECT_ERROR: 'connect_error',
+  DISCONNECT: 'disconnect',
+  DISCONNECTED: 'disconnected',
+};
+
+const RED_TETRIS = {
   REGISTER: 'red-tetris:register',
 };
 
-export const GAME = {
+const GAME = {
   START: 'game:start',
   BOARD: 'game:board',
   CURRENT_PIECE: 'game:currentPiece',
   ACTION: 'game:action',
 };
 
-export const ROOM = {
+const ROOM = {
   CREATE: 'room:create',
   JOIN: 'room:join',
   READY: 'room:ready',
 };
 
-export const EVENTS = {
+const EVENTS = {
+  COMMON,
   RED_TETRIS,
   GAME,
   ROOM,
 };
 
-export const INPUTS = {
-  ROTATE: 'ROTATE',
-  MOVE_LEFT: 'MOVE_LEFT',
-  MOVE_RIGHT: 'MOVE_RIGHT',
-  DROP: 'DROP',
-  HARD_DROP: 'HARD_DROP',
-};
+export default EVENTS;

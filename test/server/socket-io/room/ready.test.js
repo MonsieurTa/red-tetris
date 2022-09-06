@@ -14,7 +14,7 @@ import {
   registerPlayer, createRoom, joinRoom, waitEvent,
 } from '../../../helpers/socket-io';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
-import { EVENTS } from '../../../../src/shared/constants/socket-io';
+import EVENTS from '../../../../src/shared/constants/socket-io';
 let testServer;
 let clientSocket;
 
