@@ -36,6 +36,6 @@ describe('Red-Tetris registration', () => {
       done();
     });
 
-    clientSocket.emit(EVENTS.RED_TETRIS.REGISTER, { name: 'Bruce Wayne' });
+    clientSocket.emit(EVENTS.RED_TETRIS.REGISTER, { username: 'Bruce Wayne' });
   });
 });

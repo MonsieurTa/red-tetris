@@ -3,10 +3,10 @@ import { getRedTetrisSingleton } from '../../entities';
 import Player from '../../entities/Player';
 import redTetrisActions from '../actions/red-tetris';
 
-const onRegister = (socket) => ({ name }) => {
+const onRegister = (socket) => ({ username }) => {
   const redTetris = getRedTetrisSingleton();
 
-  const newPlayer = new Player(name);
+  const newPlayer = new Player(username);
   newPlayer.socket = socket;
 
   redTetris.register(newPlayer);

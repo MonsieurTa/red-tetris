@@ -33,7 +33,7 @@ describe('Fake server test', () => {
       done();
     });
 
-    clientSocket.emit(EVENTS.RED_TETRIS.REGISTER, { name: 'Clark Kent' });
+    clientSocket.emit(EVENTS.RED_TETRIS.REGISTER, { username: 'Clark Kent' });
     clientSocket.emit('ping', { type: 'server/ping' });
   });
 });

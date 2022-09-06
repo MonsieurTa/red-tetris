@@ -1,6 +1,6 @@
 import { EVENTS } from '../../src/shared/constants/socket-io';
-export const registerPlayer = (socket, { name }) => new Promise((resolve) => {
-  socket.emit(EVENTS.RED_TETRIS.REGISTER, { name });
+export const registerPlayer = (socket, { username }) => new Promise((resolve) => {
+  socket.emit(EVENTS.RED_TETRIS.REGISTER, { username });
   socket.on(EVENTS.RED_TETRIS.REGISTER, ({ playerId }) => resolve(playerId));
 });
 

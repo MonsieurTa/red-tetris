@@ -35,7 +35,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
 export const socketIoEmitterMiddleware = () => (next) => (action) => {
   switch (action.type) {
     case WS_ACTIONS.RED_TETRIS.REGISTER:
-      socket.emit(EVENTS.RED_TETRIS.REGISTER, { name: action.name });
+      socket.emit(EVENTS.RED_TETRIS.REGISTER, { username: action.username });
       return null;
     case WS_ACTIONS.ROOM.CREATE:
       socket.emit(EVENTS.ROOM.CREATE, { args: 'some args' });

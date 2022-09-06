@@ -12,8 +12,8 @@ const ERRORS = {
 
 const roomActions = {
   created: (roomId, isHost) => ({ type: 'room/create', roomId, isHost }),
-  joined: (roomId, name) => ({
-    type: 'room/join', roomId, name, status: JOIN_STATUS.ADDED,
+  joined: (roomId, username) => ({
+    type: 'room/join', roomId, username, status: JOIN_STATUS.ADDED,
   }),
   ready: (roomId, gameId) => ({ type: 'room/ready', roomId, gameId }),
   error: {

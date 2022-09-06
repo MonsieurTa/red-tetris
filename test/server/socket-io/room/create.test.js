@@ -30,7 +30,7 @@ describe('Room creation', () => {
   after(() => testServer.stop());
 
   it('should create room with host', async () => {
-    const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
+    const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
     clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
 
@@ -49,7 +49,7 @@ describe('Room creation', () => {
   it('should find already created room', async () => {
     getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummyHost' }));
 
-    const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
+    const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
     clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, roomId: '1234' });
 
     return new Promise((resolve) => {

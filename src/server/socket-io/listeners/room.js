@@ -47,7 +47,7 @@ export const onJoin = (socket) => ({ playerId, roomId }) => {
   room.addPlayerId(player.id);
 
   socket.join(room.id);
-  socket.emit(EVENTS.ROOM.JOIN, roomActions.joined(room.id, player.name));
+  socket.emit(EVENTS.ROOM.JOIN, roomActions.joined(room.id, player.username));
 };
 
 export const onReady = (socket) => ({ playerId, roomId }) => {

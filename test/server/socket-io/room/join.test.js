@@ -32,7 +32,7 @@ describe('Room joining', () => {
   after(() => testServer.stop());
 
   it('should not join an inexistant room', async () => {
-    const playerId = await registerPlayer(clientSocket, { name: 'Bruce Wayne' });
+    const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
 
@@ -54,7 +54,7 @@ describe('Room joining', () => {
 
     redTetris.storeRoom(room);
 
-    const playerId = await registerPlayer(clientSocket, { name: 'Clark Kent' });
+    const playerId = await registerPlayer(clientSocket, { username: 'Clark Kent' });
 
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
 
@@ -73,7 +73,7 @@ describe('Room joining', () => {
   it('should not join if already added', async () => {
     getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummySocketId', maxPlayers: 3 }));
 
-    const playerId = await registerPlayer(clientSocket, { name: 'Clark Kent' });
+    const playerId = await registerPlayer(clientSocket, { username: 'Clark Kent' });
 
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, roomId: '1234' });
 
