@@ -13,6 +13,8 @@ import { assert } from 'chai';
 import { createTestServer } from '../../../helpers/server';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
 import EVENTS from '../../../../src/shared/constants/socket-io';
+import { registerPlayer } from '../../../helpers/socket-io';
+
 let testServer;
 let clientSocket;
 
@@ -29,13 +31,9 @@ describe('Red-Tetris registration', () => {
 
   after(() => testServer.stop());
 
-  it('should register a player and respond with an id', (done) => {
-    clientSocket.on(EVENTS.RED_TETRIS.REGISTER, ({ type, playerId }) => {
-      assert.equal(type, 'red-tetris/register');
-      assert.isNotEmpty(playerId);
-      done();
-    });
+  it('should register a player and respond with an id', async () => {
+    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
-    clientSocket.emit(EVENTS.RED_TETRIS.REGISTER, { username: 'Bruce Wayne' });
+    assert.equal(player.username, 'Bruce Wayne');
   });
 });

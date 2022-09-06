@@ -13,6 +13,7 @@ const redTetrisSlice = createSlice({
     register: (state, { payload: player }) => ({ ...state, player }),
 
     setRooms: (state, { payload: rooms }) => ({ ...state, rooms }),
+    setCurrentRoom: (state, { payload: currentRoom }) => ({ ...state, currentRoom }),
     join: (state) => state,
     ready: (state) => state,
 
@@ -22,5 +23,5 @@ const redTetrisSlice = createSlice({
   },
 });
 
-export const { register, setRooms } = redTetrisSlice.actions;
+export const { register, setRooms, setCurrentRoom } = redTetrisSlice.actions;
 export default redTetrisSlice.reducer;

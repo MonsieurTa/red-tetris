@@ -1,6 +1,6 @@
 import { io as Client } from 'socket.io-client';
 
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import {
   after,
   afterEach,
@@ -11,8 +11,10 @@ import {
 import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
-import { registerPlayer } from '../../../helpers/socket-io';
+import { registerPlayer, waitEvent } from '../../../helpers/socket-io';
 import EVENTS from '../../../../src/shared/constants/socket-io';
+import Player from '../../../../src/server/entities/Player';
+
 describe('Room joining', () => {
   let redTetris;
   let testServer;
@@ -32,64 +34,41 @@ describe('Room joining', () => {
   after(() => testServer.stop());
 
   it('should not join an inexistant room', async () => {
-    const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
-    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, name: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, name: '1234' });
 
-    return new Promise((resolve) => {
-      clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
-        expect(arg).to.eql({
-          type: 'room/join',
-          name: '1234',
-          error: 'ERR_NOT_FOUND',
-        });
-        resolve();
-      });
-    });
+    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+    assert.equal(event.error, 'ERR_NOT_FOUND');
   });
 
   it('should not join if room is full', async () => {
-    const room = new Room({ id: '1234', host: 'dummyHostId', maxPlayers: 1 });
-    room.addPlayerId('dummyHostId');
+    const dummyPlayer = new Player('Bruce Wayne');
+    const room = new Room({ id: '1234', host: dummyPlayer, capacity: 1 });
+    room.addPlayer(dummyPlayer);
 
     redTetris.storeRoom(room);
 
-    const playerId = await registerPlayer(clientSocket, { username: 'Clark Kent' });
+    const player = await registerPlayer(clientSocket, { username: 'Clark Kent' });
 
-    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, name: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
 
-    return new Promise((resolve) => {
-      clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
-        expect(arg).to.eql({
-          type: 'room/join',
-          name: '1234',
-          error: 'ERR_IS_FULL',
-        });
-        resolve();
-      });
-    });
+    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+    assert.equal(event.error, 'ERR_IS_FULL');
   });
 
   it('should not join if already added', async () => {
-    getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummySocketId', maxPlayers: 3 }));
+    const dummyPlayer = new Player('Bruce Wayne');
+    const room = new Room({ id: '1234', host: dummyPlayer, capacity: 3 });
+    getRedTetrisSingleton().storeRoom(room);
 
-    const playerId = await registerPlayer(clientSocket, { username: 'Clark Kent' });
+    const player = await registerPlayer(clientSocket, { username: 'Clark Kent' });
 
-    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, name: '1234' });
+    clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
+    room.addPlayer(player);
 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        clientSocket.emit(EVENTS.ROOM.JOIN, { playerId, name: '1234' });
-        clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
-          expect(arg).to.eql({
-            type: 'room/join',
-            name: '1234',
-            error: 'ERR_ALREADY_ADDED',
-          });
-          resolve();
-        });
-      }, 250);
-    });
+    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+    assert.equal(event.error, 'ERR_ALREADY_ADDED');
   });
 
   it('should respond with an error if not registered', (done) => {

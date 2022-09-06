@@ -14,8 +14,8 @@ class RedTetris {
     this._players.set(player.id, player);
   }
 
-  findPlayer(socketId) {
-    return this._players.get(socketId);
+  findPlayer(playerId) {
+    return this._players.get(playerId);
   }
 
   findRoom(id) {

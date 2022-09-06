@@ -11,19 +11,19 @@ const ERRORS = {
 };
 
 const roomActions = {
-  created: (name, isHost) => ({ type: 'room/create', name, isHost }),
+  created: (name, isHost) => ({ name, isHost }),
   joined: (name, username) => ({
-    type: 'room/join', name, username, status: JOIN_STATUS.ADDED,
+    name, username, status: JOIN_STATUS.ADDED,
   }),
-  ready: (name, gameId) => ({ type: 'room/ready', name, gameId }),
+  ready: (name, gameId) => ({ name, gameId }),
   error: {
     alreadyAdded: (name) => ({
-      type: 'room/join', name, error: ERRORS.ERR_ALREADY_ADDED,
+      name, error: ERRORS.ERR_ALREADY_ADDED,
     }),
-    isEmpty: (name) => ({ type: 'room/ready', name, error: ERRORS.ERR_IS_EMPTY }),
-    wrongHost: (name) => ({ type: 'room/ready', name, error: ERRORS.ERR_WRONG_HOST }),
-    isFull: (name) => ({ type: 'room/join', name, error: ERRORS.ERR_IS_FULL }),
-    notFound: (name, type = 'room/join') => ({ type, name, error: ERRORS.ERR_NOT_FOUND }),
+    isEmpty: (name) => ({ name, error: ERRORS.ERR_IS_EMPTY }),
+    wrongHost: (name) => ({ name, error: ERRORS.ERR_WRONG_HOST }),
+    isFull: (name) => ({ name, error: ERRORS.ERR_IS_FULL }),
+    notFound: (name) => ({ name, error: ERRORS.ERR_NOT_FOUND }),
   },
 };
 

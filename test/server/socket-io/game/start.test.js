@@ -42,17 +42,16 @@ describe('Game starting', () => {
 
     clientSocket.emit(EVENTS.ROOM.READY, { playerId: player.id, id: room.id });
 
-    const roomReadyEvent = await waitEvent(clientSocket, EVENTS.ROOM.READY);
-    console.log({ roomReadyEvent });
-    expect({
-      type: roomReadyEvent.type,
-      name: roomReadyEvent.name,
-    }).to
-      .eql({ type: 'room/ready', name: '1234' });
-    expect(roomReadyEvent.gameId.startsWith('1234')).to.be.true;
+    const [roomReadyEvent, game] = await Promise.all([
+      waitEvent(clientSocket, EVENTS.ROOM.READY),
+      waitEvent(clientSocket, EVENTS.GAME.READY),
+    ]);
 
-    clientSocket.emit(EVENTS.GAME.START, { playerId, gameId: roomReadyEvent.gameId });
+    assert.equal(roomReadyEvent.host.username, 'Bruce Wayne');
+    assert.equal(roomReadyEvent.name, '1234');
+    assert.equal(roomReadyEvent.capacity, 2);
 
+    clientSocket.emit(EVENTS.GAME.START, { playerId: player.id, gameId: game.id });
     const [
       gameStartEvent,
       gameBoardEvent,
@@ -63,11 +62,10 @@ describe('Game starting', () => {
       waitEvent(clientSocket, EVENTS.GAME.CURRENT_PIECE),
     ]);
 
-    expect(gameStartEvent).to.eql({ type: 'game/start', gameId: roomReadyEvent.gameId });
-
-    assert.equal(gameBoardEvent.type, 'game/board');
-    expect(gameBoardEvent.board).to.eql(initBoard());
+    assert.deepEqual(gameStartEvent, game);
+    assert.deepEqual(gameBoardEvent.board, initBoard());
 
     assert.equal(gameCurrentPieceEvent.x, parseInt(gameCurrentPieceEvent.x, 10));
+    assert.equal(gameCurrentPieceEvent.y, parseInt(gameCurrentPieceEvent.y, 10));
   });
 });

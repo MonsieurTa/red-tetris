@@ -1,6 +1,6 @@
 import { io as Client } from 'socket.io-client';
 
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import {
   after,
   afterEach,
@@ -11,8 +11,10 @@ import {
 import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
 
 import { createTestServer } from '../../../helpers/server';
-import { registerPlayer } from '../../../helpers/socket-io';
+import { registerPlayer, waitEvent } from '../../../helpers/socket-io';
 import EVENTS from '../../../../src/shared/constants/socket-io';
+import Player from '../../../../src/server/entities/Player';
+
 let testServer;
 let clientSocket;
 
@@ -30,38 +32,32 @@ describe('Room creation', () => {
   after(() => testServer.stop());
 
   it('should create room with host', async () => {
-    const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
-    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, name: '1234' });
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
 
-    return new Promise((resolve) => {
-      clientSocket.on(EVENTS.ROOM.CREATE, (arg) => {
-        expect(arg).to.eql({
-          type: 'room/create',
-          name: '1234',
-          isHost: true,
-        });
-        resolve();
-      });
-    });
+    const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
+
+    assert.equal(room.host.username, 'Bruce Wayne');
+    assert.equal(room.name, '1234');
+    assert.equal(room.capacity, 2);
   });
 
-  it('should find already created room', async () => {
-    getRedTetrisSingleton().storeRoom(new Room({ id: '1234', host: 'dummyHost' }));
-
-    const playerId = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
-    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId, name: '1234' });
-
-    return new Promise((resolve) => {
-      clientSocket.on(EVENTS.ROOM.CREATE, (arg) => {
-        expect(arg).to.eql({
-          type: 'room/create',
-          name: '1234',
-          isHost: false,
-        });
-        resolve();
-      });
+  it('should created room if name already exist', async () => {
+    const storedRoom = new Room({
+      name: '1234',
+      host: new Player('Clark Kent'),
     });
+
+    getRedTetrisSingleton().storeRoom(storedRoom);
+
+    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+
+    clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
+
+    const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
+    assert.equal(room.name, storedRoom.name);
+    assert.notEqual(room.id, storedRoom.id);
   });
 
   it('should respond with an error', (done) => {

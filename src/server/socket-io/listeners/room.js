@@ -6,13 +6,13 @@ import PieceGenerator from '../../entities/PieceGenerator';
 
 import roomActions from '../actions/room';
 
-export const onCreate = (socket) => ({ playerId, name, maxPlayers = 2 }) => {
+export const onCreate = (socket) => ({ playerId, name, capacity = 2 }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
 
-  const room = new Room({ name, host: player.id, maxPlayers });
-  room.addPlayerId(player.id);
+  const room = new Room({ name, host: player.id, capacity });
+  room.addPlayer(player);
 
   redTetris.storeRoom(room);
 
@@ -41,7 +41,7 @@ export const onJoin = (socket) => ({ playerId, id }) => {
     return;
   }
 
-  room.addPlayerId(player.id);
+  room.addPlayer(player);
 
   socket.join(room.id);
   socket.emit(EVENTS.ROOM.JOIN, room.toDto());
@@ -62,23 +62,17 @@ export const onReady = (socket) => ({ playerId, id }) => {
     return;
   }
 
-  if (room.host !== playerId) {
+  if (room.host.id !== playerId) {
     socket.emit(EVENTS.ROOM.READY, roomActions.error.wrongHost(id));
     return;
   }
 
   const pieceGenerator = redTetris.storePieceGenerator(room.id, new PieceGenerator());
-  const players = room.playerIds.map((player) => redTetris.findPlayer(player.id));
-  players.forEach((player) => {
-    console.log({ room, player });
-    const game = new Game({
-      id: [room.id, player.id].join('#'),
-      pieceGenerator,
-      room,
-      player,
-    });
+  room.players.forEach((player) => {
+    const game = new Game({ pieceGenerator, room, player });
 
     player.socket.emit(EVENTS.ROOM.READY, room.toDto());
+    player.socket.emit(EVENTS.GAME.READY, game.toDto());
     redTetris.storeGame(game);
   });
 };

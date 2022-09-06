@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import Piece, { DIRECTION } from './Piece';
 import Board from './Board';
 
@@ -6,7 +7,6 @@ import REDUX_ACTIONS from '../../shared/actions/redux';
 
 class Game {
   constructor({
-    id,
     pieceGenerator,
     room,
     player,
@@ -15,7 +15,7 @@ class Game {
     this._player = player;
     this._board = new Board();
 
-    this._id = id;
+    this._id = crypto.randomUUID();
     this._lastTick = null;
     this._alive = false;
     this._gravity = 1; // falling block per second
@@ -82,7 +82,7 @@ class Game {
   }
 
   toDto() {
-    return { id: this._id, alive: this._alive };
+    return { id: this._id };
   }
 
   _emit(eventName, args) {

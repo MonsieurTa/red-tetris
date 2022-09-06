@@ -13,6 +13,7 @@ const RED_TETRIS = {
 };
 
 const GAME = {
+  READY: 'game:ready',
   START: 'game:start',
   BOARD: 'game:board',
   CURRENT_PIECE: 'game:currentPiece',

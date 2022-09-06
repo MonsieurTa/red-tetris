@@ -4,7 +4,7 @@ import actions from '../../../shared/actions/redux';
 import EVENTS from '../../../shared/constants/socket-io';
 import constants from '../../../shared/constants';
 
-import { register, setRooms } from '../reducers/red-tetris';
+import { register, setRooms, setCurrentRoom } from '../reducers/red-tetris';
 
 let socket = null;
 
@@ -37,8 +37,8 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         store.dispatch(setRooms(rooms));
       });
 
-      socket.on(EVENTS.ROOM.CREATE, ({ success }) => {
-        console.log(EVENTS.ROOM.CREATE, { success });
+      socket.on(EVENTS.ROOM.CREATE, (room) => {
+        store.dispatch(setCurrentRoom(room));
       });
 
       return null;

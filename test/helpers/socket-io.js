@@ -5,20 +5,14 @@ export const registerPlayer = (socket, { username }) => new Promise((resolve) =>
   socket.on(EVENTS.RED_TETRIS.REGISTER, resolve);
 });
 
-export const createRoom = (socket, { playerId, name, maxPlayers }) => new Promise((resolve) => {
-  socket.emit(EVENTS.ROOM.CREATE, { playerId, name, maxPlayers });
-  socket.on(EVENTS.ROOM.CREATE, (args) => resolve(args.name));
+export const createRoom = (socket, { playerId, name, capacity }) => new Promise((resolve) => {
+  socket.emit(EVENTS.ROOM.CREATE, { playerId, name, capacity });
+  socket.on(EVENTS.ROOM.CREATE, resolve);
 });
 
-export const joinRoom = (socket, { playerId, name }) => new Promise((resolve, reject) => {
-  socket.emit(EVENTS.ROOM.JOIN, { playerId, name });
-  socket.on(EVENTS.ROOM.JOIN, (args) => {
-    if (args.status === 'ADDED') {
-      resolve(args.name);
-    } else {
-      reject();
-    }
-  });
+export const joinRoom = (socket, { playerId, id }) => new Promise((resolve) => {
+  socket.emit(EVENTS.ROOM.JOIN, { playerId, id });
+  socket.on(EVENTS.ROOM.JOIN, resolve);
 });
 
 export const waitEvent = (socket, eventName) =>

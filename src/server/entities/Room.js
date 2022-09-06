@@ -3,34 +3,36 @@ import crypto from 'crypto';
 const MAX_PLAYERS = 2;
 
 class Room {
-  constructor({ name, host, maxPlayers = MAX_PLAYERS }) {
+  constructor({ name, host, capacity = MAX_PLAYERS }) {
     this._id = crypto.randomUUID();
     this._name = name;
     this._host = host;
-    this._playerIds = new Set();
-    this._maxPlayers = maxPlayers;
+    this._players = [];
+    this._capacity = capacity;
   }
 
-  addPlayerId(playerId) {
+  addPlayer(player) {
     if (this.isFull) return;
 
-    if (this._playerIds.size === 0) {
-      this._host = playerId;
+    if (this._players.length === 0) {
+      this._host = player;
     }
 
-    this._playerIds.add(playerId);
+    this._players.push(player);
   }
 
   isPresent(playerId) {
-    return this._playerIds.has(playerId);
+    return Boolean(this._players.find(({ id }) => id === playerId));
   }
 
   toDto() {
     return {
       id: this._id,
-      host: this._host,
+      host: this._host.toDto(),
       name: this._name,
-      maxPlayers: this._maxPlayers,
+      playerCount: this.players.length,
+      capacity: this._capacity,
+      isFull: this.isFull,
     };
   }
 
@@ -46,20 +48,24 @@ class Room {
     return this._host;
   }
 
-  get maxPlayers() {
-    return this._maxPlayers;
+  get name() {
+    return this._name;
   }
 
-  get playerIds() {
-    return [...this._playerIds.values()];
+  get capacity() {
+    return this._capacity;
+  }
+
+  get players() {
+    return this._players;
   }
 
   get isEmpty() {
-    return this._playerIds.size === 0;
+    return this._players.length === 0;
   }
 
   get isFull() {
-    return this._playerIds.size >= this._maxPlayers;
+    return this._players.length >= this._capacity;
   }
 }
 
