@@ -1,5 +1,4 @@
-import { EVENTS, INPUTS } from '../../shared/constants';
-
+import { EVENTS, INPUTS } from '../../shared/constants/socket-io';
 import Piece, { DIRECTION } from './Piece';
 import Board from './Board';
 

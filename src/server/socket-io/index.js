@@ -1,7 +1,6 @@
 import { Server } from 'socket.io';
 
-import { EVENTS } from '../../shared/constants';
-
+import { EVENTS } from '../../shared/constants/socket-io';
 import { getRedTetrisSingleton } from '../entities';
 import * as roomListeners from './listeners/room';
 import * as gameListeners from './listeners/game';

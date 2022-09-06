@@ -8,8 +8,7 @@ import {
   describe,
   it,
 } from 'mocha';
-import { EVENTS } from '../src/shared/constants';
-import { createTestServer } from './helpers/server';
+import { EVENTS } from '../src/shared/constants/socket-io';import { createTestServer } from './helpers/server';
 import { getRedTetrisSingleton } from '../src/server/entities';
 
 describe('Fake server test', () => {

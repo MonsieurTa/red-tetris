@@ -1,5 +1,4 @@
-import { EVENTS } from '../../../shared/constants';
-
+import { EVENTS } from '../../../shared/constants/socket-io';
 import { getRedTetrisSingleton, Room } from '../../entities';
 import Game from '../../entities/Game';
 import PieceGenerator from '../../entities/PieceGenerator';
