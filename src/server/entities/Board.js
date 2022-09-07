@@ -35,16 +35,17 @@ class Board {
         this._board[y + _y][x + _x] = shape;
       });
     });
-    this._removeFullRows();
   }
 
   toDto() {
     return { board: this._board };
   }
 
-  _removeFullRows() {
+  clearLines() {
     const newBoard = this._board.filter((row) => !row.every((v) => v !== '.'));
-    this._board = [...initBoard(WIDTH, HEIGHT - newBoard.length), ...newBoard];
+    const lineCount = HEIGHT - newBoard.length;
+    this._board = [...initBoard(WIDTH, lineCount), ...newBoard];
+    return lineCount;
   }
 
   _isAvailable(x, y) {
