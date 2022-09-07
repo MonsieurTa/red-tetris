@@ -18,7 +18,7 @@ class Game {
     this._id = crypto.randomUUID();
     this._lastTick = null;
     this._alive = false;
-    this._gravity = 5; // falling block per second
+    this._gravity = 1; // falling block per second
 
     this._shapeGenerator = pieceGenerator;
     this._currentShapeIndex = -1;
@@ -96,9 +96,8 @@ class Game {
           break;
         default:
       }
-      const toEmit = this.toDto();
-      this.emitToPlayer(EVENTS.GAME.STATE, toEmit);
-      this.emitToRoom(EVENTS.GAME.OTHERS_STATE, toEmit);
+      this.emitToPlayer(EVENTS.GAME.STATE, this.toDto());
+      this.emitToRoom(EVENTS.GAME.OTHERS_STATE, this.toDto());
     };
     socket.on(EVENTS.GAME.ACTION, inputListener);
   }

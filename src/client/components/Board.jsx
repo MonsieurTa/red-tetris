@@ -1,32 +1,11 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 
 import { Box } from '@mui/material';
-import EVENTS from '../../shared/constants/socket-io';
-import INPUTS from '../../shared/constants/inputs';
 import { WIDTH, HEIGHT } from '../../shared/helpers/board';
 
 const CELL_SIZES = {
   md: 50,
   sm: 25,
-};
-
-const inputListener = (dispatch) => ({ code }) => {
-  switch (code) {
-    case 'ArrowLeft':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.LEFT });
-      break;
-    case 'ArrowRight':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.RIGHT });
-      break;
-    case 'ArrowUp':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.ROTATE });
-      break;
-    case 'Space':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.HARD_DROP });
-      break;
-    default:
-  }
 };
 
 const COLOR_MAP = {
@@ -80,31 +59,19 @@ const Row = ({ row, y, size = 'md' }) => (
   </Box>
 );
 
-const Board = ({ size = 'md', value }) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    document.addEventListener('keydown', inputListener(dispatch));
-
-    return () => {
-      document.removeEventListener('keydown', inputListener(dispatch));
-    };
-  }, [dispatch]);
-
-  return (
-    <div>
-      <Box
-        className="flex flex-col"
-        sx={{
-          width: WIDTH * CELL_SIZES[size],
-          height: HEIGHT * CELL_SIZES[size],
-          backgroundColor: 'black',
-        }}
-      >
-        {value.map((row, y) => <Row key={y} size={size} row={row} y={y} />)}
-      </Box>
-    </div>
-  );
-};
+const Board = ({ size = 'md', value }) => (
+  <div>
+    <Box
+      className="flex flex-col"
+      sx={{
+        width: WIDTH * CELL_SIZES[size],
+        height: HEIGHT * CELL_SIZES[size],
+        backgroundColor: 'black',
+      }}
+    >
+      {value.map((row, y) => <Row key={y} size={size} row={row} y={y} />)}
+    </Box>
+  </div>
+);
 
 export default Board;

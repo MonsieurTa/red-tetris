@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 
@@ -11,6 +11,25 @@ import RoomList from '../components/lists/RoomList';
 import Board from '../components/Board';
 import EVENTS from '../../shared/constants/socket-io';
 import { HEIGHT, initBoard, WIDTH } from '../../shared/helpers/board';
+import INPUTS from '../../shared/constants/inputs';
+
+const inputListener = (dispatch) => ({ code }) => {
+  switch (code) {
+    case 'ArrowLeft':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.LEFT });
+      break;
+    case 'ArrowRight':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.RIGHT });
+      break;
+    case 'ArrowUp':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.ROTATE });
+      break;
+    case 'Space':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.HARD_DROP });
+      break;
+    default:
+  }
+};
 
 const App = () => {
   const dispatch = useDispatch();
@@ -18,6 +37,14 @@ const App = () => {
   const board = useSelector((store) => store.board || initBoard(WIDTH, HEIGHT));
 
   const othersBoards = useSelector((store) => Object.entries(store.othersBoards || {}).sort());
+
+  useEffect(() => {
+    document.addEventListener('keydown', inputListener(dispatch));
+
+    return () => {
+      document.removeEventListener('keydown', inputListener(dispatch));
+    };
+  }, [dispatch]);
 
   const onClick = () => {
     if (!currentRoom) return;
