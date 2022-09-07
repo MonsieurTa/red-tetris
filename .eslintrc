@@ -53,6 +53,7 @@
     "implicit-arrow-linebreak": "off",
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "no-continue": "off",
+    "no-empty": "off",
     "no-underscore-dangle": "off",
     "no-unused-expressions": "off",
     "no-use-before-define": "off",
