@@ -1,8 +1,4 @@
-const HEIGHT = 20;
-const WIDTH = 10;
-
-export const initBoard = (width = WIDTH, height = HEIGHT, defaultCell = '.') =>
-  [...Array(height)].map(() => [...Array(width)].map(() => defaultCell));
+import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 
 class Board {
   constructor() {

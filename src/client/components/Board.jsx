@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Card } from '@mui/material';
+
+import { Box } from '@mui/material';
 import EVENTS from '../../shared/constants/socket-io';
 import INPUTS from '../../shared/constants/inputs';
+import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
+
+const CELL_SIZE = 50;
 
 const inputListener = (dispatch) => ({ code }) => {
   switch (code) {
@@ -19,10 +23,51 @@ const inputListener = (dispatch) => ({ code }) => {
   }
 };
 
+const COLOR_MAP = {
+  '.': 'none',
+  I: 'cyan',
+  J: 'blue',
+  L: 'orange',
+  O: 'yellow',
+  S: 'green',
+  T: 'purple',
+  Z: 'red',
+};
+
+const Cell = ({ shape, x, y }) => {
+  const color = COLOR_MAP[shape];
+  return (
+    <Box sx={{
+      width: 50,
+      height: 50,
+      borderRight: +!(x === WIDTH - 1),
+      borderTop: +!(y === 0),
+      borderColor: 'gray',
+      backgroundColor: color,
+    }}
+    />
+  );
+};
+
+const Row = ({ row, y }) => (
+  <Box
+    className="flex flex-row"
+    sx={{ width: row.length * CELL_SIZE, height: CELL_SIZE }}
+  >
+    {row.map((cell, x) => (
+      <Cell
+        key={x}
+        shape={cell}
+        x={x}
+        y={y}
+      />
+    ))}
+  </Box>
+);
+
 const Board = () => {
   const dispatch = useDispatch();
-  const board = useSelector((store) => store.board);
-  const currentRoom = useSelector((store) => store.currentRoom);
+  const board = useSelector((store) => store.board || initBoard(WIDTH, HEIGHT));
 
   useEffect(() => {
     document.addEventListener('keydown', inputListener(dispatch));
@@ -32,29 +77,19 @@ const Board = () => {
     };
   }, [dispatch]);
 
-  const onClick = () => {
-    if (!currentRoom) return;
-
-    dispatch({ type: EVENTS.ROOM.READY, id: currentRoom.id });
-  };
   return (
-    <Card>
-      {Boolean(board) && (
-        <div className="flex flex-col">
-          {board.map((row, i) => (
-            <div key={i} className="flex flex-row gap-x-8">
-              {row.map((cell, j) => <div key={j}>{cell}</div>)}
-            </div>
-          ))}
-        </div>
-      )}
-      <Button
-        disabled={!currentRoom}
-        onClick={onClick}
+    <div>
+      <Box
+        className="flex flex-col"
+        sx={{
+          width: WIDTH * CELL_SIZE,
+          height: HEIGHT * CELL_SIZE,
+          backgroundColor: 'black',
+        }}
       >
-        Start
-      </Button>
-    </Card>
+        {board.map((row, y) => <Row key={y} row={row} y={y} />)}
+      </Box>
+    </div>
   );
 };
 
