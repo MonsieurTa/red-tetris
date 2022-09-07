@@ -17,16 +17,7 @@ const updateBoard = (piece, board) => {
 const Board = () => {
   const dispatch = useDispatch();
   const board = useSelector((store) => store.board);
-  const currentPiece = useSelector((store) => store.currentPiece);
   const currentRoom = useSelector((store) => store.currentRoom);
-
-  const [mutatedBoard, setMutatedBoard] = useState(board);
-
-  useEffect(() => {
-    if (!board || !currentPiece) return;
-    console.log({ currentPiece });
-    setMutatedBoard(updateBoard(currentPiece, board));
-  }, [currentPiece, board]);
 
   const onClick = () => {
     if (!currentRoom) return;
@@ -35,9 +26,9 @@ const Board = () => {
   };
   return (
     <Card>
-      {Boolean(mutatedBoard) && (
+      {Boolean(board) && (
         <div className="flex flex-col">
-          {mutatedBoard.map((row, i) => (
+          {board.map((row, i) => (
             <div key={i} className="flex flex-row gap-x-8">
               {row.map((cell, j) => <div key={j}>{cell}</div>)}
             </div>

@@ -11,6 +11,10 @@ class Board {
     this._board = initBoard(this._width, this._height);
   }
 
+  copy() {
+    return this._board.map((row) => row.slice());
+  }
+
   canPlace(piece) {
     return piece.blocksPositions().every((pos) => this._isAvailable(pos));
   }

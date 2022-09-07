@@ -1,54 +1,12 @@
-import Pos from './Pos';
-
-export const DIRECTION = {
-  DOWN: 'DOWN',
-  LEFT: 'LEFT',
-  RIGHT: 'RIGHT',
-};
-
-export const PIECES = {
-  I: [
-    ['.', '.', '.', '.'],
-    ['I', 'I', 'I', 'I'],
-    ['.', '.', '.', '.'],
-    ['.', '.', '.', '.'],
-  ],
-  J: [
-    ['J', '.', '.'],
-    ['J', 'J', 'J'],
-    ['.', '.', '.'],
-  ],
-  L: [
-    ['.', '.', 'L'],
-    ['L', 'L', 'L'],
-    ['.', '.', '.'],
-  ],
-  O: [
-    ['O', 'O'],
-    ['O', 'O'],
-  ],
-  S: [
-    ['.', 'S', 'S'],
-    ['S', 'S', '.'],
-    ['.', '.', '.'],
-  ],
-  T: [
-    ['.', 'T', '.'],
-    ['T', 'T', 'T'],
-    ['.', '.', '.'],
-  ],
-  Z: [
-    ['Z', 'Z', '.'],
-    ['.', 'Z', 'Z'],
-    ['.', '.', '.'],
-  ],
-};
+import INPUTS from '../../shared/constants/inputs';
+import PIECES from '../../shared/constants/pieces';
 
 const rotate = (matrix) => matrix[0].map((_, index) => matrix.map((row) => row[index]).reverse());
 
 class Piece {
-  constructor(shape, pos = new Pos()) {
-    this._pos = pos;
+  constructor(shape, x = 0, y = 0) {
+    this._x = x;
+    this._y = y;
 
     this._shape = shape;
     this._matrix = PIECES[shape];
@@ -57,19 +15,19 @@ class Piece {
   }
 
   copy() {
-    return new Piece(this._shape, this._pos.copy());
+    return new Piece(this._shape, this._x, this._y);
   }
 
-  move(direction = DIRECTION.DOWN) {
+  move(direction = INPUTS.DOWN) {
     switch (direction) {
-      case DIRECTION.DOWN:
-        this._pos._y += 1;
+      case INPUTS.DOWN:
+        this._y += 1;
         break;
-      case DIRECTION.LEFT:
-        this._pos._x -= 1;
+      case INPUTS.LEFT:
+        this._x -= 1;
         break;
-      case DIRECTION.RIGHT:
-        this._pos._x += 1;
+      case INPUTS.RIGHT:
+        this._x += 1;
         break;
       default:
         return this;
@@ -92,7 +50,7 @@ class Piece {
       row.forEach((_, x) => {
         if (this.isEmpty(x, y)) return;
 
-        positions.push([this._pos.x + x, this._pos.y + y]);
+        positions.push([this._x + x, this._y + y]);
       });
     });
     return positions;
@@ -101,7 +59,7 @@ class Piece {
   toDto() {
     return {
       matrix: this._matrix,
-      ...this._pos.toDto(),
+      ...this.toDto(),
     };
   }
 
@@ -121,12 +79,20 @@ class Piece {
     return this._matrix;
   }
 
+  get x() {
+    return this._x;
+  }
+
   set x(x) {
-    this._pos.x = x;
+    this._x = x;
+  }
+
+  get y() {
+    return this._y;
   }
 
   set y(y) {
-    this._pos.y = y;
+    this._y = y;
   }
 }
 

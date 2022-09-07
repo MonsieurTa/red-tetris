@@ -42,30 +42,12 @@ describe('Game starting', () => {
 
     clientSocket.emit(EVENTS.ROOM.READY, { playerId: player.id, id: room.id });
 
-    const [roomReadyEvent, game] = await Promise.all([
-      waitEvent(clientSocket, EVENTS.ROOM.READY),
-      waitEvent(clientSocket, EVENTS.GAME.READY),
-    ]);
-
-    assert.equal(roomReadyEvent.host.username, 'Bruce Wayne');
-    assert.equal(roomReadyEvent.name, '1234');
-    assert.equal(roomReadyEvent.capacity, 2);
+    const game = await waitEvent(clientSocket, EVENTS.GAME.READY);
 
     clientSocket.emit(EVENTS.GAME.START, { playerId: player.id, gameId: game.id });
-    const [
-      gameStartEvent,
-      gameBoardEvent,
-      gameCurrentPieceEvent,
-    ] = await Promise.all([
-      waitEvent(clientSocket, EVENTS.GAME.START),
-      waitEvent(clientSocket, EVENTS.GAME.BOARD),
-      waitEvent(clientSocket, EVENTS.GAME.CURRENT_PIECE),
-    ]);
+    const state = await waitEvent(clientSocket, EVENTS.GAME.STATE);
 
-    assert.deepEqual(gameStartEvent, game);
-    assert.deepEqual(gameBoardEvent.board, initBoard());
-
-    assert.equal(gameCurrentPieceEvent.x, parseInt(gameCurrentPieceEvent.x, 10));
-    assert.equal(gameCurrentPieceEvent.y, parseInt(gameCurrentPieceEvent.y, 10));
+    assert.isNotNull(state.id);
+    assert.isNotNull(state.board);
   });
 });

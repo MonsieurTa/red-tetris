@@ -56,13 +56,13 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         store.dispatch({ type: EVENTS.GAME.START, gameId: game.id });
       });
 
-      socket.on(EVENTS.GAME.BOARD, ({ board }) => {
+      socket.on(EVENTS.GAME.STATE, ({ board }) => {
         store.dispatch(setBoard(board));
       });
 
-      socket.on(EVENTS.GAME.CURRENT_PIECE, (piece) => {
-        store.dispatch(setCurrentPiece(piece));
-      });
+      // socket.on(EVENTS.GAME.CURRENT_PIECE, (piece) => {
+      //   store.dispatch(setCurrentPiece(piece));
+      // });
 
       return null;
     case constants.redux.WEBSOCKET.DISCONNECT:

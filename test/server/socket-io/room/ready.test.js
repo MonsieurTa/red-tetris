@@ -39,13 +39,13 @@ describe('Room ready', () => {
     const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
 
     clientSocket.emit(EVENTS.ROOM.READY, { playerId: player.id, id: room.id });
-    // const room = await waitEvent(clientSocket, EVENTS.ROOM.READY);
-
     const game = await waitEvent(clientSocket, EVENTS.GAME.READY);
 
     clientSocket.emit(EVENTS.GAME.START, { playerId: player.id, gameId: game.id });
-    const gameReady = await waitEvent(clientSocket, EVENTS.GAME.START);
-    assert.deepEqual(game, gameReady);
+    const gameState = await waitEvent(clientSocket, EVENTS.GAME.STATE);
+
+    assert.isNotNull(gameState.id);
+    assert.isNotNull(gameState.board);
   });
 
   it('should start a game with multiple players', async () => {
@@ -70,15 +70,34 @@ describe('Room ready', () => {
     clientSocket.emit(EVENTS.ROOM.READY, { playerId: bruce.id, id: room.id });
 
     const events = await Promise.all([
-      waitEvent(clientSocket, EVENTS.ROOM.READY),
-      waitEvent(clarkSocket, EVENTS.ROOM.READY),
-      waitEvent(spiderManSocket, EVENTS.ROOM.READY),
-      waitEvent(ironManSocket, EVENTS.ROOM.READY),
+      waitEvent(clientSocket, EVENTS.GAME.READY),
+      waitEvent(clarkSocket, EVENTS.GAME.READY),
+      waitEvent(spiderManSocket, EVENTS.GAME.READY),
+      waitEvent(ironManSocket, EVENTS.GAME.READY),
     ]);
 
     assert.equal(events.length, 4);
     events.forEach((event) => {
       assert.isNotNull(event);
     });
+
+    const [
+      bruceGameId,
+      clarkGameId,
+      spiderManGameId,
+      ironManGameId,
+    ] = events.map(({ id }) => id);
+
+    clientSocket.emit(EVENTS.GAME.START, { playerId: bruce.id, gameId: bruceGameId });
+    clarkSocket.emit(EVENTS.GAME.START, { playerId: clark.id, gameId: clarkGameId });
+    spiderManSocket.emit(EVENTS.GAME.START, { playerId: spiderMan.id, gameId: spiderManGameId });
+    ironManSocket.emit(EVENTS.GAME.START, { playerId: ironMan.id, gameId: ironManGameId });
+
+    await Promise.all([
+      waitEvent(clientSocket, EVENTS.GAME.STATE),
+      waitEvent(clarkSocket, EVENTS.GAME.STATE),
+      waitEvent(spiderManSocket, EVENTS.GAME.STATE),
+      waitEvent(ironManSocket, EVENTS.GAME.STATE),
+    ]);
   });
 });

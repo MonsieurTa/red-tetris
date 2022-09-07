@@ -1,3 +1,5 @@
+import EVENTS from '../../shared/constants/socket-io';
+
 class Engine {
   constructor() {
     this._running = false;
@@ -20,6 +22,8 @@ class Engine {
         if (!game.alive || !game.defaultDropSchedule) return;
 
         game.update();
+
+        game.emitToPlayer(EVENTS.GAME.STATE, game.toDto());
       });
       return new Promise((resolve) => { setTimeout(resolve, 100); })
         .then(() => (this._running ? process.nextTick(loop) : null));
