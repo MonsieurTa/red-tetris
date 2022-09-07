@@ -54,8 +54,11 @@ class Game {
   registerUserInputListeners() {
     const { socket } = this._player;
 
-    socket.on(EVENTS.GAME.ACTION, ({ action }) => {
+    const inputListener = ({ action }) => {
+      if (!this._alive) return;
+
       const pieceCopy = this._currentPiece.copy();
+
       switch (action) {
         case INPUTS.ROTATE:
           if (!this._board.canPlace(pieceCopy.rotate())) return;
@@ -71,7 +74,9 @@ class Game {
           break;
         default:
       }
-    });
+      this.emitToPlayer(EVENTS.GAME.STATE, this.toDto());
+    };
+    socket.on(EVENTS.GAME.ACTION, inputListener);
   }
 
   toDto() {

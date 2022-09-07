@@ -1,23 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Card } from '@mui/material';
 import EVENTS from '../../shared/constants/socket-io';
+import INPUTS from '../../shared/constants/inputs';
 
-const updateBoard = (piece, board) => {
-  const result = board.map((row) => row.slice());
-  const { matrix, x, y } = piece;
-
-  matrix.forEach((row, yLocal) => row.forEach((cell, xLocal) => {
-    if (cell === '.') return;
-    result[yLocal + y][xLocal + x] = cell;
-  }));
-  return result;
+const inputListener = (dispatch) => ({ code }) => {
+  switch (code) {
+    case 'ArrowLeft':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.LEFT });
+      break;
+    case 'ArrowRight':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.RIGHT });
+      break;
+    case 'ArrowUp':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.ROTATE });
+      break;
+    default:
+  }
 };
 
 const Board = () => {
   const dispatch = useDispatch();
   const board = useSelector((store) => store.board);
   const currentRoom = useSelector((store) => store.currentRoom);
+
+  useEffect(() => {
+    document.addEventListener('keydown', inputListener(dispatch));
+
+    return () => {
+      document.removeEventListener('keydown', inputListener(dispatch));
+    };
+  }, [dispatch]);
 
   const onClick = () => {
     if (!currentRoom) return;

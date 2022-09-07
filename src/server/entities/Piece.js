@@ -4,18 +4,23 @@ import PIECES from '../../shared/constants/pieces';
 const rotate = (matrix) => matrix[0].map((_, index) => matrix.map((row) => row[index]).reverse());
 
 class Piece {
-  constructor(shape, x = 0, y = 0) {
+  constructor(shape, x = 0, y = 0, matrix = PIECES[shape]) {
     this._x = x;
     this._y = y;
 
     this._shape = shape;
-    this._matrix = PIECES[shape];
+    this._matrix = matrix;
     this._width = this._matrix[0].length;
     this._height = this._matrix.length;
   }
 
   copy() {
-    return new Piece(this._shape, this._x, this._y);
+    return new Piece(
+      this._shape,
+      this._x,
+      this._y,
+      this._matrix.map((row) => row.slice()),
+    );
   }
 
   move(direction = INPUTS.DOWN) {
@@ -37,7 +42,7 @@ class Piece {
 
   rotate() {
     this._matrix = rotate(this._matrix);
-    return this._matrix;
+    return this;
   }
 
   isEmpty(x, y) {
