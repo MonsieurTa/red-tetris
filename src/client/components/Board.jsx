@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { Box } from '@mui/material';
 import EVENTS from '../../shared/constants/socket-io';
 import INPUTS from '../../shared/constants/inputs';
-import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
+import { WIDTH, HEIGHT } from '../../shared/helpers/board';
 
-const CELL_SIZE = 50;
+const CELL_SIZES = {
+  md: 50,
+  sm: 25,
+};
 
 const inputListener = (dispatch) => ({ code }) => {
   switch (code) {
@@ -37,12 +40,17 @@ const COLOR_MAP = {
   Z: 'red',
 };
 
-const Cell = ({ shape, x, y }) => {
+const Cell = ({
+  shape,
+  x,
+  y,
+  size = 'md',
+}) => {
   const color = COLOR_MAP[shape];
   return (
     <Box sx={{
-      width: 50,
-      height: 50,
+      width: CELL_SIZES[size],
+      height: CELL_SIZES[size],
       borderRight: +!(x === WIDTH - 1),
       borderTop: +!(y === 0),
       borderColor: 'gray',
@@ -52,15 +60,19 @@ const Cell = ({ shape, x, y }) => {
   );
 };
 
-const Row = ({ row, y }) => (
+const Row = ({ row, y, size = 'md' }) => (
   <Box
     className="flex flex-row"
-    sx={{ width: row.length * CELL_SIZE, height: CELL_SIZE }}
+    sx={{
+      width: row.length * CELL_SIZES[size],
+      height: CELL_SIZES[size],
+    }}
   >
     {row.map((cell, x) => (
       <Cell
         key={x}
         shape={cell}
+        size={size}
         x={x}
         y={y}
       />
@@ -68,9 +80,8 @@ const Row = ({ row, y }) => (
   </Box>
 );
 
-const Board = () => {
+const Board = ({ size = 'md', value }) => {
   const dispatch = useDispatch();
-  const board = useSelector((store) => store.board || initBoard(WIDTH, HEIGHT));
 
   useEffect(() => {
     document.addEventListener('keydown', inputListener(dispatch));
@@ -85,12 +96,12 @@ const Board = () => {
       <Box
         className="flex flex-col"
         sx={{
-          width: WIDTH * CELL_SIZE,
-          height: HEIGHT * CELL_SIZE,
+          width: WIDTH * CELL_SIZES[size],
+          height: HEIGHT * CELL_SIZES[size],
           backgroundColor: 'black',
         }}
       >
-        {board.map((row, y) => <Row key={y} row={row} y={y} />)}
+        {value.map((row, y) => <Row key={y} size={size} row={row} y={y} />)}
       </Box>
     </div>
   );

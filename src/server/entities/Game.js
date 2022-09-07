@@ -96,7 +96,9 @@ class Game {
           break;
         default:
       }
-      this.emitToPlayer(EVENTS.GAME.STATE, this.toDto());
+      const toEmit = this.toDto();
+      this.emitToPlayer(EVENTS.GAME.STATE, toEmit);
+      this.emitToRoom(EVENTS.GAME.OTHERS_STATE, toEmit);
     };
     socket.on(EVENTS.GAME.ACTION, inputListener);
   }
@@ -120,6 +122,10 @@ class Game {
 
   emitToPlayer(eventName, args) {
     this._player.socket.emit(eventName, args);
+  }
+
+  emitToRoom(eventName, args) {
+    this._player.socket.to(this._room.id).emit(eventName, args);
   }
 
   _nextPiece() {

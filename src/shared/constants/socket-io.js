@@ -16,8 +16,7 @@ const GAME = {
   READY: 'game:ready',
   START: 'game:start',
   STATE: 'game:state',
-  // BOARD: 'game:board',
-  // CURRENT_PIECE: 'game:currentPiece',
+  OTHERS_STATE: 'game:others:state',
   ACTION: 'game:action',
 };
 

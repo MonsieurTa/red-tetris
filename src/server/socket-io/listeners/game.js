@@ -10,7 +10,9 @@ export const onStart = () => ({ gameId }) => {
   game.registerUserInputListeners();
   game.start();
 
-  game.emitToPlayer(EVENTS.GAME.STATE, game.toDto());
+  const toEmit = game.toDto();
+  game.emitToPlayer(EVENTS.GAME.STATE, toEmit);
+  game.emitToRoom(EVENTS.GAME.OTHERS_STATE, toEmit);
 };
 
 export default onStart;

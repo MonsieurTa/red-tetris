@@ -9,18 +9,26 @@ import EVENTS from '../../../shared/constants/socket-io';
 
 const RoomListItem = ({ room }) => {
   const dispatch = useDispatch();
+  const player = useSelector((store) => store.player);
 
   const onClick = () => dispatch({ type: EVENTS.ROOM.JOIN, id: room.id });
 
   return (
-    <ListItemButton onClick={onClick}>
-      <ListItemText primary={room.name} secondary={`host: ${room.host.username}`} />
+    <ListItemButton
+      onClick={onClick}
+      disabled={!player}
+    >
+      <ListItemText
+        primary={room.name}
+        secondary={`host: ${room.host.username}`}
+      />
     </ListItemButton>
   );
 };
 
 const RoomList = () => {
   const rooms = useSelector((state) => state.rooms || []);
+
   return (
     <Card>
       <List>

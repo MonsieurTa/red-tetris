@@ -22,6 +22,7 @@ class RedTetris {
     this.findAllRooms()
       .forEach((room) => {
         room.remove(player.id);
+        player.socket.leave(room.id);
         if (room.isEmpty) {
           this._rooms.delete(room.id);
         }
@@ -91,6 +92,10 @@ class RedTetris {
         console.clear();
         console.log('players:');
         console.log(`\tcount: ${this._players.size}`);
+        this._players.forEach((player) => {
+          console.log(`\tplayer#${player.id}`);
+          console.log(`\tsocket#${player.socket.id}`);
+        });
 
         console.log('rooms:');
         console.log(`\tcount: ${this._rooms.size}`);

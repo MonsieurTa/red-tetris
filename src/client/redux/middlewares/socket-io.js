@@ -5,7 +5,11 @@ import EVENTS from '../../../shared/constants/socket-io';
 import constants from '../../../shared/constants';
 
 import {
-  register, setRooms, setCurrentRoom, setBoard, setCurrentPiece,
+  register,
+  setRooms,
+  setCurrentRoom,
+  setBoard,
+  addOtherBoard,
 } from '../reducers/red-tetris';
 
 let socket = null;
@@ -43,7 +47,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         store.dispatch(setCurrentRoom(room));
       });
 
-      socket.on(EVENTS.ROOM.JOIN, (room) => {
+      socket.on(EVENTS.ROOM.JOIN, ({ room, players }) => {
         if (room.error) return;
         store.dispatch(setCurrentRoom(room));
       });
@@ -54,6 +58,11 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
 
       socket.on(EVENTS.GAME.STATE, ({ board }) => {
         store.dispatch(setBoard(board));
+      });
+
+      socket.on(EVENTS.GAME.OTHERS_STATE, (otherBoard) => {
+        console.log({ otherBoard });
+        store.dispatch(addOtherBoard(otherBoard));
       });
 
       return null;
