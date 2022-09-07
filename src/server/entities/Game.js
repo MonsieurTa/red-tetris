@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import Piece from './Piece';
+import Piece, { rotate } from './Piece';
 import Board from './Board';
 
 import INPUTS from '../../shared/constants/inputs';
@@ -42,14 +42,15 @@ class Game {
 
     this._lastTick = Date.now();
 
-    const droppedPiece = this._currentPiece.copy().move(INPUTS.DOWN);
-    if (this._board.canPlace(droppedPiece)) {
+    let { x, y, matrix } = this._currentPiece;
+    if (this._board.canPlace(x, y + 1, matrix)) {
       this._currentPiece.move(INPUTS.DOWN);
     } else {
       this._board.lock(this._currentPiece);
       this._currentPiece = this._nextPiece();
 
-      if (!this._board.canPlace(this._currentPiece)) {
+      ({ x, y, matrix } = this._currentPiece);
+      if (!this._board.canPlace(x, y, matrix)) {
         this._alive = false;
       }
     }
@@ -68,28 +69,32 @@ class Game {
     const inputListener = ({ action }) => {
       if (!this._alive) return;
 
-      const pieceCopy = this._currentPiece.copy();
+      let { x, y, matrix } = this._currentPiece;
 
       switch (action) {
         case INPUTS.ROTATE:
-          if (!this._board.canPlace(pieceCopy.rotate())) return;
-          this._currentPiece.rotate();
+          const rotatedMatrix = rotate(matrix);
+          if (!this._board.canPlace(x, y, rotatedMatrix)) return;
+
+          this._currentPiece.matrix = rotatedMatrix;
           break;
         case INPUTS.LEFT:
-          if (!this._board.canPlace(pieceCopy.move(INPUTS.LEFT))) return;
+          if (!this._board.canPlace(x - 1, y, matrix)) return;
           this._currentPiece.move(INPUTS.LEFT);
           break;
         case INPUTS.RIGHT:
-          if (!this._board.canPlace(pieceCopy.move(INPUTS.RIGHT))) return;
+          if (!this._board.canPlace(x + 1, y, matrix)) return;
           this._currentPiece.move(INPUTS.RIGHT);
           break;
         case INPUTS.HARD_DROP:
-          while (this._board.canPlace(pieceCopy.move(INPUTS.DOWN))) {}
-
-          this._board.lock(pieceCopy.move(INPUTS.UP));
+          for (let _y = y + 1; this._board.canPlace(x, _y, matrix); _y += 1) {
+            this._currentPiece.move(INPUTS.DOWN);
+          }
+          this._board.lock(this._currentPiece);
           this._currentPiece = this._nextPiece();
 
-          if (!this._board.canPlace(this._currentPiece)) {
+          ({ x, y, matrix } = this._currentPiece);
+          if (!this._board.canPlace(x, y, matrix)) {
             this._alive = false;
             return;
           }
@@ -111,11 +116,14 @@ class Game {
 
   displayableBoard() {
     const board = this._board.copy();
-    this._currentPiece
-      .blocksPositions()
-      .forEach(([x, y]) => {
-        board[y][x] = this._currentPiece.shape;
+    const { x, y, matrix } = this._currentPiece;
+
+    matrix.forEach((row, _y) => {
+      row.forEach((cell, _x) => {
+        if (cell === '.') return;
+        board[y + _y][x + _x] = this._currentPiece.shape;
       });
+    });
     return board;
   }
 

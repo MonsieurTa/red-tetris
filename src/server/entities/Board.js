@@ -11,16 +11,30 @@ class Board {
     return this._board.map((row) => row.slice());
   }
 
-  canPlace(piece) {
-    return piece.blocksPositions().every((pos) => this._isAvailable(pos));
+  canPlace(x, y, matrix) {
+    for (let _y = 0; _y < matrix.length; _y += 1) {
+      for (let _x = 0; _x < matrix[0].length; _x += 1) {
+        if (matrix[_y][_x] === '.') continue;
+        if (!this._isAvailable(x + _x, y + _y)) return false;
+      }
+    }
+    return true;
   }
 
   lock(piece) {
-    piece
-      .blocksPositions()
-      .forEach(([x, y]) => {
-        this._board[y][x] = piece.shape;
+    const {
+      x,
+      y,
+      matrix,
+      shape,
+    } = piece;
+
+    matrix.forEach((row, _y) => {
+      row.forEach((cell, _x) => {
+        if (cell === '.') return;
+        this._board[y + _y][x + _x] = shape;
       });
+    });
     this._removeFullRows();
   }
 
@@ -33,7 +47,7 @@ class Board {
     this._board = [...initBoard(WIDTH, HEIGHT - newBoard.length), ...newBoard];
   }
 
-  _isAvailable([x, y]) {
+  _isAvailable(x, y) {
     if (x < 0 || x >= WIDTH) return false;
     if (y >= HEIGHT) return false;
 

@@ -3,9 +3,10 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { WIDTH, HEIGHT } from '../../shared/helpers/board';
 
+const CELL_SIZE = 30;
 const CELL_SIZES = {
-  md: 50,
-  sm: 25,
+  md: CELL_SIZE,
+  sm: CELL_SIZE / 3,
 };
 
 const COLOR_MAP = {
