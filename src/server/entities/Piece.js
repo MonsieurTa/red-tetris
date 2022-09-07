@@ -25,6 +25,9 @@ class Piece {
 
   move(direction = INPUTS.DOWN) {
     switch (direction) {
+      case INPUTS.UP:
+        this._y -= 1;
+        break;
       case INPUTS.DOWN:
         this._y += 1;
         break;

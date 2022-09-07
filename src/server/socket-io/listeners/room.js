@@ -10,6 +10,7 @@ export const onCreate = (socket) => ({ playerId, name, capacity = 2 }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
+  redTetris.findAllRooms().forEach((v) => v.remove(player.id));
 
   const room = new Room({ name, host: player.id, capacity });
   room.addPlayer(player);
@@ -41,6 +42,8 @@ export const onJoin = (socket) => ({ playerId, id }) => {
     return;
   }
 
+  redTetris.findAllRooms().forEach((v) => v.remove(player.id));
+
   room.addPlayer(player);
 
   socket.join(room.id);
@@ -67,6 +70,10 @@ export const onReady = (socket) => ({ playerId, id }) => {
 
   if (room.host.id !== playerId) {
     socket.emit(EVENTS.ROOM.READY, roomActions.error.wrongHost(id));
+    return;
+  }
+
+  if (redTetris.findAllGames().find((game) => game.room.id === room.id)) {
     return;
   }
 

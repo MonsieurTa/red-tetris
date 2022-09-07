@@ -18,11 +18,13 @@ class Game {
     this._id = crypto.randomUUID();
     this._lastTick = null;
     this._alive = false;
-    this._gravity = 10; // falling block per second
+    this._gravity = 5; // falling block per second
 
     this._shapeGenerator = pieceGenerator;
     this._currentShapeIndex = -1;
     this._currentPiece = null;
+
+    this._destroyed = false;
   }
 
   start() {
@@ -36,6 +38,8 @@ class Game {
   }
 
   update() {
+    if (!this._alive) return;
+
     this._lastTick = Date.now();
 
     const droppedPiece = this._currentPiece.copy().move(INPUTS.DOWN);
@@ -49,6 +53,13 @@ class Game {
         this._alive = false;
       }
     }
+  }
+
+  destroy() {
+    this.stop();
+    this._room = null;
+    this._player = null;
+    this._destroyed = true;
   }
 
   registerUserInputListeners() {
@@ -71,6 +82,17 @@ class Game {
         case INPUTS.RIGHT:
           if (!this._board.canPlace(pieceCopy.move(INPUTS.RIGHT))) return;
           this._currentPiece.move(INPUTS.RIGHT);
+          break;
+        case INPUTS.HARD_DROP:
+          while (this._board.canPlace(pieceCopy.move(INPUTS.DOWN))) {}
+
+          this._board.lock(pieceCopy.move(INPUTS.UP));
+          this._currentPiece = this._nextPiece();
+
+          if (!this._board.canPlace(this._currentPiece)) {
+            this._alive = false;
+            return;
+          }
           break;
         default:
       }
@@ -114,6 +136,18 @@ class Game {
 
   get alive() {
     return this._alive;
+  }
+
+  get room() {
+    return this._room;
+  }
+
+  get player() {
+    return this._player;
+  }
+
+  get destroyed() {
+    return this._destroyed;
   }
 
   get defaultDropSchedule() {

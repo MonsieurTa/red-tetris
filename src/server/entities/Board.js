@@ -21,10 +21,16 @@ class Board {
       .forEach(([x, y]) => {
         this._board[y][x] = piece.shape;
       });
+    this._removeFullRows();
   }
 
   toDto() {
     return { board: this._board };
+  }
+
+  _removeFullRows() {
+    const newBoard = this._board.filter((row) => !row.every((v) => v !== '.'));
+    this._board = [...initBoard(WIDTH, HEIGHT - newBoard.length), ...newBoard];
   }
 
   _isAvailable([x, y]) {

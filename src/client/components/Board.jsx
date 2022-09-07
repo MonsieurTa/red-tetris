@@ -19,6 +19,9 @@ const inputListener = (dispatch) => ({ code }) => {
     case 'ArrowUp':
       dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.ROTATE });
       break;
+    case 'Space':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.HARD_DROP });
+      break;
     default:
   }
 };

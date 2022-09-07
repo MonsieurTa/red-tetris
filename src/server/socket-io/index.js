@@ -50,6 +50,7 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
     socket.on('disconnect', () => {
       loginfo(`Socket disconnected: ${socket.id}`);
       // remove player
+      redTetris.unregister(socket.id);
     });
 
     socket.use(([eventName, args], next) => {

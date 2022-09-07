@@ -21,6 +21,17 @@ class Room {
     this._players.push(player);
   }
 
+  remove(playerId) {
+    this._players = this._players.filter(({ id }) => id !== playerId);
+
+    if (this.isEmpty) return;
+
+    if (this.host.id === playerId) {
+      const [newHost] = this._players;
+      this._host = newHost;
+    }
+  }
+
   isPresent(playerId) {
     return Boolean(this._players.find(({ id }) => id === playerId));
   }

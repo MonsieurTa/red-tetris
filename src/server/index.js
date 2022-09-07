@@ -19,7 +19,8 @@ const createServer = (params) => {
 
       const serverSocket = createSocketIoServer(httpServer, { loginfo });
 
-      getRedTetrisSingleton().run();
+      const redTetris = getRedTetrisSingleton();
+      redTetris.run(true);
 
       resolve({ httpServer, serverSocket });
     });
