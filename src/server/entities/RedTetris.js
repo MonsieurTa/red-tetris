@@ -1,7 +1,9 @@
+import EVENTS from '../../shared/constants/socket-io';
 import Engine from './Engine';
 
 class RedTetris {
   constructor() {
+    this._io = null;
     this._rooms = new Map();
     this._players = new Map();
     this._games = new Map();
@@ -25,6 +27,7 @@ class RedTetris {
         player.socket.leave(room.id);
         if (room.isEmpty) {
           this._rooms.delete(room.id);
+          this._io.local.emit(EVENTS.ROOM.REMOVED, { id: room.id });
         }
       });
 
@@ -115,6 +118,10 @@ class RedTetris {
 
   stop() {
     this._engine.stop();
+  }
+
+  set io(io) {
+    this._io = io;
   }
 }
 

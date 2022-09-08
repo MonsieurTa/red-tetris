@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
+import { HashRouter } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 
 import REDUX_ACTIONS from '../shared/actions/redux';
@@ -25,7 +26,9 @@ const Root = () => {
   return (
     <Provider store={store}>
       <CssBaseline />
-      <App />
+      <HashRouter>
+        <App />
+      </HashRouter>
     </Provider>
   );
 };

@@ -1,17 +1,21 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@mui/material';
+import {
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+  useNavigate,
+} from 'react-router-dom';
+import { Button, Container } from '@mui/material';
 
 import { withGlobalCssPriority } from './GlobalCssPriority';
 
-import UsernameInput from '../components/inputs/UsernameInput';
-import RoomInput from '../components/inputs/RoomInput';
-
-import RoomList from '../components/lists/RoomList';
-import Board from '../components/Board';
 import EVENTS from '../../shared/constants/socket-io';
-import { HEIGHT, initBoard, WIDTH } from '../../shared/helpers/board';
 import INPUTS from '../../shared/constants/inputs';
+import Home from '../pages/Home';
+import Rooms from '../pages/Rooms';
+import Room from '../pages/Room';
 
 const inputKeyDownListener = (dispatch) => ({ code, ...rest }) => {
   switch (code) {
@@ -43,17 +47,36 @@ const inputKeyUpListener = (dispatch) => ({ code }) => {
   }
 };
 
-const App = () => {
-  const dispatch = useDispatch();
-  const currentRoom = useSelector((store) => store.currentRoom);
-  const board = useSelector((store) => store.board || initBoard(WIDTH, HEIGHT));
-  const gameInfo = useSelector(({
-    score = 0,
-    level = 1,
-    totalLineCleared = 0,
-  }) => ({ score, level, totalLineCleared }));
+const ProtectedRoute = ({ player, children, redirectPath }) => {
+  if (!player) {
+    return <Navigate to={redirectPath} replace />;
+  }
+  return children || <Outlet />;
+};
 
-  const othersBoards = useSelector((store) => Object.entries(store.othersBoards || {}).sort());
+const RootLayout = ({ children }) => (
+  <Container maxWidth="md" className="flex flex-col h-full py-2">
+    <div className="text-9xl my-4">RED TETRIS</div>
+    {children || <Outlet />}
+  </Container>
+);
+
+const App = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const player = useSelector((store) => store.player);
+  const currentRoom = useSelector((store) => store.currentRoom);
+
+  useEffect(() => {
+    if (!player) return;
+    navigate('/rooms', { replace: true });
+  }, [player, navigate]);
+
+  useEffect(() => {
+    if (currentRoom) {
+      navigate(`/rooms/${currentRoom.id}`);
+    }
+  }, [currentRoom, navigate]);
 
   useEffect(() => {
     document.addEventListener('keydown', inputKeyDownListener(dispatch));
@@ -65,35 +88,18 @@ const App = () => {
     };
   }, [dispatch]);
 
-  const onClick = () => {
-    if (!currentRoom) return;
-
-    dispatch({ type: EVENTS.ROOM.READY, id: currentRoom.id });
-  };
-
   return (
-    <div className="flex flex-row h-screen gap-x-2">
-      <div className="flex flex-col gap-y-2 w-96">
-        <UsernameInput />
-        <RoomInput />
-        <RoomList />
-        {currentRoom?.name}
-        <Button
-          disabled={!currentRoom}
-          onClick={onClick}
-        >
-          Start
-        </Button>
-      </div>
-      <div className="flex flex-col">
-        <Board value={board} />
-        <div>{`score: ${gameInfo.score}`}</div>
-        <div>{`totalLineCleared: ${gameInfo.totalLineCleared}`}</div>
-        <div>{`level: ${gameInfo.level}`}</div>
-      </div>
-      <div className="flex">
-        {othersBoards.map(([id, otherBoard]) => <Board key={id} value={otherBoard} size="sm" />)}
-      </div>
+    <div className="w-screen h-screen">
+      <Routes>
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<Home />} />
+
+          <Route element={<ProtectedRoute player={player} redirectPath="/" />}>
+            <Route path="rooms" element={<Rooms />} />
+            <Route path="rooms/:id" element={<Room />} />
+          </Route>
+        </Route>
+      </Routes>
     </div>
   );
 };

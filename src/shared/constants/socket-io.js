@@ -22,6 +22,7 @@ const GAME = {
 
 const ROOM = {
   CREATE: 'room:create',
+  REMOVED: 'room:removed',
   JOIN: 'room:join',
   READY: 'room:ready',
 };

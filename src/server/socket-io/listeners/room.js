@@ -6,7 +6,7 @@ import PieceGenerator from '../../entities/PieceGenerator';
 
 import roomActions from '../actions/room';
 
-export const onCreate = (socket) => ({ playerId, name }) => {
+export const onCreate = (socket, io) => ({ playerId, name }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
@@ -23,8 +23,7 @@ export const onCreate = (socket) => ({ playerId, name }) => {
   redTetris.storeRoom(room);
 
   socket.join(room.id);
-  socket.emit(EVENTS.ROOM.CREATE, room.toDto());
-  socket.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
+  io.local.emit(EVENTS.ROOM.CREATE, room.toDto());
 };
 
 export const onJoin = (socket) => ({ playerId, id }) => {

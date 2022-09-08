@@ -27,7 +27,7 @@ const RoomListItem = ({ room }) => {
 };
 
 const RoomList = () => {
-  const rooms = useSelector((state) => state.rooms || []);
+  const rooms = useSelector((state) => state.rooms);
 
   return (
     <Card>

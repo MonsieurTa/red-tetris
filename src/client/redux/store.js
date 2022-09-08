@@ -5,7 +5,15 @@ import { socketIoEmitterMiddleware, socketIoListenerMiddleware } from './middlew
 
 import redTetrisReducer from './reducers/red-tetris';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = {
+  rooms: [],
+  currentRoom: null,
+  player: null,
+  game: null,
+  board: null,
+  currentPiece: null,
+  othersBoards: {},
+};
 
 const setupStore = () => configureStore({
   reducer: redTetrisReducer,

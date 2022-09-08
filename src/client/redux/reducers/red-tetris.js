@@ -2,19 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
-  initialState: {
-    rooms: [],
-    currentRoom: null,
-    player: null,
-    game: null,
-    board: null,
-    currentPiece: null,
-    othersBoards: {},
-  },
   reducers: {
     register: (state, { payload: player }) => ({ ...state, player }),
-
     setRooms: (state, { payload: rooms }) => ({ ...state, rooms }),
+    addRoom: (state, { payload: room }) => ({
+      ...state,
+      rooms: [room, ...state.rooms],
+    }),
+    removeRoom: (state, { payload: roomId }) => ({
+      ...state,
+      rooms: state.rooms.filter(({ id }) => id !== roomId),
+    }),
     setCurrentRoom: (state, { payload: currentRoom }) => ({
       ...state,
       currentRoom,
@@ -36,6 +34,8 @@ const redTetrisSlice = createSlice({
 export const {
   register,
   setRooms,
+  addRoom,
+  removeRoom,
   setCurrentRoom,
   setGameState,
   setCurrentPiece,
