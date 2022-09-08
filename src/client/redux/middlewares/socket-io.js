@@ -8,7 +8,7 @@ import {
   register,
   setRooms,
   setCurrentRoom,
-  setBoard,
+  setGameState,
   addOtherBoard,
 } from '../reducers/red-tetris';
 
@@ -56,12 +56,11 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         store.dispatch({ type: EVENTS.GAME.START, gameId: game.id });
       });
 
-      socket.on(EVENTS.GAME.STATE, ({ board }) => {
-        store.dispatch(setBoard(board));
+      socket.on(EVENTS.GAME.STATE, (gameState) => {
+        store.dispatch(setGameState(gameState));
       });
 
       socket.on(EVENTS.GAME.OTHERS_STATE, (otherBoard) => {
-        console.log({ otherBoard });
         store.dispatch(addOtherBoard(otherBoard));
       });
 

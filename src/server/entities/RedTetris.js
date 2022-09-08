@@ -89,29 +89,23 @@ class RedTetris {
   run(debug = false) {
     if (debug === true) {
       const debugLog = () => {
-        console.clear();
-        console.log('players:');
-        console.log(`\tcount: ${this._players.size}`);
+        console.log(`info::players ${this._players.size}`);
         this._players.forEach((player) => {
-          console.log(`\tplayer#${player.id}`);
-          console.log(`\tsocket#${player.socket.id}`);
+          console.log(`\tid: username: ${player.username}`);
         });
 
-        console.log('rooms:');
-        console.log(`\tcount: ${this._rooms.size}`);
-
-        console.log('games:');
-        console.log(`\tcount: ${this._games.size}`);
-
-        console.log('engine:');
-        console.log(`\tgame count: ${this._engine._games.length}`);
-        this._engine._games.forEach((v, i) => {
-          console.log(`\tgame#${i}`);
-          console.log(`\t\tname: ${v.name}`);
-          console.log(`\t\talive: ${v.alive}`);
-          console.log(`\t\tdestroyed: ${v.destroyed}`);
+        console.log(`info::rooms ${this._rooms.size}`);
+        this._rooms.forEach((room) => {
+          console.log(`\tname: ${room.name} | capacity: ${room.players.length}/${room.capacity} `);
         });
 
+        console.log(`info::games ${this._games.size}`);
+        this._games.forEach((game) => {
+          console.log(`id ${game.id} | alive: ${game.alive} | destroyed: ${game.destroyed}`);
+        });
+
+        console.log(`info::engine game | count: ${this._engine._games.length}`);
+        console.log();
         setTimeout(debugLog, 1000);
       };
       debugLog();

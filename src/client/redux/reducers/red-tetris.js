@@ -20,7 +20,7 @@ const redTetrisSlice = createSlice({
       currentRoom,
       othersBoards: {},
     }),
-    setBoard: (state, { payload: board }) => ({ ...state, board }),
+    setGameState: (state, { payload: gameState }) => ({ ...state, ...gameState }),
     addOtherBoard: (state, { payload: { id, board } }) => {
       const { othersBoards } = state;
       return ({ ...state, othersBoards: { ...othersBoards, [id]: board } });
@@ -37,7 +37,7 @@ export const {
   register,
   setRooms,
   setCurrentRoom,
-  setBoard,
+  setGameState,
   setCurrentPiece,
   addOtherBoard,
 } = redTetrisSlice.actions;

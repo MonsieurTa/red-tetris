@@ -38,6 +38,11 @@ const App = () => {
   const dispatch = useDispatch();
   const currentRoom = useSelector((store) => store.currentRoom);
   const board = useSelector((store) => store.board || initBoard(WIDTH, HEIGHT));
+  const gameInfo = useSelector(({
+    score = 0,
+    level = 1,
+    totalLineCleared = 0,
+  }) => ({ score, level, totalLineCleared }));
 
   const othersBoards = useSelector((store) => Object.entries(store.othersBoards || {}).sort());
 
@@ -54,6 +59,7 @@ const App = () => {
 
     dispatch({ type: EVENTS.ROOM.READY, id: currentRoom.id });
   };
+
   return (
     <div className="flex flex-row h-screen gap-x-2">
       <div className="flex flex-col gap-y-2 w-96">
@@ -68,8 +74,11 @@ const App = () => {
           Start
         </Button>
       </div>
-      <div className="flex">
+      <div className="flex flex-col">
         <Board value={board} />
+        <div>{`score: ${gameInfo.score}`}</div>
+        <div>{`totalLineCleared: ${gameInfo.totalLineCleared}`}</div>
+        <div>{`level: ${gameInfo.level}`}</div>
       </div>
       <div className="flex">
         {othersBoards.map(([id, otherBoard]) => <Board key={id} value={otherBoard} size="sm" />)}

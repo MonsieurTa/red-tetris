@@ -8,6 +8,7 @@ import EVENTS from '../../shared/constants/socket-io';
 const LOCK_DELAY = 100;
 
 const POINTS_PER_LINE = {
+  0: 0,
   1: 100,
   2: 300,
   3: 500,
@@ -141,6 +142,9 @@ class Game {
     return {
       id: this._id,
       board: this.displayableBoard(),
+      score: this._score,
+      totalLineCleared: this._totalLineCleared,
+      level: this._level,
     };
   }
 

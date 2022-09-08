@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-const MAX_PLAYERS = 2;
+const MAX_PLAYERS = 4;
 
 class Room {
   constructor({ name, host, capacity = MAX_PLAYERS }) {
