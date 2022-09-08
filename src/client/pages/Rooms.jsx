@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Card,
-  Grid,
   List,
   ListItem,
   ListItemButton,
@@ -44,44 +43,37 @@ const Rooms = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   return (
-    <div className="flex flex-col h-full gap-y-2">
+    <div className="flex flex-col h-full w-full gap-y-4">
       <RoomCreationInput />
 
-      <Grid container spacing={0} className="h-full">
-        <Grid item xs={6} className="h-full pr-2">
-          <Card variant="outlined">
-            <List
-              dense
-              subheader={(
-                <ListSubheader component="div" id="nested-list-subheader">
-                  Room list
-                </ListSubheader>
+      <div className="flex flex-row h-full gap-x-4">
+        <Card variant="outlined" sx={{ width: 1, height: 1 }}>
+          <List
+            dense
+            subheader={(
+              <ListSubheader component="div" id="nested-list-subheader">
+                Room list
+              </ListSubheader>
             )}
-            >
-              <RoomListItems
-                rooms={rooms}
-                onSelect={(room) => setSelectedRoom(room)}
-              />
-            </List>
-          </Card>
-        </Grid>
+          >
+            <RoomListItems
+              rooms={rooms}
+              onSelect={(room) => setSelectedRoom(room)}
+            />
+          </List>
+        </Card>
 
-        <Grid
-          container
-          spacing={0}
-          className="flex flex-row h-full pl-2"
-          item
-          xs={6}
-        >
-          <Grid item xs={12} className="h-1/2">
-            <RoomInfo room={selectedRoom} />
-          </Grid>
+        <div className="flex flex-col h-full w-full gap-y-4">
+          <RoomInfo room={selectedRoom} />
 
-          <Grid item xs={12} className="h-1/2">
-            Room preview
-          </Grid>
-        </Grid>
-      </Grid>
+          {selectedRoom && (
+            <div>
+              Room preview
+            </div>
+          )}
+        </div>
+      </div>
+
     </div>
   );
 };

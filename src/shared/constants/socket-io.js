@@ -24,6 +24,7 @@ const ROOM = {
   CREATE: 'room:create',
   REMOVED: 'room:removed',
   JOIN: 'room:join',
+  LEAVE: 'room:leave',
   READY: 'room:ready',
 };
 

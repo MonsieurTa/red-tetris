@@ -10,6 +10,7 @@ const onRegister = (socket) => ({ username }) => {
 
   redTetris.register(newPlayer);
   socket.emit(EVENTS.RED_TETRIS.REGISTER, newPlayer.toDto());
+  socket.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
 };
 
 const actions = {

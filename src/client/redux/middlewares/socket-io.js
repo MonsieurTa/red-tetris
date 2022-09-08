@@ -9,9 +9,10 @@ import {
   setRooms,
   setCurrentRoom,
   setGameState,
-  addOtherBoard,
   addRoom,
   removeRoom,
+  setRoomGame,
+  setCreatedRoom,
 } from '../reducers/red-tetris';
 
 let socket = null;
@@ -47,7 +48,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
 
       socket.on(EVENTS.ROOM.CREATE, (room) => {
         if (room.host?.id === store.getState().player?.id) {
-          store.dispatch(setCurrentRoom(room));
+          store.dispatch(setCreatedRoom(room));
         }
         store.dispatch(addRoom(room));
       });
@@ -56,8 +57,12 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         store.dispatch(removeRoom(id));
       });
 
-      socket.on(EVENTS.ROOM.JOIN, ({ room, players }) => {
+      socket.on(EVENTS.ROOM.JOIN, (room) => {
         if (room.error) return;
+        store.dispatch(setCurrentRoom(room));
+      });
+
+      socket.on(EVENTS.ROOM.LEAVE, (room) => {
         store.dispatch(setCurrentRoom(room));
       });
 
@@ -70,7 +75,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       });
 
       socket.on(EVENTS.GAME.OTHERS_STATE, (otherBoard) => {
-        store.dispatch(addOtherBoard(otherBoard));
+        store.dispatch(setRoomGame(otherBoard));
       });
 
       return null;

@@ -1,21 +1,27 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   TextField,
   Button,
 } from '@mui/material';
-import React, { useState } from 'react';
-
-import { Games } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
 
 import EVENTS from '../../shared/constants/socket-io';
 
 const Home = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const player = useSelector((store) => store.player);
   const [username, setUsername] = useState('');
 
   const onClick = () => {
     dispatch({ type: EVENTS.RED_TETRIS.REGISTER, username });
   };
+
+  useEffect(() => {
+    if (!player) return;
+    navigate('/rooms', { replace: true });
+  }, [player, navigate]);
 
   return (
     <div className="flex flex-row gap-x-2">

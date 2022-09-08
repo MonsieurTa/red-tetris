@@ -55,6 +55,7 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
 
     socket.on(EVENTS.ROOM.CREATE, roomListeners.onCreate(socket, io));
     socket.on(EVENTS.ROOM.JOIN, roomListeners.onJoin(socket));
+    socket.on(EVENTS.ROOM.LEAVE, roomListeners.onLeave(socket));
     socket.on(EVENTS.ROOM.READY, roomListeners.onReady(socket));
 
     socket.on(EVENTS.GAME.START, gameListeners.onStart(socket));

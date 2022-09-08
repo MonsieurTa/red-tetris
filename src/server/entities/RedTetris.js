@@ -25,6 +25,8 @@ class RedTetris {
       .forEach((room) => {
         room.remove(player.id);
         player.socket.leave(room.id);
+        player.socket.to(room.id).emit(EVENTS.ROOM.LEAVE, room.toDto());
+
         if (room.isEmpty) {
           this._rooms.delete(room.id);
           this._io.local.emit(EVENTS.ROOM.REMOVED, { id: room.id });

@@ -4,15 +4,17 @@ import { createLogger } from 'redux-logger';
 import { socketIoEmitterMiddleware, socketIoListenerMiddleware } from './middlewares/socket-io';
 
 import redTetrisReducer from './reducers/red-tetris';
+import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 
 const INITIAL_STATE = {
   rooms: [],
+  createdRoom: null,
   currentRoom: null,
   player: null,
   game: null,
-  board: null,
+  board: initBoard(WIDTH, HEIGHT),
   currentPiece: null,
-  othersBoards: {},
+  roomGames: {},
 };
 
 const setupStore = () => configureStore({

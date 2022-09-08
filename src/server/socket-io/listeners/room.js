@@ -54,9 +54,19 @@ export const onJoin = (socket) => ({ playerId, id }) => {
   room.addPlayer(player);
 
   socket.join(room.id);
-  socket.emit(EVENTS.ROOM.JOIN, {
-    room: room.toDto(),
-    players: room.players.map((v) => v.toDto()),
+  socket.emit(EVENTS.ROOM.JOIN, room.toDto());
+  socket.to(room.id).emit(EVENTS.ROOM.JOIN, room.toDto());
+};
+
+export const onLeave = (socket) => ({ playerId }) => {
+  const redTetris = getRedTetrisSingleton();
+
+  const player = redTetris.findPlayer(playerId);
+
+  redTetris.findAllRooms().forEach((room) => {
+    room.remove(player.id);
+    socket.leave(room.id);
+    socket.to(room.id).emit(EVENTS.ROOM.LEAVE, room.toDto());
   });
 };
 

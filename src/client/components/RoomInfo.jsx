@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Button,
   Card,
@@ -6,8 +7,11 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
+import EVENTS from '../../shared/constants/socket-io';
 
 const RoomInfoContent = ({ room }) => {
+  const dispatch = useDispatch();
+
   if (!room) {
     return (
       <CardContent>
@@ -17,6 +21,10 @@ const RoomInfoContent = ({ room }) => {
       </CardContent>
     );
   }
+
+  const onClick = () => {
+    dispatch({ type: EVENTS.ROOM.JOIN, id: room.id });
+  };
 
   return (
     <>
@@ -36,11 +44,15 @@ const RoomInfoContent = ({ room }) => {
         <Typography>
           {`players: ${room.players.length}/${room.capacity}`}
         </Typography>
-
       </CardContent>
 
       <CardActions>
-        <Button size="small">Join</Button>
+        <Button
+          size="small"
+          onClick={onClick}
+        >
+          Join
+        </Button>
       </CardActions>
     </>
   );
@@ -49,6 +61,7 @@ const RoomInfoContent = ({ room }) => {
 const RoomInfoCard = ({ room }) => (
   <Card
     variant="outlined"
+    sx={{ width: 1 }}
   >
     <RoomInfoContent room={room} />
   </Card>

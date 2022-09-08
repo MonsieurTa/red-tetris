@@ -5,9 +5,8 @@ import {
   Route,
   Outlet,
   Navigate,
-  useNavigate,
 } from 'react-router-dom';
-import { Button, Container } from '@mui/material';
+import { Container } from '@mui/material';
 
 import { withGlobalCssPriority } from './GlobalCssPriority';
 
@@ -17,7 +16,7 @@ import Home from '../pages/Home';
 import Rooms from '../pages/Rooms';
 import Room from '../pages/Room';
 
-const inputKeyDownListener = (dispatch) => ({ code, ...rest }) => {
+const inputKeyDownListener = (dispatch) => ({ code }) => {
   switch (code) {
     case 'ArrowLeft':
       dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.LEFT });
@@ -55,28 +54,15 @@ const ProtectedRoute = ({ player, children, redirectPath }) => {
 };
 
 const RootLayout = ({ children }) => (
-  <Container maxWidth="md" className="flex flex-col h-full py-2">
+  <Container maxWidth="md" className="flex flex-col h-full items-center py-2">
     <div className="text-9xl my-4">RED TETRIS</div>
     {children || <Outlet />}
   </Container>
 );
 
 const App = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const player = useSelector((store) => store.player);
-  const currentRoom = useSelector((store) => store.currentRoom);
-
-  useEffect(() => {
-    if (!player) return;
-    navigate('/rooms', { replace: true });
-  }, [player, navigate]);
-
-  useEffect(() => {
-    if (currentRoom) {
-      navigate(`/rooms/${currentRoom.id}`);
-    }
-  }, [currentRoom, navigate]);
 
   useEffect(() => {
     document.addEventListener('keydown', inputKeyDownListener(dispatch));

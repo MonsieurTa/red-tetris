@@ -13,15 +13,16 @@ const redTetrisSlice = createSlice({
       ...state,
       rooms: state.rooms.filter(({ id }) => id !== roomId),
     }),
+    setCreatedRoom: (state, { payload: createdRoom }) => ({ ...state, createdRoom }),
     setCurrentRoom: (state, { payload: currentRoom }) => ({
       ...state,
       currentRoom,
-      othersBoards: {},
+      roomGames: {},
     }),
     setGameState: (state, { payload: gameState }) => ({ ...state, ...gameState }),
-    addOtherBoard: (state, { payload: { id, board } }) => {
-      const { othersBoards } = state;
-      return ({ ...state, othersBoards: { ...othersBoards, [id]: board } });
+    setRoomGame: (state, { payload: roomGame }) => {
+      const { roomGames } = state;
+      return ({ ...state, roomGames: { ...roomGames, [roomGame.id]: roomGame } });
     },
     join: (state) => state,
     ready: (state) => state,
@@ -36,9 +37,10 @@ export const {
   setRooms,
   addRoom,
   removeRoom,
+  setCreatedRoom,
   setCurrentRoom,
   setGameState,
   setCurrentPiece,
-  addOtherBoard,
+  setRoomGame,
 } = redTetrisSlice.actions;
 export default redTetrisSlice.reducer;

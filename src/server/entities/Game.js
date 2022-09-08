@@ -155,6 +155,7 @@ class Game {
   toDto() {
     return {
       id: this._id,
+      player: this._player.toDto(),
       board: this.displayableBoard(),
       score: this._score,
       totalLineCleared: this._totalLineCleared,
