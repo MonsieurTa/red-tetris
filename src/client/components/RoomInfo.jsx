@@ -34,7 +34,7 @@ const RoomInfoContent = ({ room }) => {
         </Typography>
 
         <Typography>
-          {`players: ${room.playersCount}/${room.capacity}`}
+          {`players: ${room.players.length}/${room.capacity}`}
         </Typography>
 
       </CardContent>
