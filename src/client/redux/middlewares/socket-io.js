@@ -107,9 +107,12 @@ export const socketIoEmitterMiddleware = (store) => (next) => (action) => {
       });
       return null;
     case EVENTS.GAME.ACTION:
+      if (!store.getState().player) return null;
+
       socket.emit(EVENTS.GAME.ACTION, {
         playerId: store.getState().player.id,
         action: action.action,
+        status: action.status,
       });
       return null;
     default:

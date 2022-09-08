@@ -101,10 +101,10 @@ class RedTetris {
 
         console.log(`info::games ${this._games.size}`);
         this._games.forEach((game) => {
-          console.log(`id ${game.id} | alive: ${game.alive} | destroyed: ${game.destroyed}`);
+          console.log(`\tid ${game.id} | alive: ${game.alive} | gravity: ${game._gravity} | destroyed: ${game.destroyed}`);
         });
 
-        console.log(`info::engine game | count: ${this._engine._games.length}`);
+        console.log(`info::engine game | count: ${this._engine._games.length} | deltaTick: ${this._engine._deltaTick}`);
         console.log();
         setTimeout(debugLog, 1000);
       };

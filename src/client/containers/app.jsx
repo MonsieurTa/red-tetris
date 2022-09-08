@@ -13,7 +13,7 @@ import EVENTS from '../../shared/constants/socket-io';
 import { HEIGHT, initBoard, WIDTH } from '../../shared/helpers/board';
 import INPUTS from '../../shared/constants/inputs';
 
-const inputListener = (dispatch) => ({ code }) => {
+const inputKeyDownListener = (dispatch) => ({ code, ...rest }) => {
   switch (code) {
     case 'ArrowLeft':
       dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.LEFT });
@@ -25,10 +25,19 @@ const inputListener = (dispatch) => ({ code }) => {
       dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.ROTATE });
       break;
     case 'ArrowDown':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.DOWN });
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.DOWN, status: 'pressed' });
       break;
     case 'Space':
       dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.HARD_DROP });
+      break;
+    default:
+  }
+};
+
+const inputKeyUpListener = (dispatch) => ({ code }) => {
+  switch (code) {
+    case 'ArrowDown':
+      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.DOWN, status: 'released' });
       break;
     default:
   }
@@ -47,10 +56,12 @@ const App = () => {
   const othersBoards = useSelector((store) => Object.entries(store.othersBoards || {}).sort());
 
   useEffect(() => {
-    document.addEventListener('keydown', inputListener(dispatch));
+    document.addEventListener('keydown', inputKeyDownListener(dispatch));
+    document.addEventListener('keyup', inputKeyUpListener(dispatch));
 
     return () => {
-      document.removeEventListener('keydown', inputListener(dispatch));
+      document.removeEventListener('keydown', inputKeyDownListener(dispatch));
+      document.removeEventListener('keyup', inputKeyUpListener(dispatch));
     };
   }, [dispatch]);
 

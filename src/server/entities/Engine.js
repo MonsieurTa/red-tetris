@@ -1,9 +1,14 @@
 import EVENTS from '../../shared/constants/socket-io';
 
+export const TICK_PER_SECOND = 60;
+
+const TICK_DELAY = 1000 / TICK_PER_SECOND;
+
 class Engine {
   constructor() {
     this._running = false;
     this._games = [];
+    this._deltaTick = null;
   }
 
   stop() {
@@ -18,20 +23,23 @@ class Engine {
     this._running = true;
 
     const loop = () => {
+      const startTick = Date.now();
+
       this._games = this._games.filter((game) => game.alive && !game.destroyed);
-
       this._games.forEach((game) => {
-        if (!game.defaultDropSchedule) return;
-
         game.update();
-
-        if (game.alive) {
+        if (game.alive && game.displayable) {
           const toEmit = game.toDto();
           game.emitToPlayer(EVENTS.GAME.STATE, toEmit);
           game.emitToRoom(EVENTS.GAME.OTHERS_STATE, toEmit);
         }
       });
-      return new Promise((resolve) => { setTimeout(resolve, 100); })
+      const endTick = Date.now();
+
+      this._deltaTick = endTick - startTick;
+      return new Promise((resolve) => {
+        setTimeout(resolve, Math.abs(TICK_DELAY - this._deltaTick));
+      })
         .then(() => (this._running ? process.nextTick(loop) : null));
     };
 

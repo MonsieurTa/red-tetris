@@ -75,11 +75,15 @@ class Piece {
   }
 
   get y() {
-    return this._y;
+    return Math.floor(this._y);
   }
 
-  set y(y) {
+  setY(y) {
     this._y = y;
+  }
+
+  get yFloat() {
+    return this._y;
   }
 }
 
