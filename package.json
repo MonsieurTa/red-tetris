@@ -18,6 +18,7 @@
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.3",
     "@reduxjs/toolkit": "^1.8.5",
+    "animejs": "^3.2.1",
     "debug": "^4.3.4",
     "http-status-codes": "^2.2.0",
     "react": "^18.2.0",
