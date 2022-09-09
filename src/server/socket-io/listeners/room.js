@@ -60,13 +60,16 @@ export const onJoin = (socket) => ({ playerId, id }) => {
 
 export const onLeave = (socket) => ({ playerId }) => {
   const redTetris = getRedTetrisSingleton();
-
   const player = redTetris.findPlayer(playerId);
 
   redTetris.findAllRooms().forEach((room) => {
     room.remove(player.id);
     socket.leave(room.id);
     socket.to(room.id).emit(EVENTS.ROOM.LEAVE, room.toDto());
+
+    if (room.isEmpty) {
+      redTetris.deleteRoom(room.id);
+    }
   });
 };
 

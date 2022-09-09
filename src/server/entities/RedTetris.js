@@ -64,6 +64,11 @@ class RedTetris {
     return room;
   }
 
+  deleteRoom(roomId) {
+    this._rooms.delete(roomId);
+    this.emitToAll(EVENTS.ROOM.REMOVED, { id: roomId });
+  }
+
   findGame(gameId) {
     return this._games.get(gameId);
   }
@@ -74,8 +79,13 @@ class RedTetris {
 
   storeGame(game) {
     this._games.set(game.id, this.findGame(game.id) || game);
-    this._engine.add(game);
     return game;
+  }
+
+  startGame(game) {
+    game.registerUserInputListeners();
+    game.start();
+    this._engine.add(game);
   }
 
   storePieceGenerator(key, pieceGenerator) {
@@ -120,6 +130,10 @@ class RedTetris {
 
   stop() {
     this._engine.stop();
+  }
+
+  emitToAll(eventName, args) {
+    this._io.local.emit(eventName, args);
   }
 
   set io(io) {
