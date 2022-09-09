@@ -7,6 +7,7 @@ import redTetrisReducer from './reducers/red-tetris';
 import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 
 const INITIAL_STATE = {
+  socket: null,
   rooms: [],
   createdRoom: null,
   currentRoom: null,

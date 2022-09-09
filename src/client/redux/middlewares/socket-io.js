@@ -12,6 +12,7 @@ import {
   addRoom,
   removeRoom,
   setRoomGame,
+  setSocket,
 } from '../reducers/red-tetris';
 
 let socket = null;
@@ -23,6 +24,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         socket.close();
       }
       socket = new Client(action.host);
+      store.dispatch(setSocket(socket));
 
       socket.on(EVENTS.COMMON.CONNECT, () => store.dispatch(actions.WEBSOCKET.connected()));
       socket.on(

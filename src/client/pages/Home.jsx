@@ -50,7 +50,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!currentRoom) return;
-    navigate(`/${currentRoom.id}`);
+    navigate(currentRoom.id, { replace: true });
   }, [navigate, currentRoom]);
 
   return (

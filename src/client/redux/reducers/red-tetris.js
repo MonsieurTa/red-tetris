@@ -4,6 +4,7 @@ import { HEIGHT, initBoard, WIDTH } from '../../../shared/helpers/board';
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
   reducers: {
+    setSocket: (state, { payload: socket }) => ({ ...state, socket }),
     register: (state, { payload: player }) => ({ ...state, player }),
     setRooms: (state, { payload: rooms }) => ({ ...state, rooms }),
     addRoom: (state, { payload: room }) => ({
@@ -34,6 +35,7 @@ const redTetrisSlice = createSlice({
 });
 
 export const {
+  setSocket,
   register,
   setRooms,
   addRoom,

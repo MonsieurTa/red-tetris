@@ -5,6 +5,7 @@ import {
   Route,
   Outlet,
   Navigate,
+  useLocation,
 } from 'react-router-dom';
 import { Container } from '@mui/material';
 
@@ -60,8 +61,10 @@ const RootLayout = ({ children }) => (
 );
 
 const App = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const player = useSelector((store) => store.player);
+  const socket = useSelector((store) => store.socket);
 
   useEffect(() => {
     document.addEventListener('keydown', inputKeyDownListener(dispatch));
@@ -73,16 +76,31 @@ const App = () => {
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!socket) return;
+
+    const re = /^([a-zA-Z0-9_]+)\[([a-zA-Z0-9_]+)\]$/;
+    const match = location.hash.replace('#', '').match(re);
+    if (match) {
+      const [, roomName, username] = match;
+      if (!player) {
+        dispatch({ type: EVENTS.RED_TETRIS.REGISTER, username });
+      } else {
+        dispatch({ type: EVENTS.ROOM.CREATE, playerId: player.id, name: roomName });
+      }
+    }
+  }, [location, dispatch, socket, player]);
+
   return (
     <div className="w-screen h-screen">
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Home />} />
-          <Route element={<ProtectedRoute player={player} redirectPath="/" />}>
+          <Route element={<ProtectedRoute player={player} redirectPath="" />}>
             <Route path=":roomId" element={<Room />} />
           </Route>
         </Route>
-        <Route path="*" exact element={<Navigate to="/" replace />} />
+        <Route path="*" exact element={<Navigate to="" replace />} />
       </Routes>
     </div>
   );

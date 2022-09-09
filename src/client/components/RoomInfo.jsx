@@ -22,7 +22,7 @@ const RoomInfoContent = ({ room }) => {
   }
 
   const onClick = () => {
-    navigate(`/${room.id}`);
+    navigate(room.id, { replace: true });
   };
 
   return (
