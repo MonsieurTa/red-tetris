@@ -27,6 +27,11 @@ const Room = () => {
     dispatch({ type: EVENTS.ROOM.READY, id: roomId });
   };
 
+  const onBack = () => {
+    dispatch({ type: EVENTS.ROOM.LEAVE, id: roomId });
+    navigate('/');
+  };
+
   return (
     <div className="flex w-full justify-center gap-x-4">
       <div className="flex flex-col w-full gap-y-4">
@@ -53,6 +58,9 @@ const Room = () => {
             Start
           </Button>
         )}
+        <Button variant="contained" onClick={onBack}>
+          Back
+        </Button>
       </div>
 
       <Board value={board} />

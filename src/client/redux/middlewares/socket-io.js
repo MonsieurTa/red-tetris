@@ -108,6 +108,11 @@ export const socketIoEmitterMiddleware = (store) => (next) => (action) => {
         id: action.id,
       });
       return null;
+    case EVENTS.ROOM.LEAVE:
+      socket.emit(EVENTS.ROOM.LEAVE, {
+        playerId: store.getState().player.id,
+      });
+      return null;
     case EVENTS.ROOM.READY:
       socket.emit(EVENTS.ROOM.READY, {
         playerId: store.getState().player.id,
