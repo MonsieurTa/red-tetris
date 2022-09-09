@@ -1,22 +1,25 @@
-import { Button, Card, CardContent } from '@mui/material';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Button, Card, CardContent } from '@mui/material';
+
 import EVENTS from '../../shared/constants/socket-io';
 import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 import Board from '../components/Board';
 
 const Room = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentPlayer = useSelector((store) => store.player);
-  const {
-    id: roomId,
-    host,
-    // name,
-    players,
-  } = useSelector((store) => store.currentRoom);
+  const currentRoom = useSelector((store) => store.currentRoom);
   const board = useSelector((store) => store.board);
   const roomGames = useSelector((store) => [...Object.values(store.roomGames)]);
 
+  if (!currentRoom) {
+    navigate('/');
+  }
+
+  const { id: roomId, host, players } = currentRoom;
   const otherPlayers = players.filter((player) => player.id !== currentPlayer.id);
   const isHost = currentPlayer.id === host.id;
 

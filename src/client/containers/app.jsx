@@ -13,7 +13,6 @@ import { withGlobalCssPriority } from './GlobalCssPriority';
 import EVENTS from '../../shared/constants/socket-io';
 import INPUTS from '../../shared/constants/inputs';
 import Home from '../pages/Home';
-import Rooms from '../pages/Rooms';
 import Room from '../pages/Room';
 
 const inputKeyDownListener = (dispatch) => ({ code }) => {
@@ -79,10 +78,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Home />} />
-
           <Route element={<ProtectedRoute player={player} redirectPath="/" />}>
-            <Route path="rooms" element={<Rooms />} />
-            <Route path="rooms/:id" element={<Room />} />
+            <Route path=":id" element={<Room />} />
           </Route>
         </Route>
       </Routes>

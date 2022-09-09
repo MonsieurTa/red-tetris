@@ -21,7 +21,7 @@ const RoomCreationInput = () => {
     if (createdRoom) {
       dispatch(setCurrentRoom(createdRoom));
       dispatch(setCreatedRoom(null));
-      navigate(`/rooms/${createdRoom.id}`);
+      navigate(`/${createdRoom.id}`);
     }
   }, [createdRoom, dispatch, navigate]);
 
