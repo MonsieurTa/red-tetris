@@ -21,7 +21,7 @@ const redTetrisSlice = createSlice({
       board: initBoard(WIDTH, HEIGHT),
       roomGames: {},
     }),
-    setGameState: (state, { payload: gameState }) => ({ ...state, ...gameState }),
+    setGameState: (state, { payload: gameState }) => ({ ...state, gameState }),
     setRoomGame: (state, { payload: roomGame }) => {
       const { roomGames } = state;
       return ({ ...state, roomGames: { ...roomGames, [roomGame.id]: roomGame } });

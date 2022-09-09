@@ -7,6 +7,7 @@ import {
   ListItemButton,
   ListItemText,
   ListSubheader,
+  Typography,
 } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
@@ -55,11 +56,15 @@ const Home = () => {
 
   return (
     <div className="flex flex-col h-full w-full gap-y-4">
-      {!player ? (
-        <PlayerRegistrationInput />
-      ) : (
-        <RoomCreationInput />
-      )}
+      <div className="flex flex-row w-full justify-between items-center">
+        {!player ? (
+          <PlayerRegistrationInput />
+        ) : (
+          <RoomCreationInput />
+        )}
+
+        {player && <Typography variant="body1">{`Hello ${player.username}`}</Typography>}
+      </div>
 
       <div className="flex flex-row gap-x-4">
         <Card variant="outlined" sx={{ width: 1, height: 1 }}>

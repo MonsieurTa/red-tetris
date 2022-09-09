@@ -9,13 +9,19 @@ import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 const INITIAL_STATE = {
   socket: null,
   rooms: [],
-  createdRoom: null,
   currentRoom: null,
   player: null,
-  game: null,
-  board: initBoard(WIDTH, HEIGHT),
-  currentPiece: null,
   roomGames: {},
+  gameState: {
+    id: null,
+    player: null,
+    board: initBoard(WIDTH, HEIGHT),
+    score: 0,
+    combo: 0,
+    totalLineCleared: 0,
+    level: 1,
+    nextShapes: [],
+  },
 };
 
 const setupStore = () => configureStore({

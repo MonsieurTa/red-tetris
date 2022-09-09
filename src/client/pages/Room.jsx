@@ -14,13 +14,10 @@ const Room = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const currentPlayer = useSelector((store) => store.player);
-  const currentRoom = useSelector((store) => {
-    if (!store.currentRoom) {
-      return store.rooms.find(({ id }) => id === params.roomId);
-    }
-    return store.currentRoom;
-  });
-  const board = useSelector((store) => store.board);
+  const currentRoom = useSelector(
+    (store) => store.currentRoom || store.rooms.find(({ id }) => id === params.roomId),
+  );
+  const gameState = useSelector((store) => store.gameState);
   const roomGames = useSelector((store) => [...Object.values(store.roomGames)]);
 
   useEffect(() => {
@@ -36,6 +33,13 @@ const Room = () => {
   const { id: roomId, host, players } = currentRoom;
   const otherPlayers = players.filter((player) => player.id !== currentPlayer.id);
   const isHost = currentPlayer.id === host.id;
+  const roomRunning = [gameState, ...roomGames].some((game) => game.alive);
+  const {
+    board,
+    nextShapes,
+    score,
+    level,
+  } = gameState;
 
   const onStart = () => {
     dispatch({ type: EVENTS.ROOM.READY, id: roomId });
@@ -51,23 +55,27 @@ const Room = () => {
       <div className="flex flex-col w-full gap-y-4">
         <Card>
           <CardContent>
-            Sequence
+            {JSON.stringify(nextShapes)}
           </CardContent>
         </Card>
 
         <Card>
           <CardContent>
             Score
+            {' '}
+            {score}
           </CardContent>
         </Card>
 
         <Card>
           <CardContent>
-            Combo
+            Level
+            {' '}
+            {level}
           </CardContent>
         </Card>
 
-        {isHost && (
+        {isHost && !roomRunning && (
           <Button variant="contained" onClick={onStart}>
             Start
           </Button>

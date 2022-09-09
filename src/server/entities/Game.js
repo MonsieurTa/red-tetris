@@ -39,6 +39,7 @@ class Game {
     this._score = 0;
     this._totalLineCleared = 0;
     this._level = 1;
+    this._combo = 0;
 
     this._shapeGenerator = pieceGenerator;
     this._currentShapeIndex = -1;
@@ -160,6 +161,9 @@ class Game {
       score: this._score,
       totalLineCleared: this._totalLineCleared,
       level: this._level,
+      combo: this._combo,
+      nextShapes: this._nextShapes(),
+      alive: this._alive,
     };
   }
 
@@ -169,6 +173,11 @@ class Game {
     const piece = new Piece(this._shapeGenerator.drawShape(this._currentShapeIndex), 0, 0);
     piece.x = parseInt((this._board.width / 2), 10) - Math.ceil(piece.width / 2);
     return piece;
+  }
+
+  _nextShapes() {
+    const next = this._currentShapeIndex + 1;
+    return [...Array(3)].map((_, i) => this._shapeGenerator.drawShape(next + i));
   }
 
   _rotate() {
@@ -228,6 +237,12 @@ class Game {
     this._gravity = DEFAULT_GRAVITY * this._level;
 
     this._score += POINTS_PER_LINE[lineCleared] * this._level;
+
+    if (lineCleared === 0) {
+      this._combo = 0;
+    } else {
+      this._combo += 1;
+    }
   }
 
   get id() {
