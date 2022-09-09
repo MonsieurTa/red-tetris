@@ -21,20 +21,24 @@ const COLOR_MAP = {
 };
 
 const Cell = ({
-  shape,
-  x,
-  y,
+  shape: shapeProp,
+  borderRight,
+  borderTop,
   size = 'md',
 }) => {
+  const isGhost = shapeProp.startsWith('g');
+  const shape = shapeProp.replace('g', '');
+
   const color = COLOR_MAP[shape];
   return (
     <Box sx={{
       width: CELL_SIZES[size],
       height: CELL_SIZES[size],
-      borderRight: +!(x === WIDTH - 1),
-      borderTop: +!(y === 0),
-      borderColor: 'gray',
+      borderRight: +!borderRight,
+      borderTop: +!borderTop,
+      borderColor: isGhost ? color : 'gray',
       backgroundColor: color,
+      opacity: isGhost ? 0.5 : 1,
     }}
     />
   );
@@ -53,21 +57,25 @@ const Row = ({ row, y, size = 'md' }) => (
         key={x}
         shape={cell}
         size={size}
-        x={x}
-        y={y}
+        borderRight={x === row.length - 1}
+        borderTop={y === 0}
       />
     ))}
   </Box>
 );
 
-const Board = ({ size = 'md', value, username = '' }) => (
+const Board = ({
+  size = 'md',
+  value,
+  username = '',
+}) => (
   <div>
     <Typography>{username}</Typography>
     <Box
       className="flex flex-col"
       sx={{
-        width: WIDTH * CELL_SIZES[size],
-        height: HEIGHT * CELL_SIZES[size],
+        width: value[0].length * CELL_SIZES[size],
+        height: value.length * CELL_SIZES[size],
         backgroundColor: 'black',
       }}
     >

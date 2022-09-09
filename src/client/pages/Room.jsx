@@ -6,6 +6,7 @@ import { Button, Card, CardContent } from '@mui/material';
 import EVENTS from '../../shared/constants/socket-io';
 import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 import Board from '../components/Board';
+import PIECES from '../../shared/constants/pieces';
 
 const EMPTY_BOARD = initBoard(WIDTH, HEIGHT);
 
@@ -54,8 +55,14 @@ const Room = () => {
     <div className="flex w-full justify-center gap-x-4">
       <div className="flex flex-col w-full gap-y-4">
         <Card>
-          <CardContent>
-            {JSON.stringify(nextShapes)}
+          <CardContent className="flex flex-row justify-evenly">
+            {nextShapes.map((shape, i) => (
+              <Board
+                key={`${shape}#${i}}`}
+                size="sm"
+                value={PIECES[shape]}
+              />
+            ))}
           </CardContent>
         </Card>
 

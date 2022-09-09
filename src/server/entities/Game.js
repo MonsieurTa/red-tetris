@@ -130,14 +130,21 @@ class Game {
     socket.on(EVENTS.GAME.ACTION, inputListener);
   }
 
-  displayableBoard() {
+  _displayableBoard() {
     const board = this._board.copy();
-    const { x, y, matrix } = this._currentPiece;
+    const ghostPiece = this._getGhostPiece();
 
-    matrix.forEach((row, _y) => {
+    ghostPiece.matrix.forEach((row, _y) => {
       row.forEach((cell, _x) => {
         if (cell === '.') return;
-        board[y + _y][x + _x] = this._currentPiece.shape;
+        board[ghostPiece.y + _y][ghostPiece.x + _x] = `g${ghostPiece.shape}`;
+      });
+    });
+
+    this._currentPiece.matrix.forEach((row, _y) => {
+      row.forEach((cell, _x) => {
+        if (cell === '.') return;
+        board[this._currentPiece.y + _y][this._currentPiece.x + _x] = this._currentPiece.shape;
       });
     });
 
@@ -157,7 +164,7 @@ class Game {
     return {
       id: this._id,
       player: this._player.toDto(),
-      board: this.displayableBoard(),
+      board: this._displayableBoard(),
       score: this._score,
       totalLineCleared: this._totalLineCleared,
       level: this._level,
@@ -165,6 +172,21 @@ class Game {
       nextShapes: this._nextShapes(),
       alive: this._alive,
     };
+  }
+
+  _getGhostPiece() {
+    const {
+      shape,
+      x,
+      y,
+      matrix,
+    } = this._currentPiece;
+    let _y = y;
+
+    while (this._board.canPlace(x, _y + 1, matrix)) {
+      _y += 1;
+    }
+    return new Piece(shape, x, _y, matrix);
   }
 
   _nextPiece() {
