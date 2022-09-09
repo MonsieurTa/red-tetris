@@ -45,11 +45,14 @@ class RedTetris {
 
   leaveRoom(roomId, playerId) {
     const room = this.findAllRooms().find((v) => v.id === roomId);
-    room.remove(playerId);
 
-    if (room.isEmpty) {
-      this.deleteRoom(roomId);
-      this.emitToAll(EVENTS.RED_TETRIS.ROOMS, this.findAllRooms().map((v) => v.toDto()));
+    if (room) {
+      room.remove(playerId);
+
+      if (room.isEmpty) {
+        this.deleteRoom(roomId);
+        this.emitToAll(EVENTS.RED_TETRIS.ROOMS, this.findAllRooms().map((v) => v.toDto()));
+      }
     }
 
     const game = this.findAllGames().find((v) => v.room.id === roomId);
@@ -113,6 +116,10 @@ class RedTetris {
   storePieceGenerator(key, pieceGenerator) {
     this._shapeGenerators.set(key, pieceGenerator);
     return pieceGenerator;
+  }
+
+  hasAlreadyStarted(roomId) {
+    return this._engine.hasAlreadyStarted(roomId);
   }
 
   reset() {

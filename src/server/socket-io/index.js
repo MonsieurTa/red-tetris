@@ -29,18 +29,6 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
       }
     });
 
-    socket.on(EVENTS.RED_TETRIS.REGISTER, redTetrisListeners.onRegister(socket));
-
-    socket.on('error', (error) => {
-      socket.emit(error.type, { error: error.message });
-    });
-
-    socket.on('disconnect', () => {
-      loginfo(`Socket disconnected: ${socket.id}`);
-      // remove player
-      redTetris.unregister(socket.id);
-    });
-
     socket.use(([eventName, args], next) => {
       if (!['error', 'disconnect', 'ping', EVENTS.RED_TETRIS.REGISTER].includes(eventName)) {
         const player = redTetris.findPlayer(args.playerId);
@@ -53,12 +41,24 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
       return next();
     });
 
+    socket.on('error', (error) => {
+      socket.emit(error.type, { error: error.message });
+    });
+
+    socket.on('disconnect', () => {
+      loginfo(`Socket disconnected: ${socket.id}`);
+      redTetris.unregister(socket.id);
+    });
+
+    socket.on(EVENTS.RED_TETRIS.REGISTER, redTetrisListeners.onRegister(socket));
     socket.on(EVENTS.ROOM.CREATE, roomListeners.onCreate(socket, io));
     socket.on(EVENTS.ROOM.JOIN, roomListeners.onJoin(socket));
     socket.on(EVENTS.ROOM.LEAVE, roomListeners.onLeave(socket));
     socket.on(EVENTS.ROOM.READY, roomListeners.onReady(socket));
 
     socket.on(EVENTS.GAME.START, gameListeners.onStart(socket));
+
+    socket.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
   });
 
   return io;

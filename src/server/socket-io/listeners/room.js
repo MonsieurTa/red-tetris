@@ -77,6 +77,10 @@ export const onReady = (socket) => ({ playerId, id }) => {
     return;
   }
 
+  if (redTetris.hasAlreadyStarted(room.id)) {
+    return;
+  }
+
   const pieceGenerator = redTetris.storePieceGenerator(room.id, new PieceGenerator());
   room.players.forEach((player) => {
     const game = new Game({ pieceGenerator, room, player });

@@ -19,6 +19,10 @@ class Engine {
     this._games.push(game);
   }
 
+  hasAlreadyStarted(roomId) {
+    return Boolean(this._games.find((game) => game.room.id === roomId));
+  }
+
   remove(gameId) {
     this._games = this._games.filter(({ id }) => id !== gameId);
   }
