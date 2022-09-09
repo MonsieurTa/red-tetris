@@ -10,14 +10,8 @@ export const onCreate = (socket, io) => ({ playerId, name }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
-  redTetris
-    .findAllRooms()
-    .forEach((v) => {
-      v.remove(player.id);
-      player.socket.leave(v.id);
-    });
-
   const room = new Room({ name, host: player.id });
+
   room.addPlayer(player);
 
   redTetris.storeRoom(room);
@@ -46,11 +40,6 @@ export const onJoin = (socket) => ({ playerId, id }) => {
     return;
   }
 
-  redTetris.findAllRooms().forEach((v) => {
-    v.remove(player.id);
-    player.socket.leave(v.id);
-  });
-
   room.addPlayer(player);
 
   socket.join(room.id);
@@ -58,19 +47,14 @@ export const onJoin = (socket) => ({ playerId, id }) => {
   socket.to(room.id).emit(EVENTS.ROOM.JOIN, room.toDto());
 };
 
-export const onLeave = (socket) => ({ playerId }) => {
+export const onLeave = (socket) => ({ playerId, roomId }) => {
   const redTetris = getRedTetrisSingleton();
-  const player = redTetris.findPlayer(playerId);
 
-  redTetris.findAllRooms().forEach((room) => {
-    room.remove(player.id);
-    socket.leave(room.id);
-    socket.to(room.id).emit(EVENTS.ROOM.LEAVE, room.toDto());
+  const room = redTetris.leaveRoom(roomId, playerId);
 
-    if (room.isEmpty) {
-      redTetris.deleteRoom(room.id);
-    }
-  });
+  if (room) {
+    socket.to(roomId).emit(EVENTS.ROOM.LEAVE, room.toDto());
+  }
 };
 
 export const onReady = (socket) => ({ playerId, id }) => {
@@ -90,10 +74,6 @@ export const onReady = (socket) => ({ playerId, id }) => {
 
   if (room.host.id !== playerId) {
     socket.emit(EVENTS.ROOM.READY, roomActions.error.wrongHost(id));
-    return;
-  }
-
-  if (redTetris.findAllGames().find((game) => game.room.id === room.id)) {
     return;
   }
 

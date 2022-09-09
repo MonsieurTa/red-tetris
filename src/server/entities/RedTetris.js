@@ -37,10 +37,27 @@ class RedTetris {
       .filter((game) => game.player.id === player.id)
       .forEach((game) => {
         game.destroy();
-        this._games.delete(game.id);
+        this.deleteGame(game.id);
       });
 
     this._players.delete(player.id);
+  }
+
+  leaveRoom(roomId, playerId) {
+    const room = this.findAllRooms().find((v) => v.id === roomId);
+    room.remove(playerId);
+
+    if (room.isEmpty) {
+      this.deleteRoom(roomId);
+      this.emitToAll(EVENTS.RED_TETRIS.ROOMS, this.findAllRooms().map((v) => v.toDto()));
+    }
+
+    const game = this.findAllGames().find((v) => v.room.id === roomId);
+    if (game) {
+      game.destroy();
+      this.deleteGame(game.id);
+    }
+    return room;
   }
 
   findPlayer(playerId) {
@@ -66,6 +83,7 @@ class RedTetris {
 
   deleteRoom(roomId) {
     this._rooms.delete(roomId);
+
     this.emitToAll(EVENTS.ROOM.REMOVED, { id: roomId });
   }
 
@@ -80,6 +98,10 @@ class RedTetris {
   storeGame(game) {
     this._games.set(game.id, this.findGame(game.id) || game);
     return game;
+  }
+
+  deleteGame(gameId) {
+    this._games.delete(gameId);
   }
 
   startGame(game) {

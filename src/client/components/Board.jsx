@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { WIDTH, HEIGHT } from '../../shared/helpers/board';
 
 const CELL_SIZE = 30;
@@ -60,8 +60,9 @@ const Row = ({ row, y, size = 'md' }) => (
   </Box>
 );
 
-const Board = ({ size = 'md', value }) => (
+const Board = ({ size = 'md', value, username = '' }) => (
   <div>
+    <Typography>{username}</Typography>
     <Box
       className="flex flex-col"
       sx={{

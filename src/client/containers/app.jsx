@@ -79,9 +79,10 @@ const App = () => {
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Home />} />
           <Route element={<ProtectedRoute player={player} redirectPath="/" />}>
-            <Route path=":id" element={<Room />} />
+            <Route path=":roomId" element={<Room />} />
           </Route>
         </Route>
+        <Route path="*" exact element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );

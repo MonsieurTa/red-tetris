@@ -1,5 +1,4 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import {
   Button,
   Card,
@@ -7,10 +6,10 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
-import EVENTS from '../../shared/constants/socket-io';
+import { useNavigate } from 'react-router-dom';
 
 const RoomInfoContent = ({ room }) => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   if (!room) {
     return (
@@ -23,7 +22,7 @@ const RoomInfoContent = ({ room }) => {
   }
 
   const onClick = () => {
-    dispatch({ type: EVENTS.ROOM.JOIN, id: room.id });
+    navigate(`/${room.id}`);
   };
 
   return (

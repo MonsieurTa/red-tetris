@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Card,
@@ -9,6 +9,7 @@ import {
   ListSubheader,
 } from '@mui/material';
 
+import { useNavigate } from 'react-router-dom';
 import RoomCreationInput from '../components/inputs/RoomCreationInput';
 import RoomInfo from '../components/RoomInfo';
 import PlayerRegistrationInput from '../components/inputs/PlayerRegistrationInput';
@@ -41,9 +42,16 @@ const RoomListItems = ({ disabled, rooms, onSelect }) => {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
   const rooms = useSelector((store) => store.rooms);
   const player = useSelector((store) => store.player);
+  const currentRoom = useSelector((store) => store.currentRoom);
   const [selectedRoom, setSelectedRoom] = useState(null);
+
+  useEffect(() => {
+    if (!currentRoom) return;
+    navigate(`/${currentRoom.id}`);
+  }, [navigate, currentRoom]);
 
   return (
     <div className="flex flex-col h-full w-full gap-y-4">
@@ -53,7 +61,7 @@ const Home = () => {
         <RoomCreationInput />
       )}
 
-      <div className="flex flex-row h-full gap-x-4">
+      <div className="flex flex-row gap-x-4">
         <Card variant="outlined" sx={{ width: 1, height: 1 }}>
           <List
             dense

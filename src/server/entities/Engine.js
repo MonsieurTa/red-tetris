@@ -19,6 +19,10 @@ class Engine {
     this._games.push(game);
   }
 
+  remove(gameId) {
+    this._games = this._games.filter(({ id }) => id !== gameId);
+  }
+
   run() {
     this._running = true;
 
