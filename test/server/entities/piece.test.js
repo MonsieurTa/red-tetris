@@ -3,27 +3,30 @@ import {
   describe,
   it,
 } from 'mocha';
-import Piece from '../../../src/server/entities/Piece';
+import Piece, { rotate } from '../../../src/server/entities/Piece';
 
 describe('Piece', () => {
   it('should rotate I piece', (done) => {
     const piece = new Piece('I');
+    let rotatedMatrix = rotate(piece.matrix);
 
-    expect(piece.rotate()).to.eql([
+    expect(rotatedMatrix).to.eql([
       ['.', '.', 'I', '.'],
       ['.', '.', 'I', '.'],
       ['.', '.', 'I', '.'],
       ['.', '.', 'I', '.'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', '.', '.', '.'],
       ['.', '.', '.', '.'],
       ['I', 'I', 'I', 'I'],
       ['.', '.', '.', '.'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', 'I', '.', '.'],
       ['.', 'I', '.', '.'],
       ['.', 'I', '.', '.'],
@@ -35,20 +38,23 @@ describe('Piece', () => {
 
   it('should rotate J piece', (done) => {
     const piece = new Piece('J');
+    let rotatedMatrix = rotate(piece.matrix);
 
-    expect(piece.rotate()).to.eql([
+    expect(rotatedMatrix).to.eql([
       ['.', 'J', 'J'],
       ['.', 'J', '.'],
       ['.', 'J', '.'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', '.', '.'],
       ['J', 'J', 'J'],
       ['.', '.', 'J'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', 'J', '.'],
       ['.', 'J', '.'],
       ['J', 'J', '.'],
@@ -59,20 +65,23 @@ describe('Piece', () => {
 
   it('should rotate L piece', (done) => {
     const piece = new Piece('L');
+    let rotatedMatrix = rotate(piece.matrix);
 
-    expect(piece.rotate()).to.eql([
+    expect(rotatedMatrix).to.eql([
       ['.', 'L', '.'],
       ['.', 'L', '.'],
       ['.', 'L', 'L'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', '.', '.'],
       ['L', 'L', 'L'],
       ['L', '.', '.'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['L', 'L', '.'],
       ['.', 'L', '.'],
       ['.', 'L', '.'],
@@ -83,18 +92,21 @@ describe('Piece', () => {
 
   it('should rotate O piece', (done) => {
     const piece = new Piece('O');
+    let rotatedMatrix = rotate(piece.matrix);
 
-    expect(piece.rotate()).to.eql([
+    expect(rotatedMatrix).to.eql([
       ['O', 'O'],
       ['O', 'O'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['O', 'O'],
       ['O', 'O'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['O', 'O'],
       ['O', 'O'],
     ]);
@@ -104,20 +116,23 @@ describe('Piece', () => {
 
   it('should rotate S piece', (done) => {
     const piece = new Piece('S');
+    let rotatedMatrix = rotate(piece.matrix);
 
-    expect(piece.rotate()).to.eql([
+    expect(rotatedMatrix).to.eql([
       ['.', 'S', '.'],
       ['.', 'S', 'S'],
       ['.', '.', 'S'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', '.', '.'],
       ['.', 'S', 'S'],
       ['S', 'S', '.'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['S', '.', '.'],
       ['S', 'S', '.'],
       ['.', 'S', '.'],
@@ -128,20 +143,23 @@ describe('Piece', () => {
 
   it('should rotate T piece', (done) => {
     const piece = new Piece('T');
+    let rotatedMatrix = rotate(piece.matrix);
 
-    expect(piece.rotate()).to.eql([
+    expect(rotatedMatrix).to.eql([
       ['.', 'T', '.'],
       ['.', 'T', 'T'],
       ['.', 'T', '.'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', '.', '.'],
       ['T', 'T', 'T'],
       ['.', 'T', '.'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', 'T', '.'],
       ['T', 'T', '.'],
       ['.', 'T', '.'],
@@ -152,20 +170,23 @@ describe('Piece', () => {
 
   it('should rotate Z piece', (done) => {
     const piece = new Piece('Z');
+    let rotatedMatrix = rotate(piece.matrix);
 
-    expect(piece.rotate()).to.eql([
+    expect(rotatedMatrix).to.eql([
       ['.', '.', 'Z'],
       ['.', 'Z', 'Z'],
       ['.', 'Z', '.'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', '.', '.'],
       ['Z', 'Z', '.'],
       ['.', 'Z', 'Z'],
     ]);
 
-    expect(piece.rotate()).to.eql([
+    rotatedMatrix = rotate(rotatedMatrix);
+    expect(rotatedMatrix).to.eql([
       ['.', 'Z', '.'],
       ['Z', 'Z', '.'],
       ['Z', '.', '.'],
