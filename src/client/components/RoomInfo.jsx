@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  alpha,
   Button,
   Card,
   CardActions,
@@ -7,6 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { grey } from '@mui/material/colors';
 
 const RoomInfoContent = ({ room }) => {
   const navigate = useNavigate();
@@ -60,7 +62,7 @@ const RoomInfoContent = ({ room }) => {
 const RoomInfoCard = ({ room }) => (
   <Card
     variant="outlined"
-    sx={{ width: 1 }}
+    sx={{ width: 1, background: alpha(grey[900], 0.2) }}
   >
     <RoomInfoContent room={room} />
   </Card>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
+  alpha,
   Card,
   List,
   ListItem,
@@ -9,6 +10,7 @@ import {
   ListSubheader,
   Typography,
 } from '@mui/material';
+import { blueGrey, grey } from '@mui/material/colors';
 
 import { useNavigate } from 'react-router-dom';
 import RoomCreationInput from '../components/inputs/RoomCreationInput';
@@ -56,23 +58,36 @@ const Home = () => {
 
   return (
     <div className="flex flex-col h-full w-full gap-y-4">
-      <div className="flex flex-row w-full justify-between items-center">
+      <div className="flex flex-row w-full justify-between items-cente">
         {!player ? (
           <PlayerRegistrationInput />
         ) : (
           <RoomCreationInput />
         )}
 
-        {player && <Typography variant="body1">{`Hello ${player.username}`}</Typography>}
+        {player && <Typography variant="body1" color="white">{`Hello ${player.username}`}</Typography>}
       </div>
 
       <div className="flex flex-row gap-x-4">
-        <Card variant="outlined" sx={{ width: 1, height: 1 }}>
+        <Card
+          variant="outlined"
+          sx={{
+            width: 1,
+            height: 1,
+            background: alpha(grey[900], 0.2),
+          }}
+        >
           <List
             dense
             subheader={(
-              <ListSubheader component="div" id="nested-list-subheader">
-                Room list
+              <ListSubheader
+                component="div"
+                id="nested-list-subheader"
+                sx={{
+                  background: alpha(grey[900], 0.2),
+                }}
+              >
+                <div>Room list</div>
               </ListSubheader>
             )}
           >

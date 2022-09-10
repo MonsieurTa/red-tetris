@@ -15,6 +15,7 @@ import EVENTS from '../../shared/constants/socket-io';
 import INPUTS from '../../shared/constants/inputs';
 import Home from '../pages/Home';
 import Room from '../pages/Room';
+import StoryBook from '../pages/StoryBook';
 
 const inputKeyDownListener = (dispatch) => ({ code }) => {
   switch (code) {
@@ -92,7 +93,7 @@ const App = () => {
   }, [location, dispatch, socket, player]);
 
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 background-animate">
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Home />} />
@@ -100,6 +101,7 @@ const App = () => {
             <Route path=":roomId" element={<Room />} />
           </Route>
         </Route>
+        <Route path="/story-book" element={<StoryBook />} />
         <Route path="*" exact element={<Navigate to="" replace />} />
       </Routes>
     </div>

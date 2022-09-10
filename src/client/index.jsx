@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { CssBaseline } from '@mui/material';
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 
 import REDUX_ACTIONS from '../shared/actions/redux';
 
@@ -15,6 +15,12 @@ import './styles/index.css';
 
 const store = setupStore();
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 const Root = () => {
   useEffect(() => {
     store.dispatch(REDUX_ACTIONS.WEBSOCKET.connect(`http://${HOST}:${PORT}`));
@@ -25,10 +31,12 @@ const Root = () => {
 
   return (
     <Provider store={store}>
-      <CssBaseline />
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ThemeProvider>
     </Provider>
   );
 };

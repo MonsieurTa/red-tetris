@@ -40,6 +40,7 @@ const Room = () => {
     nextShapes,
     score,
     level,
+    totalLineCleared,
   } = gameState;
 
   const onStart = () => {
@@ -54,34 +55,6 @@ const Room = () => {
   return (
     <div className="flex w-full justify-center gap-x-4">
       <div className="flex flex-col w-full gap-y-4">
-        <Card>
-          <CardContent className="flex flex-row justify-evenly">
-            {nextShapes.map((shape, i) => (
-              <Board
-                key={`${shape}#${i}}`}
-                size="sm"
-                value={PIECES[shape]}
-              />
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent>
-            Score
-            {' '}
-            {score}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent>
-            Level
-            {' '}
-            {level}
-          </CardContent>
-        </Card>
-
         {isHost && !roomRunning && (
           <Button variant="contained" onClick={onStart}>
             Start
@@ -92,7 +65,13 @@ const Room = () => {
         </Button>
       </div>
 
-      <Board value={board} />
+      <Board
+        value={board}
+        score={score}
+        level={level}
+        nextShapes={nextShapes}
+        lineCleared={totalLineCleared}
+      />
 
       <div className="flex flex-row w-full">
         {roomGames.length ? (
@@ -102,6 +81,9 @@ const Room = () => {
               size="sm"
               value={game.board}
               username={game.player.name}
+              score={game.score}
+              level={game.level}
+              lineCleared={game.totalLineCleared}
             />
           ))
         ) : (otherPlayers.map((player) => (

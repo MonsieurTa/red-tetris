@@ -116,7 +116,7 @@ class Game {
           if (status === 'pressed') {
             this._gravity = MAX_GRAVITY;
           } else if (status === 'released') {
-            this._gravity = DEFAULT_GRAVITY * this._level;
+            this._setCurrentGravity();
           }
           break;
         case INPUTS.HARD_DROP:
@@ -256,7 +256,7 @@ class Game {
     const lineCleared = this._board.clearLines();
     this._totalLineCleared += lineCleared;
     this._level = parseInt(this._totalLineCleared / 10, 10) + 1;
-    this._gravity = DEFAULT_GRAVITY * this._level;
+    this._setCurrentGravity();
 
     this._score += POINTS_PER_LINE[lineCleared] * this._level;
 
@@ -265,6 +265,10 @@ class Game {
     } else {
       this._combo += 1;
     }
+  }
+
+  _setCurrentGravity() {
+    this._gravity = DEFAULT_GRAVITY + (DEFAULT_GRAVITY * this._level) / 10;
   }
 
   get id() {
