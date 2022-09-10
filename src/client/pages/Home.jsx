@@ -10,7 +10,7 @@ import {
   ListSubheader,
   Typography,
 } from '@mui/material';
-import { blueGrey, grey } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 
 import { useNavigate } from 'react-router-dom';
 import RoomCreationInput from '../components/inputs/RoomCreationInput';

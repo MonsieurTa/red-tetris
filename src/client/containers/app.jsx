@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import { Container, Snackbar } from '@mui/material';
 
+import anime from 'animejs';
 import { withGlobalCssPriority } from './GlobalCssPriority';
 
 import EVENTS from '../../shared/constants/socket-io';
@@ -77,7 +78,10 @@ const ProtectedRoute = ({ player, children, redirectPath }) => {
 
 const RootLayout = ({ children }) => (
   <Container maxWidth="md" className="flex flex-col h-full items-center py-2">
-    <div className="text-9xl my-4">RED TETRIS</div>
+    <h1 className="text-6xl my-8">
+      {'RED TETRIS'.split('').map((l, i) => <span key={i} className="inline-block">{l}</span>)}
+    </h1>
+
     {children || <Outlet />}
   </Container>
 );
@@ -121,6 +125,25 @@ const App = () => {
       setError(null);
     }
   }, [error]);
+
+  useEffect(() => {
+    anime.timeline({ loop: true })
+      .add({
+        targets: '.text-6xl.my-8 .inline-block',
+        scale: [4, 1],
+        opacity: [0, 1],
+        translateZ: 0,
+        easing: 'easeOutExpo',
+        duration: 950,
+        delay: (el, i) => 70 * i,
+      }).add({
+        targets: '.text-6xl.my-8',
+        opacity: 0,
+        duration: 1000,
+        easing: 'easeOutExpo',
+        delay: 1000,
+      });
+  }, []);
 
   return (
     <div className="w-screen h-screen bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 background-animate">
