@@ -1,4 +1,6 @@
-const WEBSOCKET = {
+import { HEIGHT, initBoard, WIDTH } from '../helpers/board';
+
+export const WEBSOCKET = {
   CONNECT: 'web-socket/connect',
   CONNECTED: 'web-socket/connected',
   CONNECTING: 'web-socket/connecting',
@@ -7,26 +9,40 @@ const WEBSOCKET = {
   DISCONNECTED: 'web-socket/disconnected',
 };
 
-const RED_TETRIS = {
+export const RED_TETRIS = {
   REGISTER: 'red-tetris/register',
 };
 
-const GAME = {
+export const GAME = {
   START: 'game/start',
   BOARD: 'game/board',
   CURRENT_PIECE: 'game/currentPiece',
   ACTION: 'game/action',
 };
 
-const ROOM = {
+export const ROOM = {
   CREATE: 'room/create',
   JOIN: 'room/join',
   READY: 'room/ready',
 };
 
-export default {
-  WEBSOCKET,
-  RED_TETRIS,
-  GAME,
-  ROOM,
+export const DEFAULT_GAME_STATE = {
+  id: null,
+  player: null,
+  board: initBoard(WIDTH, HEIGHT),
+  score: 0,
+  combo: 0,
+  totalLineCleared: 0,
+  level: 1,
+  nextShapes: [],
+};
+
+export const INITIAL_STATE = {
+  socket: null,
+  rooms: [],
+  currentRoom: null,
+  player: null,
+  roomGames: {},
+  gameState: DEFAULT_GAME_STATE,
+  error: null,
 };

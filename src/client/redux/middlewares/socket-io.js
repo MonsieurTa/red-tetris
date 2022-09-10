@@ -1,8 +1,6 @@
 import { io as Client } from 'socket.io-client';
-
-import actions from '../../../shared/actions/redux';
+import { WEBSOCKET } from '../../../shared/constants/redux';
 import EVENTS from '../../../shared/constants/socket-io';
-import constants from '../../../shared/constants';
 
 import {
   register,
@@ -13,28 +11,23 @@ import {
   removeRoom,
   setRoomGame,
   setSocket,
+  setError,
 } from '../reducers/red-tetris';
 
 let socket = null;
 
 export const socketIoListenerMiddleware = (store) => (next) => (action) => {
   switch (action.type) {
-    case constants.redux.WEBSOCKET.CONNECT:
+    case WEBSOCKET.CONNECT:
       if (socket) {
         socket.close();
       }
       socket = new Client(action.host);
       store.dispatch(setSocket(socket));
 
-      socket.on(EVENTS.COMMON.CONNECT, () => store.dispatch(actions.WEBSOCKET.connected()));
-      socket.on(
-        EVENTS.COMMON.CONNECT.CONNECT_ERROR,
-        () => store.dispatch(actions.WEBSOCKET.connectError()),
-      );
-      socket.on(
-        EVENTS.COMMON.CONNECT.DISCONNECT,
-        () => store.dispatch(actions.WEBSOCKET.disconnected()),
-      );
+      socket.on(EVENTS.COMMON.ERROR, ({ error }) => {
+        store.dispatch(setError(error));
+      });
 
       // register all listeners here
       // ...
@@ -80,7 +73,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       });
 
       return null;
-    case constants.redux.WEBSOCKET.DISCONNECT:
+    case WEBSOCKET.DISCONNECT:
       if (socket) {
         socket.close();
       }

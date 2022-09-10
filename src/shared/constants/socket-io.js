@@ -5,6 +5,7 @@ const COMMON = {
   CONNECT_ERROR: 'connect_error',
   DISCONNECT: 'disconnect',
   DISCONNECTED: 'disconnected',
+  ERROR: 'ERROR',
 };
 
 const RED_TETRIS = {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Routes,
@@ -7,7 +7,7 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import { Container } from '@mui/material';
+import { Container, Snackbar } from '@mui/material';
 
 import { withGlobalCssPriority } from './GlobalCssPriority';
 
@@ -16,6 +16,27 @@ import INPUTS from '../../shared/constants/inputs';
 import Home from '../pages/Home';
 import Room from '../pages/Room';
 import StoryBook from '../pages/StoryBook';
+import { ERRORS } from '../../server/socket-io/actions/room';
+import { setError } from '../redux/reducers/red-tetris';
+
+const formatError = (error) => {
+  switch (error) {
+    case ERRORS.ERR_ALREADY_ADDED:
+      return 'You have already joined the room.';
+    case ERRORS.ERR_ALREADY_STARTED:
+      return 'The room has already started.';
+    case ERRORS.ERR_IS_EMPTY:
+      return 'The room is empty.';
+    case ERRORS.ERR_IS_FULL:
+      return 'The room is full.';
+    case ERRORS.ERR_NOT_FOUND:
+      return 'Room not found.';
+    case ERRORS.ERR_WRONG_HOST:
+      return 'Wrong host.';
+    default:
+      return 'Unexpected error';
+  }
+};
 
 const inputKeyDownListener = (dispatch) => ({ code }) => {
   switch (code) {
@@ -66,6 +87,8 @@ const App = () => {
   const dispatch = useDispatch();
   const player = useSelector((store) => store.player);
   const socket = useSelector((store) => store.socket);
+  const error = useSelector((store) => store.error);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     document.addEventListener('keydown', inputKeyDownListener(dispatch));
@@ -92,6 +115,13 @@ const App = () => {
     }
   }, [location, dispatch, socket, player]);
 
+  useEffect(() => {
+    if (error) {
+      setOpenSnackbar(true);
+      setError(null);
+    }
+  }, [error]);
+
   return (
     <div className="w-screen h-screen bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 background-animate">
       <Routes>
@@ -104,6 +134,13 @@ const App = () => {
         <Route path="/story-book" element={<StoryBook />} />
         <Route path="*" exact element={<Navigate to="" replace />} />
       </Routes>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5_000}
+        onClose={() => setOpenSnackbar(false)}
+        message={formatError(error)}
+      />
     </div>
   );
 };

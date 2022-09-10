@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { HEIGHT, initBoard, WIDTH } from '../../../shared/helpers/board';
+import { DEFAULT_GAME_STATE } from '../../../shared/constants/redux';
 
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
@@ -18,7 +18,7 @@ const redTetrisSlice = createSlice({
     setCurrentRoom: (state, { payload: currentRoom }) => ({
       ...state,
       currentRoom,
-      board: initBoard(WIDTH, HEIGHT),
+      gameState: DEFAULT_GAME_STATE,
       roomGames: {},
     }),
     setGameState: (state, { payload: gameState }) => ({ ...state, gameState }),
@@ -26,11 +26,7 @@ const redTetrisSlice = createSlice({
       const { roomGames } = state;
       return ({ ...state, roomGames: { ...roomGames, [roomGame.id]: roomGame } });
     },
-    join: (state) => state,
-    ready: (state) => state,
-
-    startGame: (state) => state,
-    board: (state) => state,
+    setError: (state, { payload: error }) => ({ ...state, error }),
   },
 });
 
@@ -44,5 +40,6 @@ export const {
   setGameState,
   setCurrentPiece,
   setRoomGame,
+  setError,
 } = redTetrisSlice.actions;
 export default redTetrisSlice.reducer;

@@ -4,7 +4,7 @@ import { getRedTetrisSingleton, Room } from '../../entities';
 import Game from '../../entities/Game';
 import PieceGenerator from '../../entities/PieceGenerator';
 
-import roomActions from '../actions/room';
+import { ERRORS } from '../actions/room';
 
 export const onCreate = (socket, io) => ({ playerId, name }) => {
   const redTetris = getRedTetrisSingleton();
@@ -27,16 +27,21 @@ export const onJoin = (socket) => ({ playerId, id }) => {
   const room = redTetris.findRoom(id);
 
   if (!room) {
-    socket.emit(EVENTS.ROOM.JOIN, roomActions.error.notFound(id));
+    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_NOT_FOUND });
     return;
   }
   if (room.isFull) {
-    socket.emit(EVENTS.ROOM.JOIN, roomActions.error.isFull(room.id));
+    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_IS_FULL });
     return;
   }
 
   if (room.isPresent(player.id)) {
-    socket.emit(EVENTS.ROOM.JOIN, roomActions.error.alreadyAdded(room.id));
+    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_ALREADY_ADDED });
+    return;
+  }
+
+  if (redTetris.hasAlreadyStarted(room.id)) {
+    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_ALREADY_STARTED });
     return;
   }
 
@@ -63,21 +68,22 @@ export const onReady = (socket) => ({ playerId, id }) => {
   const room = redTetris.findRoom(id);
 
   if (!room) {
-    socket.emit(EVENTS.ROOM.READY, roomActions.error.notFound(id, 'room/ready'));
+    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_NOT_FOUND });
     return;
   }
 
   if (room.isEmpty) {
-    socket.emit(EVENTS.ROOM.READY, roomActions.error.isEmpty(id));
+    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_IS_EMPTY });
     return;
   }
 
   if (room.host.id !== playerId) {
-    socket.emit(EVENTS.ROOM.READY, roomActions.error.wrongHost(id));
+    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_WRONG_HOST });
     return;
   }
 
   if (redTetris.hasAlreadyStarted(room.id)) {
+    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_ALREADY_STARTED });
     return;
   }
 

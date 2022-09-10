@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Card, CardContent } from '@mui/material';
+import { Button } from '@mui/material';
 
 import EVENTS from '../../shared/constants/socket-io';
 import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 import Board from '../components/Board';
-import PIECES from '../../shared/constants/pieces';
 
 const EMPTY_BOARD = initBoard(WIDTH, HEIGHT);
 
@@ -24,10 +23,10 @@ const Room = () => {
   useEffect(() => {
     if (!currentRoom) {
       navigate('/', { replace: true });
-    } else {
+    } else if (!params.roomId) {
       dispatch({ type: EVENTS.ROOM.JOIN, id: currentRoom.id });
     }
-  }, [navigate, dispatch, currentRoom]);
+  }, [params, navigate, dispatch, currentRoom]);
 
   if (!currentRoom) return null;
 
