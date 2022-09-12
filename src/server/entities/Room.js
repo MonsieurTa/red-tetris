@@ -1,18 +1,23 @@
-import crypto from 'crypto';
+import { ERRORS } from '../socket-io/actions/room';
 
 const MAX_PLAYERS = 5;
 
 class Room {
   constructor({ name, host, capacity = MAX_PLAYERS }) {
-    this._id = crypto.randomUUID();
-    this._name = name;
+    this._id = name;
     this._host = host;
     this._players = [];
     this._capacity = capacity;
   }
 
   addPlayer(player) {
-    if (this.isFull) return;
+    if (this.isFull) {
+      throw new Error(ERRORS.ERR_IS_FULL);
+    }
+
+    if (this.isPresent(player.id)) {
+      throw new Error(ERRORS.ERR_ALREADY_ADDED);
+    }
 
     if (this._players.length === 0) {
       this._host = player;

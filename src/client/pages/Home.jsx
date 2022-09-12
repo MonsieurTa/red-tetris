@@ -8,7 +8,6 @@ import {
   ListItemButton,
   ListItemText,
   ListSubheader,
-  Typography,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
@@ -39,7 +38,7 @@ const RoomListItems = ({ disabled, rooms, onSelect }) => {
       disabled={disabled}
       onClick={() => onSelect(room)}
     >
-      <ListItemText primary={room.name} />
+      <ListItemText primary={room.id} />
     </ListItemButton>
   ));
 };
@@ -64,8 +63,6 @@ const Home = () => {
         ) : (
           <RoomCreationInput />
         )}
-
-        {player && <Typography variant="body1" color="white">{`Hello ${player.username}`}</Typography>}
       </div>
 
       <div className="flex flex-row gap-x-4">

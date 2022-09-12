@@ -35,7 +35,7 @@ const RoomInfoContent = ({ room }) => {
         </Typography>
 
         <Typography variant="h5" component="div">
-          {room.name}
+          {room.id}
         </Typography>
 
         <Typography sx={{ mb: 1.5 }} color="text.secondary">

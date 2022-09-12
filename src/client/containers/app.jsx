@@ -76,15 +76,20 @@ const ProtectedRoute = ({ player, children, redirectPath }) => {
   return children || <Outlet />;
 };
 
-const RootLayout = ({ children }) => (
-  <Container maxWidth="md" className="flex flex-col h-full items-center py-2">
-    <h1 className="text-6xl my-8">
-      {'RED TETRIS'.split('').map((l, i) => <span key={i} className="inline-block">{l}</span>)}
-    </h1>
+const RootLayout = ({ children }) => {
+  const player = useSelector((store) => store.player);
+  return (
+    <Container maxWidth="md" className="flex flex-col h-full items-center py-2">
+      <h1 className="text-6xl my-8">
+        {(player?.username ? `Hello ${player.username}` : 'RED TETRIS')
+          .split('')
+          .map((l, i) => <span key={i} className="inline-block">{l}</span>)}
+      </h1>
 
-    {children || <Outlet />}
-  </Container>
-);
+      {children || <Outlet />}
+    </Container>
+  );
+};
 
 const App = () => {
   const location = useLocation();

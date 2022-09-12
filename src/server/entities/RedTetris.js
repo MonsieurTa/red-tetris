@@ -140,7 +140,7 @@ class RedTetris {
 
         console.log(`info::rooms ${this._rooms.size}`);
         this._rooms.forEach((room) => {
-          console.log(`\tname: ${room.name} | capacity: ${room.players.length}/${room.capacity} `);
+          console.log(`\tname: ${room.id} | capacity: ${room.players.length}/${room.capacity} `);
         });
 
         console.log(`info::games ${this._games.size}`);

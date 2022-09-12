@@ -10,14 +10,28 @@ export const onCreate = (socket, io) => ({ playerId, name }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
-  const room = new Room({ name, host: player.id });
 
-  room.addPlayer(player);
+  const existingRoom = redTetris.findRoom(name);
 
-  redTetris.storeRoom(room);
+  if (existingRoom) {
+    try {
+      existingRoom.addPlayer(player);
 
-  socket.join(room.id);
-  io.local.emit(EVENTS.ROOM.CREATE, room.toDto());
+      socket.join(existingRoom.id);
+      socket.emit(EVENTS.ROOM.JOIN, existingRoom.toDto());
+      socket.to(existingRoom.id).emit(EVENTS.ROOM.JOIN, existingRoom.toDto());
+    } catch (e) {
+      socket.emit(EVENTS.COMMON.ERROR, { error: e.message });
+    }
+  } else {
+    const room = new Room({ name, host: player.id });
+    room.addPlayer(player);
+
+    redTetris.storeRoom(room);
+
+    socket.join(room.id);
+    io.local.emit(EVENTS.ROOM.CREATE, room.toDto());
+  }
 };
 
 export const onJoin = (socket) => ({ playerId, id }) => {
@@ -30,26 +44,21 @@ export const onJoin = (socket) => ({ playerId, id }) => {
     socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_NOT_FOUND });
     return;
   }
-  if (room.isFull) {
-    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_IS_FULL });
-    return;
-  }
-
-  if (room.isPresent(player.id)) {
-    socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_ALREADY_ADDED });
-    return;
-  }
 
   if (redTetris.hasAlreadyStarted(room.id)) {
     socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_ALREADY_STARTED });
     return;
   }
 
-  room.addPlayer(player);
+  try {
+    room.addPlayer(player);
 
-  socket.join(room.id);
-  socket.emit(EVENTS.ROOM.JOIN, room.toDto());
-  socket.to(room.id).emit(EVENTS.ROOM.JOIN, room.toDto());
+    socket.join(room.id);
+    socket.emit(EVENTS.ROOM.JOIN, room.toDto());
+    socket.to(room.id).emit(EVENTS.ROOM.JOIN, room.toDto());
+  } catch (e) {
+    socket.emit(EVENTS.COMMON.ERROR, { error: e.message });
+  }
 };
 
 export const onLeave = (socket) => ({ playerId, roomId }) => {

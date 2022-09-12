@@ -19,7 +19,7 @@ const RoomListItem = ({ room }) => {
       disabled={!player}
     >
       <ListItemText
-        primary={room.name}
+        primary={room.id}
         secondary={`host: ${room.host.username}`}
       />
     </ListItemButton>

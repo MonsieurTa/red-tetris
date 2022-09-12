@@ -72,14 +72,14 @@ const Room = () => {
         lineCleared={totalLineCleared}
       />
 
-      <div className="flex flex-row w-full">
+      <div className="flex flex-row w-full gap-2">
         {roomGames.length ? (
           roomGames.map((game) => (
             <Board
               key={game.id}
               size="sm"
               value={game.board}
-              username={game.player.name}
+              username={game.player.username}
               score={game.score}
               level={game.level}
               lineCleared={game.totalLineCleared}
@@ -90,7 +90,7 @@ const Room = () => {
             key={player.id}
             size="sm"
             value={EMPTY_BOARD}
-            username={player.name}
+            username={player.username}
           />
         )))}
       </div>
