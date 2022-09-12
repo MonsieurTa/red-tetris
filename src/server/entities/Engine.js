@@ -48,7 +48,12 @@ class Engine {
       return new Promise((resolve) => {
         setTimeout(resolve, Math.abs(TICK_DELAY - this._deltaTick));
       })
-        .then(() => (this._running ? process.nextTick(loop) : null));
+        .then(() => {
+          if (!this._running) {
+            return null;
+          }
+          return process.nextTick(loop);
+        });
     };
 
     return loop();
