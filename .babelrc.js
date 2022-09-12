@@ -3,7 +3,16 @@ module.exports = {
     ["@babel/preset-env", { targets: { node: 'current' } }],
     ["@babel/preset-react",  { runtime: 'automatic' }],
   ],
-  "plugins": [
-    ['babel-plugin-direct-import', { modules: ['@mui/material', '@mui/icons-material'] }],
-  ],
+  "env": {
+    "development": {
+      "plugins": [
+        ['babel-plugin-direct-import', { modules: ['@mui/material', '@mui/icons-material'] }],
+      ],          
+    },
+    "production": {
+      "plugins": [
+        ['babel-plugin-direct-import', { modules: ['@mui/material', '@mui/icons-material'] }],
+      ],    
+    }
+  }
 }
