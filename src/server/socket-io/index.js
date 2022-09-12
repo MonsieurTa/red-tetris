@@ -1,4 +1,5 @@
 import { Server } from 'socket.io';
+import eiosw from 'eiows';
 
 import EVENTS from '../../shared/constants/socket-io';
 import { getRedTetrisSingleton } from '../entities';
@@ -15,7 +16,13 @@ class NotRegistered extends Error {
 }
 
 const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
-  const io = new Server(httpServer);
+  const io = new Server(httpServer, {
+    wsEngine: eiosw.Server,
+    perMessageDeflate: {
+      threshold: 32768,
+    },
+  });
+
   const redTetris = getRedTetrisSingleton();
 
   redTetris.io = io;
