@@ -83,7 +83,7 @@ const RootLayout = ({ children }) => {
       <h1 className="text-6xl my-8">
         {(player?.username ? `Hello ${player.username}` : 'RED TETRIS')
           .split('')
-          .map((l, i) => <span key={i} className="inline-block">{l}</span>)}
+          .map((l, i) => <span key={i} className="inline">{l}</span>)}
       </h1>
 
       {children || <Outlet />}
@@ -134,7 +134,7 @@ const App = () => {
   useEffect(() => {
     anime.timeline({ loop: true })
       .add({
-        targets: '.text-6xl.my-8 .inline-block',
+        targets: '.text-6xl.my-8 .inline',
         scale: [4, 1],
         opacity: [0, 1],
         translateZ: 0,

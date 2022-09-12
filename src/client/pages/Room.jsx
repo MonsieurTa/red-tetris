@@ -9,6 +9,54 @@ import Board from '../components/Board';
 
 const EMPTY_BOARD = initBoard(WIDTH, HEIGHT);
 
+const chunk = (arr, size) => {
+  const result = [];
+
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+};
+
+const EmptyBoards = ({ players }) => (
+  <div className="flex flex-col gap-y-2">
+    {chunk(players, 2)
+      .map((row, i) => (
+        <div key={i} className="flex flex-row gap-x-2">
+          {row.map((player) => (
+            <Board
+              key={player.id}
+              size="sm"
+              value={EMPTY_BOARD}
+              username={player.username}
+            />
+          ))}
+        </div>
+      ))}
+  </div>
+);
+
+const OtherBoards = ({ games }) => (
+  <div className="flex flex-col gap-y-2">
+    {chunk(games, 2)
+      .map((row, i) => (
+        <div key={i} className="flex flex-row gap-x-2">
+          {row.map((game) => (
+            <Board
+              key={game.id}
+              size="sm"
+              value={game.board}
+              username={game.player.username}
+              score={game.score}
+              level={game.level}
+              lineCleared={game.totalLineCleared}
+            />
+          ))}
+        </div>
+      ))}
+  </div>
+);
+
 const Room = () => {
   const navigate = useNavigate();
   const params = useParams();
@@ -74,25 +122,10 @@ const Room = () => {
 
       <div className="flex flex-row w-full gap-2">
         {roomGames.length ? (
-          roomGames.map((game) => (
-            <Board
-              key={game.id}
-              size="sm"
-              value={game.board}
-              username={game.player.username}
-              score={game.score}
-              level={game.level}
-              lineCleared={game.totalLineCleared}
-            />
-          ))
-        ) : (otherPlayers.map((player) => (
-          <Board
-            key={player.id}
-            size="sm"
-            value={EMPTY_BOARD}
-            username={player.username}
-          />
-        )))}
+          <OtherBoards games={roomGames} />
+        ) : (
+          <EmptyBoards players={otherPlayers} />
+        )}
       </div>
     </div>
   );
