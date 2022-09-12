@@ -130,30 +130,7 @@ class RedTetris {
     this._players = new Map();
   }
 
-  run(debug = false) {
-    if (debug === true) {
-      const debugLog = () => {
-        console.log(`info::players ${this._players.size}`);
-        this._players.forEach((player) => {
-          console.log(`\tid: username: ${player.username}`);
-        });
-
-        console.log(`info::rooms ${this._rooms.size}`);
-        this._rooms.forEach((room) => {
-          console.log(`\tname: ${room.id} | capacity: ${room.players.length}/${room.capacity} `);
-        });
-
-        console.log(`info::games ${this._games.size}`);
-        this._games.forEach((game) => {
-          console.log(`\tid ${game.id} | alive: ${game.alive} | gravity: ${game._gravity} | destroyed: ${game.destroyed}`);
-        });
-
-        console.log(`info::engine game | count: ${this._engine._games.length} | deltaTick: ${this._engine._deltaTick}`);
-        console.log();
-        setTimeout(debugLog, 1000);
-      };
-      debugLog();
-    }
+  run() {
     return this._engine.run();
   }
 
