@@ -29,7 +29,10 @@ describe('Room creation', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => testServer.stop());
+  after(() => {
+    clientSocket.close();
+    setTimeout(() => testServer.stop(), 100);
+  });
 
   it('should create room with host', async () => {
     const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });

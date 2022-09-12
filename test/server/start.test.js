@@ -8,14 +8,13 @@ import {
   it,
 } from 'mocha';
 
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import { createTestServer } from '../../../helpers/server';
 import {
   registerPlayer,
   waitEvent,
 } from '../../../helpers/socket-io';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
-import { initBoard } from '../../../../src/server/entities/Board';
 import EVENTS from '../../../../src/shared/constants/socket-io';
 
 let testServer;
@@ -32,7 +31,10 @@ describe('Game starting', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => testServer.stop());
+  after(() => {
+    clientSocket.close();
+    setTimeout(() => testServer.stop(), 100);
+  });
 
   it('should get initial red-tetris data', async () => {
     const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });

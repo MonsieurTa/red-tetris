@@ -1,6 +1,5 @@
 import { io as Client } from 'socket.io-client';
 
-// import { expect } from 'chai';
 import {
   after,
   afterEach,
@@ -12,7 +11,6 @@ import {
 import { assert } from 'chai';
 import { createTestServer } from '../../../helpers/server';
 import { getRedTetrisSingleton } from '../../../../src/server/entities';
-import EVENTS from '../../../../src/shared/constants/socket-io';
 import { registerPlayer } from '../../../helpers/socket-io';
 
 let testServer;
@@ -29,7 +27,10 @@ describe('Red-Tetris registration', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => testServer.stop());
+  after(() => {
+    clientSocket.close();
+    setTimeout(() => testServer.stop(), 100);
+  });
 
   it('should register a player and respond with an id', async () => {
     const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });

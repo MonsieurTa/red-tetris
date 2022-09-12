@@ -1,5 +1,4 @@
 import http from 'http';
-import { io as Client } from 'socket.io-client';
 import { configureStore } from '@reduxjs/toolkit';
 
 import params from '../../params';
@@ -22,8 +21,8 @@ export const createTestServer = () => new Promise((resolve) => {
       httpServer,
       serverSocket,
       stop: () => {
-        httpServer.close(() => httpServer.unref());
         serverSocket.close();
+        httpServer.close(() => httpServer.unref());
 
         getRedTetrisSingleton().stop();
       },

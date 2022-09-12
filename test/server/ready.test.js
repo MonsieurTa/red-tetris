@@ -8,7 +8,7 @@ import {
   it,
 } from 'mocha';
 
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import { createTestServer } from '../../../helpers/server';
 import {
   registerPlayer, createRoom, joinRoom, waitEvent,
@@ -30,7 +30,10 @@ describe('Room ready', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => testServer.stop());
+  after(() => {
+    clientSocket.close();
+    setTimeout(() => testServer.stop(), 100);
+  });
 
   it('should start a game with one player', async () => {
     const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
@@ -99,5 +102,9 @@ describe('Room ready', () => {
       waitEvent(spiderManSocket, EVENTS.GAME.STATE),
       waitEvent(ironManSocket, EVENTS.GAME.STATE),
     ]);
+
+    clarkSocket.close();
+    spiderManSocket.close();
+    ironManSocket.close();
   });
 });

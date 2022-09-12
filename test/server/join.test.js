@@ -31,7 +31,10 @@ describe('Room joining', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => testServer.stop());
+  after(() => {
+    clientSocket.close();
+    setTimeout(() => testServer.stop(), 100);
+  });
 
   it('should join a room', async () => {
     const dummyPlayer = new Player('Bruce Wayne');
