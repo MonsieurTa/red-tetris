@@ -1,9 +1,3 @@
-import { expect } from 'chai';
-import {
-  describe,
-  it,
-} from 'mocha';
-
 import PieceGenerator, {
   DEFAULT_SEQUENCE,
   FIRST_SEQUENCE,
@@ -11,41 +5,38 @@ import PieceGenerator, {
 } from '../../src/server/entities/PieceGenerator';
 
 describe('Piece generator', () => {
-  it('should draw one sequence', (done) => {
+  it('should draw one sequence', () => {
     const generator = new PieceGenerator();
 
     const sequence = generator.drawSequence(0);
 
-    expect(sequence.length).to.equal(7);
-    done();
+    expect(sequence.length).toEqual(7);
   });
 
-  it('should only give IJLT', (done) => {
+  it('should only give IJLT', () => {
     const expectedPieces = new Set(FIRST_SEQUENCE.split(''));
     const generator = new PieceGenerator();
 
     for (let i = 0; i < 1000; i += 1) {
       const piece = generator.drawShape(0);
       generator.reset(0);
-      expect(expectedPieces.has(piece)).to.be.true;
+      expect(expectedPieces.has(piece)).toBeTruthy();
     }
-    done();
   });
 
-  it('should draw every pieces', (done) => {
+  it('should draw every pieces', () => {
     const expectedPieces = new Set(DEFAULT_SEQUENCE.split(''));
     const generator = new PieceGenerator();
 
     const sequence = generator.drawSequence(0);
 
-    expect(expectedPieces.size).to.equal(SEQUENCE_SIZE);
+    expect(expectedPieces.size).toEqual(SEQUENCE_SIZE);
 
     sequence.forEach((piece) => {
-      expect(expectedPieces.has(piece)).to.be.true;
+      expect(expectedPieces.has(piece)).toBeTruthy();
       expectedPieces.delete(piece);
     });
 
-    expect(expectedPieces.size).to.equal(0);
-    done();
+    expect(expectedPieces.size).toEqual(0);
   });
 });

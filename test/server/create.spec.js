@@ -1,13 +1,5 @@
 import { io as Client } from 'socket.io-client';
 
-import { assert, expect } from 'chai';
-import {
-  after,
-  afterEach,
-  before,
-  describe,
-  it,
-} from 'mocha';
 import { getRedTetrisSingleton, Room } from '../../src/server/entities';
 
 import { createTestServer } from '../helpers/server';
@@ -19,7 +11,7 @@ let testServer;
 let clientSocket;
 
 describe('Room creation', () => {
-  before((done) => {
+  beforeAll((done) => {
     createTestServer().then((server) => {
       clientSocket = new Client(`http://${server.host}:${server.port}`);
       testServer = server;
@@ -29,7 +21,7 @@ describe('Room creation', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => {
+  afterAll(() => {
     clientSocket.close();
     setTimeout(() => testServer.stop(), 100);
   });
@@ -41,9 +33,9 @@ describe('Room creation', () => {
 
     const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
 
-    assert.equal(room.host.username, 'Bruce Wayne');
-    assert.equal(room.id, '1234');
-    assert.equal(room.capacity, 5);
+    expect(room.host.username).toEqual('Bruce Wayne');
+    expect(room.id).toEqual('1234');
+    expect(room.capacity).toEqual(5);
   });
 
   it('should join room if name already exist', async () => {
@@ -58,15 +50,14 @@ describe('Room creation', () => {
 
     clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
     const room = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
-    assert.equal(storedRoom.id, room.id);
+
+    expect(storedRoom.id).toEqual(room.id);
   });
 
-  it('should respond with an error', (done) => {
-    clientSocket.on(EVENTS.ROOM.CREATE, (arg) => {
-      expect(arg).to.eql({ error: 'NotRegistered' });
-      done();
-    });
-
+  it('should respond with an error', async () => {
     clientSocket.emit(EVENTS.ROOM.CREATE, { name: '1234' });
+    const event = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
+
+    expect(event.error).toEqual('NotRegistered');
   });
 });

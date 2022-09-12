@@ -1,14 +1,5 @@
 import { io as Client } from 'socket.io-client';
 
-import {
-  after,
-  afterEach,
-  before,
-  describe,
-  it,
-} from 'mocha';
-
-import { assert } from 'chai';
 import { createTestServer } from '../helpers/server';
 import {
   registerPlayer, createRoom, joinRoom, waitEvent,
@@ -20,7 +11,7 @@ let testServer;
 let clientSocket;
 
 describe('Room ready', () => {
-  before((done) => {
+  beforeAll((done) => {
     createTestServer().then((server) => {
       clientSocket = new Client(`http://${server.host}:${server.port}`);
       testServer = server;
@@ -30,7 +21,7 @@ describe('Room ready', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => {
+  afterAll(() => {
     clientSocket.close();
     setTimeout(() => testServer.stop(), 100);
   });
@@ -47,8 +38,8 @@ describe('Room ready', () => {
     clientSocket.emit(EVENTS.GAME.START, { playerId: player.id, gameId: game.id });
     const gameState = await waitEvent(clientSocket, EVENTS.GAME.STATE);
 
-    assert.isNotNull(gameState.id);
-    assert.isNotNull(gameState.board);
+    expect(gameState.id).not.toBeNull();
+    expect(gameState.board).not.toBeNull();
   });
 
   it('should start a game with multiple players', async () => {
@@ -79,9 +70,9 @@ describe('Room ready', () => {
       waitEvent(ironManSocket, EVENTS.GAME.READY),
     ]);
 
-    assert.equal(events.length, 4);
+    expect(events.length).toEqual(4);
     events.forEach((event) => {
-      assert.isNotNull(event);
+      expect(event).not.toBeNull();
     });
 
     const [

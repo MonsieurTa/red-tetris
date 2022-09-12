@@ -1,14 +1,5 @@
 import { io as Client } from 'socket.io-client';
 
-import {
-  after,
-  afterEach,
-  before,
-  describe,
-  it,
-} from 'mocha';
-
-import { assert } from 'chai';
 import { createTestServer } from '../helpers/server';
 import {
   registerPlayer,
@@ -21,7 +12,7 @@ let testServer;
 let clientSocket;
 
 describe('Game starting', () => {
-  before((done) => {
+  beforeAll((done) => {
     createTestServer().then((server) => {
       clientSocket = new Client(`http://${server.host}:${server.port}`);
       testServer = server;
@@ -31,7 +22,7 @@ describe('Game starting', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => {
+  afterAll(() => {
     clientSocket.close();
     setTimeout(() => testServer.stop(), 100);
   });
@@ -49,7 +40,7 @@ describe('Game starting', () => {
     clientSocket.emit(EVENTS.GAME.START, { playerId: player.id, gameId: game.id });
     const state = await waitEvent(clientSocket, EVENTS.GAME.STATE);
 
-    assert.isNotNull(state.id);
-    assert.isNotNull(state.board);
+    expect(state.id).not.toBeNull();
+    expect(state.board).not.toBeNull();
   });
 });

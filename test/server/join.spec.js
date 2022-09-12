@@ -1,13 +1,4 @@
 import { io as Client } from 'socket.io-client';
-
-import { assert, expect } from 'chai';
-import {
-  after,
-  afterEach,
-  before,
-  describe,
-  it,
-} from 'mocha';
 import { getRedTetrisSingleton, Room } from '../../src/server/entities';
 
 import { createTestServer } from '../helpers/server';
@@ -20,18 +11,18 @@ describe('Room joining', () => {
   let testServer;
   let clientSocket;
 
-  before((done) => {
-    createTestServer().then((server) => {
-      clientSocket = new Client(`http://${server.host}:${server.port}`);
-      testServer = server;
-      redTetris = getRedTetrisSingleton();
-      done();
-    });
+  beforeAll(async () => {
+    await createTestServer()
+      .then((server) => {
+        clientSocket = new Client(`http://${server.host}:${server.port}`);
+        testServer = server;
+        redTetris = getRedTetrisSingleton();
+      });
   });
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => {
+  afterAll(() => {
     clientSocket.close();
     setTimeout(() => testServer.stop(), 100);
   });
@@ -48,8 +39,8 @@ describe('Room joining', () => {
 
     const joinedRoom = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
 
-    assert.equal(joinedRoom.id, '1234');
-    assert.equal(joinedRoom.players.length, 2);
+    expect(joinedRoom.id).toEqual('1234');
+    expect(joinedRoom.players.length).toEqual(2);
   });
 
   it('should not join an inexistant room', async () => {
@@ -58,7 +49,7 @@ describe('Room joining', () => {
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, name: '1234' });
 
     const event = await waitEvent(clientSocket, EVENTS.COMMON.ERROR);
-    assert.equal(event.error, 'ERR_NOT_FOUND');
+    expect(event.error).toEqual('ERR_NOT_FOUND');
   });
 
   it('should not join if room is full', async () => {
@@ -73,7 +64,8 @@ describe('Room joining', () => {
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
 
     const event = await waitEvent(clientSocket, EVENTS.COMMON.ERROR);
-    assert.equal(event.error, 'ERR_IS_FULL');
+
+    expect(event.error).toEqual('ERR_IS_FULL');
   });
 
   it('should not join if already added', async () => {
@@ -87,14 +79,14 @@ describe('Room joining', () => {
     room.addPlayer(player);
 
     const event = await waitEvent(clientSocket, EVENTS.COMMON.ERROR);
-    assert.equal(event.error, 'ERR_ALREADY_ADDED');
+
+    expect(event.error).toEqual('ERR_ALREADY_ADDED');
   });
 
-  it('should respond with an error if not registered', (done) => {
-    clientSocket.on(EVENTS.ROOM.JOIN, (arg) => {
-      expect(arg).to.eql({ error: 'NotRegistered' });
-      done();
-    });
+  it('should respond with an error if not registered', async () => {
     clientSocket.emit(EVENTS.ROOM.JOIN, { name: '1234' });
+    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+
+    expect(event.error).toEqual('NotRegistered');
   });
 });

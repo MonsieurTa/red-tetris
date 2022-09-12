@@ -1,22 +1,14 @@
 import { io as Client } from 'socket.io-client';
 
-import {
-  after,
-  afterEach,
-  before,
-  describe,
-  it,
-} from 'mocha';
-import { getRedTetrisSingleton } from '../../src/server/entities';
-
 import { createTestServer } from '../helpers/server';
+import { getRedTetrisSingleton } from '../../src/server/entities';
 import { registerPlayer } from '../helpers/socket-io';
 
 let testServer;
 let clientSocket;
 
-describe('Room creation', () => {
-  before((done) => {
+describe('Red-Tetris registration', () => {
+  beforeAll((done) => {
     createTestServer().then((server) => {
       clientSocket = new Client(`http://${server.host}:${server.port}`);
       testServer = server;
@@ -26,12 +18,14 @@ describe('Room creation', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  after(() => {
+  afterAll(() => {
     clientSocket.close();
     setTimeout(() => testServer.stop(), 100);
   });
 
-  it('should end test normally', async () => {
-    await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+  it('should register a player and respond with an id', async () => {
+    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+
+    expect(player.username).toEqual('Bruce Wayne');
   });
 });
