@@ -70,5 +70,13 @@
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
     "react/no-array-index-key": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.spec.{js,jsx}", "**/__mocks__/**"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
 }
