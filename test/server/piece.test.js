@@ -3,7 +3,7 @@ import {
   describe,
   it,
 } from 'mocha';
-import Piece, { rotate } from '../../../src/server/entities/Piece';
+import Piece, { rotate } from '../../src/server/entities/Piece';
 
 describe('Piece', () => {
   it('should rotate I piece', (done) => {

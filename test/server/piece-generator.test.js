@@ -4,7 +4,11 @@ import {
   it,
 } from 'mocha';
 
-import PieceGenerator, { DEFAULT_SEQUENCE, FIRST_SEQUENCE, SEQUENCE_SIZE } from '../../../src/server/entities/PieceGenerator';
+import PieceGenerator, {
+  DEFAULT_SEQUENCE,
+  FIRST_SEQUENCE,
+  SEQUENCE_SIZE,
+} from '../../src/server/entities/PieceGenerator';
 
 describe('Piece generator', () => {
   it('should draw one sequence', (done) => {

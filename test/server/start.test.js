@@ -9,13 +9,13 @@ import {
 } from 'mocha';
 
 import { assert } from 'chai';
-import { createTestServer } from '../../../helpers/server';
+import { createTestServer } from '../helpers/server';
 import {
   registerPlayer,
   waitEvent,
-} from '../../../helpers/socket-io';
-import { getRedTetrisSingleton } from '../../../../src/server/entities';
-import EVENTS from '../../../../src/shared/constants/socket-io';
+} from '../helpers/socket-io';
+import { getRedTetrisSingleton } from '../../src/server/entities';
+import EVENTS from '../../src/shared/constants/socket-io';
 
 let testServer;
 let clientSocket;

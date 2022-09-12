@@ -8,12 +8,12 @@ import {
   describe,
   it,
 } from 'mocha';
-import { getRedTetrisSingleton, Room } from '../../../../src/server/entities';
+import { getRedTetrisSingleton, Room } from '../../src/server/entities';
 
-import { createTestServer } from '../../../helpers/server';
-import { registerPlayer, waitEvent } from '../../../helpers/socket-io';
-import EVENTS from '../../../../src/shared/constants/socket-io';
-import Player from '../../../../src/server/entities/Player';
+import { createTestServer } from '../helpers/server';
+import { registerPlayer, waitEvent } from '../helpers/socket-io';
+import EVENTS from '../../src/shared/constants/socket-io';
+import Player from '../../src/server/entities/Player';
 
 let testServer;
 let clientSocket;

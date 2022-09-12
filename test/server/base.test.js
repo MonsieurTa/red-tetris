@@ -7,10 +7,10 @@ import {
   describe,
   it,
 } from 'mocha';
-import { getRedTetrisSingleton } from '../../../src/server/entities';
+import { getRedTetrisSingleton } from '../../src/server/entities';
 
-import { createTestServer } from '../../helpers/server';
-import { registerPlayer } from '../../helpers/socket-io';
+import { createTestServer } from '../helpers/server';
+import { registerPlayer } from '../helpers/socket-io';
 
 let testServer;
 let clientSocket;

@@ -9,9 +9,9 @@ import {
 } from 'mocha';
 
 import { assert } from 'chai';
-import { createTestServer } from '../../../helpers/server';
-import { getRedTetrisSingleton } from '../../../../src/server/entities';
-import { registerPlayer } from '../../../helpers/socket-io';
+import { createTestServer } from '../helpers/server';
+import { getRedTetrisSingleton } from '../../src/server/entities';
+import { registerPlayer } from '../helpers/socket-io';
 
 let testServer;
 let clientSocket;
