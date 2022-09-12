@@ -39,11 +39,11 @@ describe('Room creation', () => {
     const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
 
     assert.equal(room.host.username, 'Bruce Wayne');
-    assert.equal(room.name, '1234');
-    assert.equal(room.capacity, 2);
+    assert.equal(room.id, '1234');
+    assert.equal(room.capacity, 5);
   });
 
-  it('should created room if name already exist', async () => {
+  it('should join room if name already exist', async () => {
     const storedRoom = new Room({
       name: '1234',
       host: new Player('Clark Kent'),
@@ -54,10 +54,8 @@ describe('Room creation', () => {
     const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
 
     clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
-
-    const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
-    assert.equal(room.name, storedRoom.name);
-    assert.notEqual(room.id, storedRoom.id);
+    const room = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+    assert.equal(storedRoom.id, room.id);
   });
 
   it('should respond with an error', (done) => {

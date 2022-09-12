@@ -43,12 +43,10 @@ describe('Room joining', () => {
 
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
 
-    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+    const joinedRoom = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
 
-    assert.equal(event.room.name, '1234');
-    assert.equal(event.room.playersCount, 2);
-
-    assert.equal(event.players.length, 2);
+    assert.equal(joinedRoom.id, '1234');
+    assert.equal(joinedRoom.players.length, 2);
   });
 
   it('should not join an inexistant room', async () => {
@@ -56,7 +54,7 @@ describe('Room joining', () => {
 
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, name: '1234' });
 
-    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+    const event = await waitEvent(clientSocket, EVENTS.COMMON.ERROR);
     assert.equal(event.error, 'ERR_NOT_FOUND');
   });
 
@@ -71,7 +69,7 @@ describe('Room joining', () => {
 
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
 
-    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+    const event = await waitEvent(clientSocket, EVENTS.COMMON.ERROR);
     assert.equal(event.error, 'ERR_IS_FULL');
   });
 
@@ -85,7 +83,7 @@ describe('Room joining', () => {
     clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
     room.addPlayer(player);
 
-    const event = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);
+    const event = await waitEvent(clientSocket, EVENTS.COMMON.ERROR);
     assert.equal(event.error, 'ERR_ALREADY_ADDED');
   });
 

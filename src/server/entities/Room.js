@@ -45,7 +45,6 @@ class Room {
     return {
       id: this._id,
       host: this._host.toDto(),
-      name: this._name,
       players: this._players.map((v) => v.toDto()),
       capacity: this._capacity,
       isFull: this.isFull,
