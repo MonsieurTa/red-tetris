@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { DEFAULT_GAME_STATE } from '../../../shared/constants/redux';
 
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
@@ -15,12 +14,19 @@ const redTetrisSlice = createSlice({
       ...state,
       rooms: state.rooms.filter(({ id }) => id !== roomId),
     }),
-    setCurrentRoom: (state, { payload: currentRoom }) => ({
-      ...state,
-      currentRoom,
-      gameState: DEFAULT_GAME_STATE,
-      roomGames: {},
-    }),
+    setCurrentRoom: (state, { payload: currentRoom }) => {
+      const { players } = currentRoom;
+      const playerIds = new Set(players.map((v) => v.id));
+
+      const roomGamesEntries = Object
+        .entries(state.roomGames)
+        .filter(([, game]) => playerIds.has(game.player.id));
+      return ({
+        ...state,
+        currentRoom,
+        roomGames: Object.fromEntries(roomGamesEntries),
+      });
+    },
     setGameState: (state, { payload: gameState }) => ({ ...state, gameState }),
     setRoomGame: (state, { payload: roomGame }) => {
       const { roomGames } = state;
