@@ -1,15 +1,10 @@
 import { io as Client } from 'socket.io-client';
 import { WEBSOCKET } from '../../../shared/constants/redux';
 import EVENTS from '../../../shared/constants/socket-io';
+import { registerGameListeners, registerRedTetrisListeners, registerRoomListeners } from '../../lib/socketListeners';
 
 import {
-  register,
-  setRooms,
   setCurrentRoom,
-  setGameState,
-  addRoom,
-  removeRoom,
-  setRoomGame,
   setSocket,
   setError,
 } from '../reducers/red-tetris';
@@ -29,53 +24,14 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         store.dispatch(setError(error));
       });
 
-      // register all listeners here
-      // ...
-      socket.on(EVENTS.RED_TETRIS.REGISTER, (player) => {
-        store.dispatch(register(player));
-      });
-
-      socket.on(EVENTS.RED_TETRIS.ROOMS, (rooms) => {
-        store.dispatch(setRooms(rooms));
-      });
-
-      socket.on(EVENTS.ROOM.CREATE, (room) => {
-        if (room.host?.id === store.getState().player?.id) {
-          store.dispatch(setCurrentRoom(room));
-        }
-        store.dispatch(addRoom(room));
-      });
-
-      socket.on(EVENTS.ROOM.REMOVED, ({ id }) => {
-        store.dispatch(removeRoom(id));
-      });
-
-      socket.on(EVENTS.ROOM.JOIN, (room) => {
-        store.dispatch(setCurrentRoom(room));
-      });
-
-      socket.on(EVENTS.ROOM.LEAVE, (room) => {
-        store.dispatch(setCurrentRoom(room));
-      });
-
-      socket.on(EVENTS.GAME.READY, (game) => {
-        store.dispatch({ type: EVENTS.GAME.START, gameId: game.id });
-      });
-
-      socket.on(EVENTS.GAME.STATE, (gameState) => {
-        store.dispatch(setGameState(gameState));
-      });
-
-      socket.on(EVENTS.GAME.OTHERS_STATE, (otherBoard) => {
-        store.dispatch(setRoomGame(otherBoard));
-      });
-
+      registerRedTetrisListeners(socket, store);
+      registerRoomListeners(socket, store);
+      registerGameListeners(socket, store);
       break;
     case WEBSOCKET.DISCONNECT:
       if (socket) {
         socket.close();
       }
-
       store.dispatch(setSocket(null));
       break;
     default:

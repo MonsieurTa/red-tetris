@@ -13,60 +13,12 @@ import anime from 'animejs';
 import { withGlobalCssPriority } from './GlobalCssPriority';
 
 import EVENTS from '../../shared/constants/socket-io';
-import INPUTS from '../../shared/constants/inputs';
 import Home from '../pages/Home';
 import Room from '../pages/Room';
-import { ERRORS } from '../../server/socket-io/actions/room';
 import { setError } from '../redux/reducers/red-tetris';
 
-const formatError = (error) => {
-  switch (error) {
-    case ERRORS.ERR_ALREADY_ADDED:
-      return 'You have already joined the room.';
-    case ERRORS.ERR_ALREADY_STARTED:
-      return 'The room has already started.';
-    case ERRORS.ERR_IS_EMPTY:
-      return 'The room is empty.';
-    case ERRORS.ERR_IS_FULL:
-      return 'The room is full.';
-    case ERRORS.ERR_NOT_FOUND:
-      return 'Room not found.';
-    case ERRORS.ERR_WRONG_HOST:
-      return 'Wrong host.';
-    default:
-      return 'Unexpected error';
-  }
-};
-
-const inputKeyDownListener = (dispatch) => ({ code }) => {
-  switch (code) {
-    case 'ArrowLeft':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.LEFT });
-      break;
-    case 'ArrowRight':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.RIGHT });
-      break;
-    case 'ArrowUp':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.ROTATE });
-      break;
-    case 'ArrowDown':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.DOWN, status: 'pressed' });
-      break;
-    case 'Space':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.HARD_DROP });
-      break;
-    default:
-  }
-};
-
-const inputKeyUpListener = (dispatch) => ({ code }) => {
-  switch (code) {
-    case 'ArrowDown':
-      dispatch({ type: EVENTS.GAME.ACTION, action: INPUTS.DOWN, status: 'released' });
-      break;
-    default:
-  }
-};
+import { inputKeyDownListener, inputKeyUpListener } from '../lib/inputListeners';
+import formatError from '../lib/format';
 
 const ProtectedRoute = ({ player, children, redirectPath }) => {
   if (!player) {

@@ -9,7 +9,7 @@ module.exports = {
   },
   collectCoverageFrom: [
     'src/client/**/*.{js,jsx}',
-    '!src/client/containers/**/*.{js,jsx}',
+    // '!src/client/containers/**/*.{js,jsx}',
     'src/server/**/*.js',
   ],
   coverageReporters: ['clover', 'json', 'lcov', 'text', 'text-summary'],
