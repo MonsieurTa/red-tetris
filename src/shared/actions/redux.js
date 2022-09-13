@@ -13,7 +13,7 @@ const JOIN_STATUS = {
 
 const ACTIONS = {
   WEBSOCKET: {
-    connect: () => ({ type: WEBSOCKET.CONNECT }),
+    connect: (host) => ({ type: WEBSOCKET.CONNECT, host }),
     connected: () => ({ type: WEBSOCKET.CONNECTED }),
     connecting: () => ({ type: WEBSOCKET.CONNECTING }),
     connectError: () => ({ type: WEBSOCKET.CONNECT_ERROR }),

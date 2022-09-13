@@ -27,3 +27,5 @@ export const waitBoard = (socket) =>
   new Promise((resolve) => {
     socket.on(EVENTS.GAME.BOARD, (args) => { resolve(args); });
   });
+
+export const wait = (ms = 10) => new Promise((resolve) => { setTimeout(resolve, ms); });

@@ -8,7 +8,7 @@ import createSocketIoServer from './socket-io';
 const loginfo = debug('tetris:info');
 
 const createServer = (params) => {
-  const { host, port } = params;
+  const { host, port, runEngine = true } = params;
   return new Promise((resolve) => {
     const httpServer = http.createServer();
 
@@ -20,7 +20,10 @@ const createServer = (params) => {
       const serverSocket = createSocketIoServer(httpServer, { loginfo });
 
       const redTetris = getRedTetrisSingleton();
-      redTetris.run();
+
+      if (runEngine) {
+        redTetris.run();
+      }
 
       resolve({ httpServer, serverSocket });
     });

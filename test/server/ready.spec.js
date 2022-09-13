@@ -2,7 +2,10 @@ import { io as Client } from 'socket.io-client';
 
 import { createTestServer } from '../helpers/server';
 import {
-  registerPlayer, createRoom, joinRoom, waitEvent,
+  registerPlayer,
+  createRoom,
+  joinRoom,
+  waitEvent,
 } from '../helpers/socket-io';
 import { getRedTetrisSingleton } from '../../src/server/entities';
 import EVENTS from '../../src/shared/constants/socket-io';

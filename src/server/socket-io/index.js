@@ -30,14 +30,8 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
   io.on('connection', (socket) => {
     loginfo(`Socket connected: ${socket.id}`);
 
-    socket.on('ping', (action) => {
-      if (action.type === 'server/ping') {
-        socket.emit('ping', { type: 'pong' });
-      }
-    });
-
     socket.use(([eventName, args], next) => {
-      if (!['error', 'disconnect', 'ping', EVENTS.RED_TETRIS.REGISTER].includes(eventName)) {
+      if (!['error', 'disconnect', EVENTS.RED_TETRIS.REGISTER].includes(eventName)) {
         const player = redTetris.findPlayer(args.playerId);
         if (!player) {
           return next(new NotRegistered(eventName, args));

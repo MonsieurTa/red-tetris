@@ -3,6 +3,7 @@ import React from 'react';
 import { alpha, Box, LinearProgress } from '@mui/material';
 import { blueGrey, grey } from '@mui/material/colors';
 import PIECES from '../../shared/constants/pieces';
+import { HEIGHT, initBoard, WIDTH } from '../../shared/helpers/board';
 
 const CELL_SIZE = 30;
 const CELL_SIZES = {
@@ -167,14 +168,14 @@ const Stats = ({
 
 const Board = ({
   size = 'md',
-  value,
+  value = initBoard(WIDTH, HEIGHT),
   username = '',
   score = 0,
   level = 1,
   lineCleared = 0,
   nextShapes = [],
 }) => (
-  <Box className="flex flex-col gap-y-2">
+  <Box data-testid="board" className="flex flex-col gap-y-2">
     <div className="flex flex-row gap-x-4">
       <div className="flex flex-col gap-y-1">
         <Box

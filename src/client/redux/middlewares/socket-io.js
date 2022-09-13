@@ -14,9 +14,9 @@ import {
   setError,
 } from '../reducers/red-tetris';
 
-let socket = null;
-
 export const socketIoListenerMiddleware = (store) => (next) => (action) => {
+  let { socket } = store.getState();
+
   switch (action.type) {
     case WEBSOCKET.CONNECT:
       if (socket) {
@@ -32,7 +32,6 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       // register all listeners here
       // ...
       socket.on(EVENTS.RED_TETRIS.REGISTER, (player) => {
-        window.localStorage.setItem('_player', player);
         store.dispatch(register(player));
       });
 
@@ -52,7 +51,6 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       });
 
       socket.on(EVENTS.ROOM.JOIN, (room) => {
-        if (room.error) return;
         store.dispatch(setCurrentRoom(room));
       });
 
@@ -72,65 +70,72 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
         store.dispatch(setRoomGame(otherBoard));
       });
 
-      return null;
+      break;
     case WEBSOCKET.DISCONNECT:
       if (socket) {
         socket.close();
       }
 
-      socket = null;
-      return null;
+      store.dispatch(setSocket(null));
+      break;
     default:
-      return next(action);
+      next(action);
   }
 };
 
 export const socketIoEmitterMiddleware = (store) => (next) => (action) => {
+  const { socket } = store.getState();
+
+  if (!socket) {
+    next(action);
+    return;
+  }
+
   switch (action.type) {
     case EVENTS.RED_TETRIS.REGISTER:
       socket.emit(EVENTS.RED_TETRIS.REGISTER, { username: action.username });
-      return null;
+      break;
     case EVENTS.ROOM.CREATE:
       socket.emit(EVENTS.ROOM.CREATE, {
         playerId: store.getState().player.id,
         name: action.name,
       });
-      return null;
+      break;
     case EVENTS.ROOM.JOIN:
       socket.emit(EVENTS.ROOM.JOIN, {
         playerId: store.getState().player.id,
         id: action.id,
       });
-      return null;
+      break;
     case EVENTS.ROOM.LEAVE:
       socket.emit(EVENTS.ROOM.LEAVE, {
         playerId: store.getState().player.id,
         roomId: action.roomId,
       });
       store.dispatch(setCurrentRoom(null));
-      return null;
+      break;
     case EVENTS.ROOM.READY:
       socket.emit(EVENTS.ROOM.READY, {
         playerId: store.getState().player.id,
         id: action.id,
       });
-      return null;
+      break;
     case EVENTS.GAME.START:
       socket.emit(EVENTS.GAME.START, {
         playerId: store.getState().player.id,
         gameId: action.gameId,
       });
-      return null;
+      break;
     case EVENTS.GAME.ACTION:
-      if (!store.getState().player) return null;
+      if (!store.getState().player) break;
 
       socket.emit(EVENTS.GAME.ACTION, {
         playerId: store.getState().player.id,
         action: action.action,
         status: action.status,
       });
-      return null;
+      break;
     default:
-      return next(action);
+      next(action);
   }
 };

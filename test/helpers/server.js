@@ -13,7 +13,7 @@ export const createTestServer = () => new Promise((resolve) => {
   const resolver = (_host, _port) => {
     const serverSocket = createSocketIoServer(httpServer);
 
-    getRedTetrisSingleton().run();
+    // getRedTetrisSingleton().run();
 
     resolve({
       host: _host,

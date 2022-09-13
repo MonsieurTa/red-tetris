@@ -6,10 +6,20 @@ import { socketIoEmitterMiddleware, socketIoListenerMiddleware } from './middlew
 
 import redTetrisReducer from './reducers/red-tetris';
 
+const getMiddlewares = () => {
+  const middlewares = [socketIoListenerMiddleware, socketIoEmitterMiddleware];
+
+  if (process.env.NODE_ENV === 'development') {
+    middlewares.push(createLogger());
+  }
+
+  return middlewares;
+};
+
 const setupStore = () => configureStore({
   reducer: redTetrisReducer,
   preloadedState: INITIAL_STATE,
-  middleware: [socketIoListenerMiddleware, socketIoEmitterMiddleware, createLogger()],
+  middleware: getMiddlewares(),
 });
 
 export default setupStore;

@@ -3,11 +3,6 @@ import { useSelector } from 'react-redux';
 import {
   alpha,
   Card,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  ListSubheader,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
@@ -15,33 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import RoomCreationInput from '../components/inputs/RoomCreationInput';
 import RoomInfo from '../components/RoomInfo';
 import PlayerRegistrationInput from '../components/inputs/PlayerRegistrationInput';
-
-const RoomListItems = ({ disabled, rooms, onSelect }) => {
-  if (rooms.length === 0) {
-    return (
-      <ListItem>
-        <ListItemText
-          primary="No room yet..."
-          primaryTypographyProps={{
-            sx: { fontSize: 14 },
-            color: 'text.secondary',
-            gutterBottom: true,
-          }}
-        />
-      </ListItem>
-    );
-  }
-
-  return rooms.map((room) => (
-    <ListItemButton
-      key={room.id}
-      disabled={disabled}
-      onClick={() => onSelect(room)}
-    >
-      <ListItemText primary={room.id} />
-    </ListItemButton>
-  ));
-};
+import RoomList from '../components/RoomList';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -74,36 +43,11 @@ const Home = () => {
             background: alpha(grey[900], 0.2),
           }}
         >
-          <List
-            dense
-            subheader={(
-              <ListSubheader
-                component="div"
-                id="nested-list-subheader"
-                sx={{
-                  background: alpha(grey[900], 0.2),
-                }}
-              >
-                <div>Room list</div>
-              </ListSubheader>
-            )}
-          >
-            <RoomListItems
-              disabled={!player}
-              rooms={rooms}
-              onSelect={(room) => setSelectedRoom(room)}
-            />
-          </List>
+          <RoomList player={player} rooms={rooms} onClick={(room) => setSelectedRoom(room)} />
         </Card>
 
         <div className="flex flex-col h-full w-full gap-y-4">
           <RoomInfo room={selectedRoom} />
-
-          {selectedRoom && (
-            <div>
-              Room preview
-            </div>
-          )}
         </div>
       </div>
 

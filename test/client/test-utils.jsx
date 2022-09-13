@@ -3,9 +3,10 @@ import { Provider } from 'react-redux';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { render } from '@testing-library/react';
 
+import { BrowserRouter } from 'react-router-dom';
 import setupStore from '../../src/client/redux/store';
 
-const store = setupStore();
+export const store = setupStore();
 
 const darkTheme = createTheme({
   palette: {
@@ -16,7 +17,9 @@ const darkTheme = createTheme({
 const AllTheProviders = ({ children }) => (
   <ThemeProvider theme={darkTheme}>
     <Provider store={store}>
-      {children}
+      <BrowserRouter>
+        {children}
+      </BrowserRouter>
     </Provider>
   </ThemeProvider>
 );

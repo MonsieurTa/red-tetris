@@ -16,7 +16,6 @@ import EVENTS from '../../shared/constants/socket-io';
 import INPUTS from '../../shared/constants/inputs';
 import Home from '../pages/Home';
 import Room from '../pages/Room';
-import StoryBook from '../pages/StoryBook';
 import { ERRORS } from '../../server/socket-io/actions/room';
 import { setError } from '../redux/reducers/red-tetris';
 
@@ -159,7 +158,6 @@ const App = () => {
             <Route path=":roomId" element={<Room />} />
           </Route>
         </Route>
-        <Route path="/story-book" element={<StoryBook />} />
         <Route path="*" exact element={<Navigate to="" replace />} />
       </Routes>
 
