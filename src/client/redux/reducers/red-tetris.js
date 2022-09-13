@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { INITIAL_STATE } from '../../../shared/constants/redux';
 
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
-  initialState: {},
+  initialState: INITIAL_STATE.redTetris,
   reducers: {
     setSocket: (state, { payload: socket }) => ({ ...state, socket }),
     register: (state, { payload: player }) => ({ ...state, player }),

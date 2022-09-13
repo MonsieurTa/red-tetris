@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
-import { INITIAL_STATE } from '../../shared/constants/redux';
 
 import { socketIoEmitterMiddleware, socketIoListenerMiddleware } from './middlewares/socket-io';
 
@@ -18,7 +17,6 @@ const getMiddlewares = () => {
 
 const setupStore = () => configureStore({
   reducer: redTetrisReducer,
-  preloadedState: INITIAL_STATE,
   middleware: getMiddlewares(),
 });
 

@@ -38,11 +38,13 @@ export const DEFAULT_GAME_STATE = {
 };
 
 export const INITIAL_STATE = {
-  socket: null,
-  rooms: [],
-  currentRoom: null,
-  player: null,
-  roomGames: {},
-  gameState: DEFAULT_GAME_STATE,
-  error: null,
+  redTetris: {
+    socket: null,
+    rooms: [],
+    currentRoom: null,
+    player: null,
+    roomGames: {},
+    gameState: DEFAULT_GAME_STATE,
+    error: null,
+  },
 };

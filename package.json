@@ -10,7 +10,7 @@
     "srv-dev": "DEBUG=tetris:* babel-watch -w src src/server/main.js",
     "srv-dist": "babel src --out-dir dist",
     "test": "jest",
-    "coverage": "jest --coverage --runInBand"
+    "coverage": "jest --coverage"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
