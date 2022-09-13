@@ -30,14 +30,14 @@ const Root = () => {
   }, []);
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Provider store={store}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </ThemeProvider>
-    </Provider>
+      </Provider>
+    </ThemeProvider>
   );
 };
 
@@ -46,3 +46,5 @@ const root = createRoot(
 );
 
 root.render(<Root />);
+
+export default Root;

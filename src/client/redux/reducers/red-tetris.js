@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
+  initialState: {},
   reducers: {
     setSocket: (state, { payload: socket }) => ({ ...state, socket }),
     register: (state, { payload: player }) => ({ ...state, player }),
