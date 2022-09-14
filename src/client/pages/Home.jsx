@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 import {
   alpha,
   Card,
+  CardContent,
+  CardHeader,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
@@ -43,7 +45,15 @@ const Home = () => {
             background: alpha(grey[900], 0.2),
           }}
         >
-          <RoomList player={player} rooms={rooms} onClick={(room) => setSelectedRoom(room)} />
+          <CardHeader
+            title="Rooms"
+            sx={{
+              background: alpha(grey[900], 0.2),
+            }}
+          />
+          <CardContent className="max-h-96 overflow-auto">
+            <RoomList player={player} rooms={rooms} onSelect={(room) => setSelectedRoom(room)} />
+          </CardContent>
         </Card>
 
         <div className="flex flex-col h-full w-full gap-y-4">

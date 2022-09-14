@@ -1,13 +1,10 @@
 import React from 'react';
 import {
-  alpha,
   List,
-  ListSubheader,
   ListItem,
   ListItemButton,
   ListItemText,
 } from '@mui/material';
-import { grey } from '@mui/material/colors';
 
 const RoomListItems = ({ disabled, rooms, onSelect }) => {
   if (rooms.length === 0) {
@@ -37,20 +34,7 @@ const RoomListItems = ({ disabled, rooms, onSelect }) => {
 };
 
 const RoomList = ({ player = null, rooms = [], onSelect = () => {} }) => (
-  <List
-    dense
-    subheader={(
-      <ListSubheader
-        component="div"
-        id="nested-list-subheader"
-        sx={{
-          background: alpha(grey[900], 0.2),
-        }}
-      >
-        <div>Room list</div>
-      </ListSubheader>
-    )}
-  >
+  <List dense>
     <RoomListItems
       disabled={!player}
       rooms={rooms}

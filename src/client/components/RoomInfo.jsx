@@ -7,11 +7,12 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { grey } from '@mui/material/colors';
+import { useDispatch } from 'react-redux';
+import EVENTS from '../../shared/constants/socket-io';
 
 const RoomInfoContent = ({ room }) => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   if (!room) {
     return (
@@ -24,7 +25,7 @@ const RoomInfoContent = ({ room }) => {
   }
 
   const onClick = () => {
-    navigate(room.id, { replace: true });
+    dispatch({ type: EVENTS.ROOM.JOIN, id: room.id });
   };
 
   return (

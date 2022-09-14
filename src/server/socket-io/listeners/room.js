@@ -14,6 +14,11 @@ export const onCreate = (socket, io) => ({ playerId, name }) => {
   const existingRoom = redTetris.findRoom(name);
 
   if (existingRoom) {
+    if (redTetris.hasAlreadyStarted(existingRoom.id)) {
+      socket.emit(EVENTS.COMMON.ERROR, { error: ERRORS.ERR_ALREADY_STARTED });
+      return;
+    }
+
     try {
       existingRoom.addPlayer(player);
 

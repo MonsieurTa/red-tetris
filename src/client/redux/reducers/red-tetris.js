@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { INITIAL_STATE } from '../../../shared/constants/redux';
+import { DEFAULT_GAME_STATE, INITIAL_STATE } from '../../../shared/constants/redux';
 
 const redTetrisSlice = createSlice({
   name: 'red-tetris',
@@ -21,7 +21,7 @@ const redTetrisSlice = createSlice({
         return ({
           ...state,
           currentRoom: null,
-          gameState: null,
+          gameState: DEFAULT_GAME_STATE,
           roomGames: {},
         });
       }
@@ -43,7 +43,8 @@ const redTetrisSlice = createSlice({
       const { roomGames } = state;
       return ({ ...state, roomGames: { ...roomGames, [roomGame.id]: roomGame } });
     },
-    setRoomRunning: (state, { payload: isRunning }) => ({ ...state, roomRunning: isRunning }),
+    setRoomRunning: (state, { payload: isRunning }) =>
+      ({ ...state, roomRunning: isRunning, roomGames: isRunning ? {} : state.roomGames }),
     setError: (state, { payload: error }) => ({ ...state, error }),
   },
 });

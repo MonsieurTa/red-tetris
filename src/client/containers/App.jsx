@@ -78,9 +78,8 @@ const App = () => {
   useEffect(() => {
     if (error) {
       setOpenSnackbar(true);
-      setError(null);
     }
-  }, [error]);
+  }, [dispatch, error]);
 
   useEffect(() => {
     anime.timeline({ loop: true })
@@ -116,7 +115,10 @@ const App = () => {
       <Snackbar
         open={openSnackbar}
         autoHideDuration={5_000}
-        onClose={() => setOpenSnackbar(false)}
+        onClose={() => {
+          setOpenSnackbar(false);
+          dispatch(setError(null));
+        }}
         message={formatError(error)}
       />
     </div>
