@@ -1,7 +1,7 @@
 import http from 'http';
 import { configureStore } from '@reduxjs/toolkit';
 
-import params from '../../params';
+import params from '../../src/server/params';
 import createSocketIoServer from '../../src/server/socket-io';
 import { getRedTetrisSingleton } from '../../src/server/entities';
 

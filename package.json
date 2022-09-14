@@ -8,7 +8,7 @@
     "client-dist": "NODE_ENV=production webpack --config webpack.prod.js --mode=production --progress",
     "client-dev": "NODE_ENV=development webpack-dev-server --config webpack.dev.js --mode=development --hot --host 0.0.0.0 --port 8080",
     "srv-dev": "DEBUG=tetris:* babel-watch -w src src/server/main.js",
-    "srv-dist": "babel src --out-dir dist",
+    "srv-dist": "babel src --out-dir dist --ignore src/client/**/*.js",
     "test": "jest --runInBand",
     "coverage": "jest --coverage --runInBand"
   },

@@ -9,7 +9,7 @@ import App from './App';
 
 import setupStore from '../redux/store';
 
-import { HOST, PORT } from '../../../params';
+import { HOST, PORT } from '../../shared/params';
 
 const store = setupStore();
 
