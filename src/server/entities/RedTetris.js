@@ -9,7 +9,6 @@ class RedTetris {
     this._games = new Map();
 
     this._shapeGenerators = new Map();
-    this._engine = new Engine();
   }
 
   register(player) {
@@ -124,7 +123,7 @@ class RedTetris {
 
   reset() {
     this._engine.stop();
-    this._engine = new Engine();
+    this._engine = new Engine({ io: this._io });
     this._shapeGenerators = new Map();
     this._rooms = new Map();
     this._players = new Map();
@@ -144,6 +143,7 @@ class RedTetris {
 
   set io(io) {
     this._io = io;
+    this._engine = new Engine({ io });
   }
 }
 

@@ -24,6 +24,7 @@ it('should return initial state', () => {
     currentRoom: null,
     player: null,
     roomGames: {},
+    roomRunning: false,
     gameState: {
       id: null,
       player: null,

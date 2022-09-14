@@ -28,7 +28,7 @@ it('should add a game', () => {
   const game = new Game({ player, room, pieceGenerator });
 
   engine.add(game);
-  expect(engine._games).toEqual([game]);
+  expect(engine._gamesByRoomId.get(room.id)).toEqual([game]);
 });
 
 it('should return true if game is in the loop', () => {
@@ -41,19 +41,4 @@ it('should return true if game is in the loop', () => {
 
   engine.add(game);
   expect(engine.hasAlreadyStarted(room.id)).toBeTruthy();
-});
-
-it('should game from game loop', () => {
-  const engine = new Engine();
-
-  const player = new Player('Bruce Wayne');
-  const room = new Room({ name: 'Cool Room' });
-  const pieceGenerator = new PieceGenerator();
-  const game = new Game({ player, room, pieceGenerator });
-
-  engine.add(game);
-  expect(engine._games).toEqual([game]);
-
-  engine.remove(game.id);
-  expect(engine._games).toEqual([]);
 });

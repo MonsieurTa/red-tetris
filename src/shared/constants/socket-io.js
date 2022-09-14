@@ -16,6 +16,7 @@ const RED_TETRIS = {
 const GAME = {
   READY: 'game:ready',
   START: 'game:start',
+  END: 'game:end',
   STATE: 'game:state',
   OTHERS_STATE: 'game:others:state',
   ACTION: 'game:action',

@@ -67,6 +67,7 @@ const Room = () => {
   );
   const gameState = useSelector((store) => store.gameState);
   const roomGames = useSelector((store) => [...Object.values(store.roomGames)]);
+  const roomRunning = useSelector((store) => store.roomRunning);
 
   useEffect(() => {
     if (!currentRoom) {
@@ -81,7 +82,6 @@ const Room = () => {
   const { id: roomId, host, players } = currentRoom;
   const otherPlayers = players.filter((player) => player.id !== currentPlayer.id);
   const isHost = currentPlayer.id === host.id;
-  const roomRunning = [gameState, ...roomGames].some((game) => game.alive);
   const {
     board,
     nextShapes,

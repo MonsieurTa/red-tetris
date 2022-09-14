@@ -268,7 +268,7 @@ class Game {
   }
 
   _setCurrentGravity() {
-    this._gravity = DEFAULT_GRAVITY + (DEFAULT_GRAVITY * this._level) / 10;
+    this._gravity = DEFAULT_GRAVITY + (DEFAULT_GRAVITY * this._level) / 5;
   }
 
   get id() {

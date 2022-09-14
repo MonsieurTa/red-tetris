@@ -44,6 +44,7 @@ export const INITIAL_STATE = {
     currentRoom: null,
     player: null,
     roomGames: {},
+    roomRunning: false,
     gameState: DEFAULT_GAME_STATE,
     error: null,
   },
