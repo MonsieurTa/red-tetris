@@ -9,8 +9,8 @@
     "client-dev": "NODE_ENV=development webpack-dev-server --config webpack.dev.js --mode=development --hot --host 0.0.0.0 --port 8080",
     "srv-dev": "DEBUG=tetris:* babel-watch -w src src/server/main.js",
     "srv-dist": "babel src --out-dir dist",
-    "test": "jest",
-    "coverage": "jest --coverage"
+    "test": "jest --runInBand",
+    "coverage": "jest --coverage --runInBand"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",

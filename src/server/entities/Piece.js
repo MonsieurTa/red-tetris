@@ -39,19 +39,8 @@ class Piece {
     return this._matrix[y][x] !== this._shape;
   }
 
-  toDto() {
-    return {
-      matrix: this._matrix,
-      ...this.toDto(),
-    };
-  }
-
   get width() {
     return this._width;
-  }
-
-  get height() {
-    return this._height;
   }
 
   get shape() {
