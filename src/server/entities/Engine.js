@@ -74,10 +74,10 @@ class Engine {
           game.resetSentLines();
         });
 
-        for (const senderGameId of linesSentByGameId) {
+        for (const senderGameId of linesSentByGameId.keys()) {
           const lineSent = linesSentByGameId.get(senderGameId);
 
-          for (const receiverGameId of linesToAddByGameId) {
+          for (const receiverGameId of linesToAddByGameId.keys()) {
             if (senderGameId === receiverGameId) continue;
             const linesToAdd = linesToAddByGameId.get(receiverGameId);
             linesToAddByGameId.set(receiverGameId, linesToAdd + lineSent);
