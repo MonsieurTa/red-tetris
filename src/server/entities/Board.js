@@ -55,7 +55,7 @@ class Board {
 
   _isAvailable(x, y) {
     if (x < 0 || x >= WIDTH) return false;
-    if (y >= HEIGHT) return false;
+    if (y < 0 || y >= HEIGHT) return false;
 
     return this._board[y][x] === '.';
   }
