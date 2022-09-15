@@ -6,6 +6,7 @@ import {
   createRoom,
   joinRoom,
   waitEvent,
+  wait,
 } from '../helpers/socket-io';
 import { getRedTetrisSingleton } from '../../src/server/entities';
 import EVENTS from '../../src/shared/constants/socket-io';
@@ -24,9 +25,11 @@ describe('Room ready', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  afterAll(() => {
+  afterAll(async () => {
     clientSocket.close();
-    setTimeout(() => testServer.stop(), 100);
+
+    await wait();
+    testServer.stop();
   });
 
   it('should start a game with one player', async () => {

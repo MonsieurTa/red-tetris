@@ -3,6 +3,7 @@ import { io as Client } from 'socket.io-client';
 import { createTestServer } from '../helpers/server';
 import {
   registerPlayer,
+  wait,
   waitEvent,
 } from '../helpers/socket-io';
 import { getRedTetrisSingleton } from '../../src/server/entities';
@@ -22,9 +23,11 @@ describe('Game starting', () => {
 
   afterEach(() => getRedTetrisSingleton().reset());
 
-  afterAll(() => {
+  afterAll(async () => {
     clientSocket.close();
-    setTimeout(() => testServer.stop(), 100);
+
+    await wait();
+    testServer.stop();
   });
 
   it('should get initial red-tetris data', async () => {

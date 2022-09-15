@@ -2,7 +2,7 @@ import { io as Client } from 'socket.io-client';
 import { getRedTetrisSingleton, Room } from '../../src/server/entities';
 
 import { createTestServer } from '../helpers/server';
-import { registerPlayer, waitEvent } from '../helpers/socket-io';
+import { registerPlayer, wait, waitEvent } from '../helpers/socket-io';
 import EVENTS from '../../src/shared/constants/socket-io';
 import Player from '../../src/server/entities/Player';
 
@@ -21,9 +21,11 @@ beforeAll(async () => {
 
 afterEach(() => getRedTetrisSingleton().reset());
 
-afterAll(() => {
+afterAll(async () => {
   clientSocket.close();
-  setTimeout(() => testServer.stop(), 100);
+
+  await wait();
+  testServer.stop();
 });
 
 it('should join a room', async () => {
