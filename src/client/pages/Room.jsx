@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
@@ -6,6 +6,7 @@ import { Button } from '@mui/material';
 import EVENTS from '../../shared/constants/socket-io';
 import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 import Board from '../components/Board';
+import GameEndModal from '../components/GameEndModal';
 
 const EMPTY_BOARD = initBoard(WIDTH, HEIGHT);
 
@@ -68,6 +69,9 @@ const Room = () => {
   const gameState = useSelector((store) => store.gameState);
   const roomGames = useSelector((store) => [...Object.values(store.roomGames)]);
   const roomRunning = useSelector((store) => store.roomRunning);
+  const winner = useSelector((store) => store.winner);
+
+  const [openWinnerModal, setOpenWinnerModal] = useState(false);
 
   useEffect(() => {
     if (!currentRoom) {
@@ -76,6 +80,12 @@ const Room = () => {
       dispatch({ type: EVENTS.ROOM.JOIN, id: currentRoom.id });
     }
   }, [params, navigate, dispatch, currentRoom]);
+
+  useEffect(() => {
+    if (!winner) return;
+
+    setOpenWinnerModal(true);
+  }, [winner]);
 
   if (!currentRoom) return null;
 
@@ -127,6 +137,14 @@ const Room = () => {
           <EmptyBoards players={otherPlayers} />
         )}
       </div>
+
+      {winner && (
+        <GameEndModal
+          winner={winner}
+          open={openWinnerModal}
+          onClose={() => setOpenWinnerModal(false)}
+        />
+      )}
     </div>
   );
 };

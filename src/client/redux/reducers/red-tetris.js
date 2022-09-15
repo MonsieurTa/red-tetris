@@ -43,8 +43,12 @@ const redTetrisSlice = createSlice({
       const { roomGames } = state;
       return ({ ...state, roomGames: { ...roomGames, [roomGame.id]: roomGame } });
     },
-    setRoomRunning: (state, { payload: isRunning }) =>
-      ({ ...state, roomRunning: isRunning, roomGames: isRunning ? {} : state.roomGames }),
+    setRoomRunning: (state, { payload: roomRunning }) => ({
+      ...state,
+      roomRunning,
+      roomGames: roomRunning ? {} : state.roomGames,
+    }),
+    setWinner: (state, { payload: winner }) => ({ ...state, winner }),
     setError: (state, { payload: error }) => ({ ...state, error }),
   },
 });
@@ -60,6 +64,7 @@ export const {
   setCurrentPiece,
   setRoomGame,
   setRoomRunning,
+  setWinner,
   setError,
 } = redTetrisSlice.actions;
 export default redTetrisSlice.reducer;

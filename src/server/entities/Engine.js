@@ -31,15 +31,8 @@ class Engine {
     this._running = false;
   }
 
-  add(game) {
-    const { id: roomId } = game.room;
-    const storedRoomGames = this._gamesByRoomId.get(roomId);
-
-    if (!storedRoomGames) {
-      this._gamesByRoomId.set(game.room.id, [game]);
-    } else {
-      storedRoomGames.push(game);
-    }
+  addGames(roomId, games) {
+    this._gamesByRoomId.set(roomId, games);
   }
 
   hasAlreadyStarted(roomId) {
@@ -54,8 +47,21 @@ class Engine {
         const runningGames = this._gamesByRoomId.get(roomId)
           .filter((game) => game.alive && !game.destroyed);
 
+        console.log({ runningGames: runningGames.length });
+        if (runningGames.length === 1) {
+          const [game] = runningGames;
+          console.log({ alive: game.alive, kind: game.kind });
+          if (game.kind === 'multiplayer') {
+            this._io.to(roomId)
+              .emit(EVENTS.GAME.END, { winner: game.player.toDto() });
+            game.destroy();
+            this._gamesByRoomId.delete(roomId);
+            continue;
+          }
+        }
+
         if (runningGames.length === 0) {
-          this._io.to(roomId).emit(EVENTS.GAME.END, { status: 'end' });
+          this._io.to(roomId).emit(EVENTS.GAME.END);
           this._gamesByRoomId.delete(roomId);
           continue;
         }

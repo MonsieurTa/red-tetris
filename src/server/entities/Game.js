@@ -23,10 +23,12 @@ class Game {
     pieceGenerator,
     room,
     player,
+    kind = 'solo',
   }) {
     this._room = room;
     this._player = player;
     this._board = new Board();
+    this._kind = kind;
 
     this._id = crypto.randomUUID();
     this._lastTick = null;
@@ -296,6 +298,10 @@ class Game {
 
   get id() {
     return this._id;
+  }
+
+  get kind() {
+    return this._kind;
   }
 
   get board() {

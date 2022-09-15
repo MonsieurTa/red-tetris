@@ -8,6 +8,7 @@ import {
   setRoomGame,
   setRoomRunning,
   setRooms,
+  setWinner,
 } from '../redux/reducers/red-tetris';
 
 export const onRegister = (store) => (player) => store.dispatch(register(player));
@@ -27,11 +28,15 @@ export const onGameReady = (store) =>
   (game) => {
     store.dispatch({ type: EVENTS.GAME.START, gameId: game.id });
     store.dispatch(setRoomRunning(true));
+    store.dispatch(setWinner(null));
   };
 export const onGameState = (store) => (gameState) => store.dispatch(setGameState(gameState));
 export const onGameOtherState = (store) =>
   (otherBoard) => store.dispatch(setRoomGame(otherBoard));
-export const onGameEnd = (store) => () => store.dispatch(setRoomRunning(false));
+export const onGameEnd = (store) => ({ winner } = {}) => {
+  store.dispatch(setRoomRunning(false));
+  store.dispatch(setWinner(winner));
+};
 
 export const registerRedTetrisListeners = (socket, store) => {
   socket.on(EVENTS.RED_TETRIS.REGISTER, onRegister(store));

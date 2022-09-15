@@ -108,10 +108,18 @@ export const onReady = (socket) => ({ playerId, id }) => {
   }
 
   const pieceGenerator = redTetris.storePieceGenerator(room.id, new PieceGenerator());
-  room.players.forEach((player) => {
-    const game = new Game({ pieceGenerator, room, player });
+  const games = room.players.map((player) => {
+    const game = new Game({
+      pieceGenerator,
+      room,
+      player,
+      kind: room.players.length > 1 ? 'multiplayer' : 'solo',
+    });
     redTetris.storeGame(game);
 
     player.socket.emit(EVENTS.GAME.READY, { id: game.id });
+    return game;
   });
+
+  redTetris.startGames(room.id, games);
 };

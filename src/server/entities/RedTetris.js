@@ -33,7 +33,7 @@ class RedTetris {
       });
 
     this.findAllGames()
-      .filter((game) => game.player.id === player.id)
+      .filter((game) => !game.player || game.player.id === player.id)
       .forEach((game) => {
         game.destroy();
         this.deleteGame(game.id);
@@ -108,10 +108,13 @@ class RedTetris {
     this._games.delete(gameId);
   }
 
-  startGame(game) {
-    game.registerUserInputListeners();
-    game.start();
-    this._engine.add(game);
+  startGames(roomId, games) {
+    games.forEach((game) => {
+      game.registerUserInputListeners();
+      game.start();
+    });
+
+    this._engine.addGames(roomId, games);
   }
 
   storePieceGenerator(key, pieceGenerator) {

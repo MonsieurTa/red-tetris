@@ -46,6 +46,7 @@ export const INITIAL_STATE = {
     roomGames: {},
     roomRunning: false,
     gameState: DEFAULT_GAME_STATE,
+    winner: null,
     error: null,
   },
 };
