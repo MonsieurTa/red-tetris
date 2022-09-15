@@ -61,8 +61,8 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
     });
 
     socket.on(EVENTS.RED_TETRIS.REGISTER, redTetrisListeners.onRegister(socket));
-    socket.on(EVENTS.ROOM.CREATE, roomListeners.onCreate(socket, io));
-    socket.on(EVENTS.ROOM.JOIN, roomListeners.onJoin(socket, io));
+    socket.on(EVENTS.ROOM.CREATE, roomListeners.onCreate(socket));
+    socket.on(EVENTS.ROOM.JOIN, roomListeners.onJoin(socket));
     socket.on(EVENTS.ROOM.LEAVE, roomListeners.onLeave(socket));
     socket.on(EVENTS.ROOM.READY, roomListeners.onReady(socket));
 

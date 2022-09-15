@@ -6,7 +6,7 @@ import PieceGenerator from '../../entities/PieceGenerator';
 
 import { ERRORS } from '../actions/room';
 
-export const onCreate = (socket, io) => ({ playerId, name }) => {
+export const onCreate = (socket) => ({ playerId, name }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
@@ -26,7 +26,7 @@ export const onCreate = (socket, io) => ({ playerId, name }) => {
       socket.emit(EVENTS.ROOM.JOIN, existingRoom.toDto());
       socket.to(existingRoom.id).emit(EVENTS.ROOM.JOIN, existingRoom.toDto());
 
-      io.local.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
+      redTetris.emitToAll(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
     } catch (e) {
       socket.emit(EVENTS.COMMON.ERROR, { error: e.message });
     }
@@ -37,11 +37,11 @@ export const onCreate = (socket, io) => ({ playerId, name }) => {
     redTetris.storeRoom(room);
 
     socket.join(room.id);
-    io.local.emit(EVENTS.ROOM.CREATE, room.toDto());
+    redTetris.emitToAll(EVENTS.ROOM.CREATE, room.toDto());
   }
 };
 
-export const onJoin = (socket, io) => ({ playerId, id }) => {
+export const onJoin = (socket) => ({ playerId, id }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
@@ -64,7 +64,7 @@ export const onJoin = (socket, io) => ({ playerId, id }) => {
     socket.emit(EVENTS.ROOM.JOIN, room.toDto());
     socket.to(room.id).emit(EVENTS.ROOM.JOIN, room.toDto());
 
-    io.local.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
+    redTetris.emitToAll(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
   } catch (e) {
     socket.emit(EVENTS.COMMON.ERROR, { error: e.message });
   }
@@ -77,6 +77,7 @@ export const onLeave = (socket) => ({ playerId, roomId }) => {
 
   if (room) {
     socket.to(roomId).emit(EVENTS.ROOM.LEAVE, room.toDto());
+    redTetris.emitToAll(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
   }
 };
 

@@ -26,6 +26,12 @@ const Home = () => {
     navigate(currentRoom.id, { replace: true });
   }, [navigate, currentRoom]);
 
+  useEffect(() => {
+    if (selectedRoom) {
+      setSelectedRoom(rooms.find((v) => v.id === selectedRoom.id));
+    }
+  }, [rooms, selectedRoom]);
+
   return (
     <div className="flex flex-col h-full w-full gap-y-4">
       <div className="flex flex-row w-full justify-between items-cente">

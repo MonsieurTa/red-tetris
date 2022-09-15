@@ -40,6 +40,8 @@ class RedTetris {
       });
 
     this._players.delete(player.id);
+
+    this.emitToAll(EVENTS.RED_TETRIS.ROOMS, this.findAllRooms().map((v) => v.toDto()));
   }
 
   leaveRoom(roomId, playerId) {
