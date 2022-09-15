@@ -25,6 +25,8 @@ export const onCreate = (socket, io) => ({ playerId, name }) => {
       socket.join(existingRoom.id);
       socket.emit(EVENTS.ROOM.JOIN, existingRoom.toDto());
       socket.to(existingRoom.id).emit(EVENTS.ROOM.JOIN, existingRoom.toDto());
+
+      io.local.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
     } catch (e) {
       socket.emit(EVENTS.COMMON.ERROR, { error: e.message });
     }
@@ -39,7 +41,7 @@ export const onCreate = (socket, io) => ({ playerId, name }) => {
   }
 };
 
-export const onJoin = (socket) => ({ playerId, id }) => {
+export const onJoin = (socket, io) => ({ playerId, id }) => {
   const redTetris = getRedTetrisSingleton();
 
   const player = redTetris.findPlayer(playerId);
@@ -61,6 +63,8 @@ export const onJoin = (socket) => ({ playerId, id }) => {
     socket.join(room.id);
     socket.emit(EVENTS.ROOM.JOIN, room.toDto());
     socket.to(room.id).emit(EVENTS.ROOM.JOIN, room.toDto());
+
+    io.local.emit(EVENTS.RED_TETRIS.ROOMS, redTetris.findAllRooms().map((v) => v.toDto()));
   } catch (e) {
     socket.emit(EVENTS.COMMON.ERROR, { error: e.message });
   }

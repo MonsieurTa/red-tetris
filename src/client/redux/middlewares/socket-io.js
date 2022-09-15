@@ -17,7 +17,7 @@ export const socketIoListenerMiddleware = (store) => (next) => (action) => {
       if (socket) {
         socket.close();
       }
-      socket = new Client(action.host);
+      socket = new Client(action.host, { transports: ['websocket'] });
       store.dispatch(setSocket(socket));
 
       socket.on(EVENTS.COMMON.ERROR, ({ error }) => {

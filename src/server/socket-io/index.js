@@ -21,6 +21,15 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
     perMessageDeflate: {
       threshold: 32768,
     },
+    handlePreflightRequest: (req, res) => {
+      const headers = {
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Origin': req.headers.origin, // or the specific origin you want to give access to,
+        'Access-Control-Allow-Credentials': true,
+      };
+      res.writeHead(200, headers);
+      res.end();
+    },
   });
 
   const redTetris = getRedTetrisSingleton();
@@ -53,7 +62,7 @@ const createSocketIoServer = (httpServer, { loginfo = () => {} } = {}) => {
 
     socket.on(EVENTS.RED_TETRIS.REGISTER, redTetrisListeners.onRegister(socket));
     socket.on(EVENTS.ROOM.CREATE, roomListeners.onCreate(socket, io));
-    socket.on(EVENTS.ROOM.JOIN, roomListeners.onJoin(socket));
+    socket.on(EVENTS.ROOM.JOIN, roomListeners.onJoin(socket, io));
     socket.on(EVENTS.ROOM.LEAVE, roomListeners.onLeave(socket));
     socket.on(EVENTS.ROOM.READY, roomListeners.onReady(socket));
 
