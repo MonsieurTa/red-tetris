@@ -6,6 +6,18 @@ it('should unregister a player', () => {
   player.socket = { id: 'some id' };
 
   const redTetris = new RedTetris();
+
+  const io = {
+    local: {
+      emit: (eventName, args) => {
+        expect(eventName).not.toBeNull();
+        expect(args).not.toBeNull();
+      },
+    },
+  };
+
+  redTetris.io = io;
+
   redTetris.register(player);
   expect(redTetris._players.size).toEqual(1);
 

@@ -41,8 +41,13 @@ class Board {
     return { board: this._board };
   }
 
+  addLines(count = 0) {
+    const toAdd = initBoard(WIDTH, count, 'X');
+    this._board = [...this._board.slice(count), ...toAdd];
+  }
+
   clearLines() {
-    const newBoard = this._board.filter((row) => !row.every((v) => v !== '.'));
+    const newBoard = this._board.filter((row) => !row.every((v) => v !== '.' && v !== 'X'));
     const lineCount = HEIGHT - newBoard.length;
     this._board = [...initBoard(WIDTH, lineCount), ...newBoard];
     return lineCount;

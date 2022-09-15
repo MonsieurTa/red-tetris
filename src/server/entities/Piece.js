@@ -68,7 +68,11 @@ class Piece {
   }
 
   setY(y) {
-    this._y = y;
+    if (y < 0) {
+      this._y = 0;
+    } else {
+      this._y = y;
+    }
   }
 
   get yFloat() {

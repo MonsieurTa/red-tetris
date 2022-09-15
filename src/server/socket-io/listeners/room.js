@@ -74,6 +74,7 @@ export const onLeave = (socket) => ({ playerId, roomId }) => {
   const redTetris = getRedTetrisSingleton();
 
   const room = redTetris.leaveRoom(roomId, playerId);
+  socket.leave(roomId);
 
   if (room) {
     socket.to(roomId).emit(EVENTS.ROOM.LEAVE, room.toDto());

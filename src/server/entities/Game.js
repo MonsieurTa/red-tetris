@@ -38,6 +38,7 @@ class Game {
 
     this._score = 0;
     this._totalLineCleared = 0;
+    this._sentLines = 0;
     this._level = 1;
     this._combo = 0;
 
@@ -134,22 +135,43 @@ class Game {
     const board = this._board.copy();
     const ghostPiece = this._getGhostPiece();
 
-    ghostPiece.matrix.forEach((row, _y) => {
-      row.forEach((cell, _x) => {
-        if (cell === '.') return;
-        board[ghostPiece.y + _y][ghostPiece.x + _x] = `g${ghostPiece.shape}`;
+    if (this._board.canPlace(ghostPiece.x, ghostPiece.y, ghostPiece.matrix)) {
+      ghostPiece.matrix.forEach((row, _y) => {
+        row.forEach((cell, _x) => {
+          if (cell === '.') return;
+          board[ghostPiece.y + _y][ghostPiece.x + _x] = `g${ghostPiece.shape}`;
+        });
       });
-    });
+    }
 
-    this._currentPiece.matrix.forEach((row, _y) => {
-      row.forEach((cell, _x) => {
-        if (cell === '.') return;
-        board[this._currentPiece.y + _y][this._currentPiece.x + _x] = this._currentPiece.shape;
+    if (this._board.canPlace(
+      this._currentPiece.x,
+      this._currentPiece.y,
+      this._currentPiece.matrix,
+    )) {
+      this._currentPiece.matrix.forEach((row, _y) => {
+        row.forEach((cell, _x) => {
+          if (cell === '.') return;
+          board[this._currentPiece.y + _y][this._currentPiece.x + _x] = this._currentPiece.shape;
+        });
       });
-    });
+    }
 
     this._displayable = false;
     return board;
+  }
+
+  addLines(count = 0) {
+    if (count === 0) return;
+
+    this._board.addLines(count);
+
+    this._currentPiece.setY(this._currentPiece.yFloat - count);
+    this._displayable = true;
+  }
+
+  resetSentLines() {
+    this._sentLines = 0;
   }
 
   emitToPlayer(eventName, args) {
@@ -264,6 +286,7 @@ class Game {
       this._combo = 0;
     } else {
       this._combo += 1;
+      this._sentLines += lineCleared - 1;
     }
   }
 
@@ -273,6 +296,10 @@ class Game {
 
   get id() {
     return this._id;
+  }
+
+  get board() {
+    return this._board.copy();
   }
 
   get alive() {
@@ -293,6 +320,10 @@ class Game {
 
   get displayable() {
     return this._displayable;
+  }
+
+  get sentLines() {
+    return this._sentLines;
   }
 }
 

@@ -1,8 +1,24 @@
+/* eslint-disable no-restricted-syntax */
+import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 import EVENTS from '../../shared/constants/socket-io';
 
 export const TICK_PER_SECOND = 60;
 
 const TICK_DELAY = 1000 / TICK_PER_SECOND;
+
+const toSpectrum = (board) => {
+  const result = initBoard(WIDTH, HEIGHT);
+
+  for (let x = 0; x < board[0].length; x += 1) {
+    for (let y = 0; y < board.length; y += 1) {
+      if (board[y][x] !== '.' && !board[y][x].startsWith('g')) {
+        result[y][x] = board[y][x];
+        break;
+      }
+    }
+  }
+  return result;
+};
 
 class Engine {
   constructor({ io = null } = {}) {
@@ -34,27 +50,58 @@ class Engine {
     this._running = true;
 
     const loop = () => {
-      [...this._gamesByRoomId.entries()]
-        .forEach(([roomId, games]) => {
-          const runningGames = games.filter((game) => game.alive && !game.destroyed);
+      for (const roomId of this._gamesByRoomId.keys()) {
+        const runningGames = this._gamesByRoomId.get(roomId)
+          .filter((game) => game.alive && !game.destroyed);
 
-          if (runningGames.length === 0) {
-            this._io.to(roomId).emit(EVENTS.GAME.END, { status: 'end' });
-            this._gamesByRoomId.delete(roomId);
-            return;
+        if (runningGames.length === 0) {
+          this._io.to(roomId).emit(EVENTS.GAME.END, { status: 'end' });
+          this._gamesByRoomId.delete(roomId);
+          continue;
+        }
+
+        const linesSentByGameId = new Map();
+        const linesToAddByGameId = new Map();
+
+        runningGames.forEach((game) => {
+          game.update();
+
+          linesToAddByGameId.set(game.id, 0);
+          if (game.sentLines > 0) {
+            linesSentByGameId.set(game.id, game.sentLines);
           }
 
-          runningGames.forEach((game) => {
-            game.update();
-            if (game.alive && game.displayable) {
-              const toEmit = game.toDto();
-              game.emitToPlayer(EVENTS.GAME.STATE, toEmit);
-              game.emitToRoom(EVENTS.GAME.OTHERS_STATE, toEmit);
-            }
-          });
-
-          this._gamesByRoomId.set(roomId, runningGames);
+          game.resetSentLines();
         });
+
+        for (const senderGameId of linesSentByGameId) {
+          const lineSent = linesSentByGameId.get(senderGameId);
+
+          for (const receiverGameId of linesToAddByGameId) {
+            if (senderGameId === receiverGameId) continue;
+            const linesToAdd = linesToAddByGameId.get(receiverGameId);
+            linesToAddByGameId.set(receiverGameId, linesToAdd + lineSent);
+          }
+        }
+
+        runningGames.forEach((game) => {
+          const linesToAdd = linesToAddByGameId.get(game.id);
+          game.addLines(linesToAdd);
+
+          if (game.displayable) {
+            const toEmit = game.toDto();
+            game.emitToPlayer(EVENTS.GAME.STATE, toEmit);
+
+            game.emitToRoom(EVENTS.GAME.OTHERS_STATE, {
+              ...toEmit,
+              board: toSpectrum(game.board),
+            });
+          }
+        });
+
+        this._gamesByRoomId.set(roomId, runningGames);
+      }
+
       return new Promise((resolve) => {
         setTimeout(resolve, Math.abs(TICK_DELAY));
       })

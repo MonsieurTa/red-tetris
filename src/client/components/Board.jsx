@@ -20,6 +20,7 @@ const COLOR_MAP = {
   S: 'green',
   T: 'purple',
   Z: 'red',
+  X: 'grey',
 };
 
 const Cell = ({

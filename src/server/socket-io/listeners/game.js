@@ -13,7 +13,6 @@ export const onStart = () => ({ gameId }) => {
 
   const toEmit = game.toDto();
   game.emitToPlayer(EVENTS.GAME.STATE, toEmit);
-  game.emitToRoom(EVENTS.GAME.OTHERS_STATE, toEmit);
 };
 
 export default onStart;
