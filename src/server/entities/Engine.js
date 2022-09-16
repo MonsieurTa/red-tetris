@@ -47,10 +47,9 @@ class Engine {
         const runningGames = this._gamesByRoomId.get(roomId)
           .filter((game) => game.alive && !game.destroyed);
 
-        console.log({ runningGames: runningGames.length });
         if (runningGames.length === 1) {
           const [game] = runningGames;
-          console.log({ alive: game.alive, kind: game.kind });
+
           if (game.kind === 'multiplayer') {
             this._io.to(roomId)
               .emit(EVENTS.GAME.END, { winner: game.player.toDto() });
