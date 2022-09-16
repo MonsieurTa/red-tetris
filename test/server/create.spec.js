@@ -29,13 +29,13 @@ describe('Room creation', () => {
   });
 
   it('should create room with host', async () => {
-    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    const player = await registerPlayer(clientSocket, { username: 'BruceWayne' });
 
     clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
 
     const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
 
-    expect(room.host.username).toEqual('Bruce Wayne');
+    expect(room.host.username).toEqual('BruceWayne');
     expect(room.id).toEqual('1234');
     expect(room.capacity).toEqual(5);
   });
@@ -43,12 +43,12 @@ describe('Room creation', () => {
   it('should join room if name already exist', async () => {
     const storedRoom = new Room({
       name: '1234',
-      host: new Player('Clark Kent'),
+      host: new Player('ClarkKent'),
     });
 
     getRedTetrisSingleton().storeRoom(storedRoom);
 
-    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    const player = await registerPlayer(clientSocket, { username: 'BruceWayne' });
 
     clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
     const room = await waitEvent(clientSocket, EVENTS.ROOM.JOIN);

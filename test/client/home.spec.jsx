@@ -24,8 +24,8 @@ it('should render PlayerRegistrationInput', () => {
 
   expect(submitButton).toBeDisabled();
 
-  fireEvent.change(input, { target: { value: 'Bruce Wayne' } });
-  expect(input.value).toBe('Bruce Wayne');
+  fireEvent.change(input, { target: { value: 'BruceWayne' } });
+  expect(input.value).toBe('BruceWayne');
   expect(submitButton).not.toBeDisabled();
 });
 
@@ -37,8 +37,8 @@ it('should render RoomCreationInput', () => {
 
   expect(submitButton).toBeDisabled();
 
-  fireEvent.change(input, { target: { value: 'Nice room' } });
-  expect(input.value).toBe('Nice room');
+  fireEvent.change(input, { target: { value: 'NiceRoom' } });
+  expect(input.value).toBe('NiceRoom');
   expect(submitButton).not.toBeDisabled();
 });
 
@@ -50,13 +50,13 @@ it('should render without player', () => {
 
   expect(submitButton).toBeDisabled();
 
-  fireEvent.change(input, { target: { value: 'Bruce Wayne' } });
-  expect(input.value).toBe('Bruce Wayne');
+  fireEvent.change(input, { target: { value: 'BruceWayne' } });
+  expect(input.value).toBe('BruceWayne');
   expect(submitButton).not.toBeDisabled();
 });
 
 it('should render with player', () => {
-  store.dispatch(register(new Player('Bruce Wayne').toDto()));
+  store.dispatch(register(new Player('BruceWayne').toDto()));
 
   const utils = render(<Home />);
   const input = utils.getByLabelText('Create a room');
@@ -65,7 +65,7 @@ it('should render with player', () => {
 
   expect(submitButton).toBeDisabled();
 
-  fireEvent.change(input, { target: { value: 'Nice room' } });
-  expect(input.value).toBe('Nice room');
+  fireEvent.change(input, { target: { value: 'NiceRoom' } });
+  expect(input.value).toBe('NiceRoom');
   expect(submitButton).not.toBeDisabled();
 });

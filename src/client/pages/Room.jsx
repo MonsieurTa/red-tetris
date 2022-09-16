@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 
+import { setWinner } from '../redux/reducers/red-tetris';
 import EVENTS from '../../shared/constants/socket-io';
 import { WIDTH, HEIGHT, initBoard } from '../../shared/helpers/board';
 import Board from '../components/Board';
@@ -142,7 +143,10 @@ const Room = () => {
         <GameEndModal
           winner={winner}
           open={openWinnerModal}
-          onClose={() => setOpenWinnerModal(false)}
+          onClose={() => {
+            setOpenWinnerModal(false);
+            dispatch(setWinner(null));
+          }}
         />
       )}
     </div>

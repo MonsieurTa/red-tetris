@@ -4,7 +4,7 @@ import Player from '../../src/server/entities/Player';
 import PieceGenerator from '../../src/server/entities/PieceGenerator';
 
 const createGame = () => {
-  const player = new Player('Bruce Wayne');
+  const player = new Player('BruceWayne');
   const room = new Room({ name: 'Cool Room' });
   const pieceGenerator = new PieceGenerator();
   return new Game({ player, room, pieceGenerator });

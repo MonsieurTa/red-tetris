@@ -26,8 +26,8 @@ describe('Red-Tetris registration', () => {
   });
 
   it('should register a player and respond with an id', async () => {
-    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    const player = await registerPlayer(clientSocket, { username: 'BruceWayne' });
 
-    expect(player.username).toEqual('Bruce Wayne');
+    expect(player.username).toEqual('BruceWayne');
   });
 });

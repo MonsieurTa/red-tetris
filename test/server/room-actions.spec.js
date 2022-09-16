@@ -1,19 +1,19 @@
 import roomActions from '../../src/server/socket-io/actions/room';
 
 it('should return room actions', () => {
-  expect(roomActions.created('Nice Room', false)).toEqual({
-    name: 'Nice Room',
+  expect(roomActions.created('NiceRoom', false)).toEqual({
+    name: 'NiceRoom',
     isHost: false,
   });
 
-  expect(roomActions.joined('Nice Room', 'Bruce Wayne')).toEqual({
-    name: 'Nice Room',
-    username: 'Bruce Wayne',
+  expect(roomActions.joined('NiceRoom', 'BruceWayne')).toEqual({
+    name: 'NiceRoom',
+    username: 'BruceWayne',
     status: 'ADDED',
   });
 
-  expect(roomActions.ready('Nice Room', 'Game Id')).toEqual({
-    name: 'Nice Room',
+  expect(roomActions.ready('NiceRoom', 'Game Id')).toEqual({
+    name: 'NiceRoom',
     gameId: 'Game Id',
   });
 });

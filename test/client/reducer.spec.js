@@ -36,6 +36,7 @@ it('should return initial state', () => {
       nextShapes: [],
     },
     error: null,
+    winner: null,
   });
 });
 
@@ -45,7 +46,7 @@ it('should nullish socket', () => {
 });
 
 it('should store player', () => {
-  const player = new Player('Bruce Wayne').toDto();
+  const player = new Player('BruceWayne').toDto();
   const state = reducer(INITIAL_STATE.redTetris, register(player));
   expect(state.player).toEqual(player);
 });
@@ -58,7 +59,7 @@ it('should store rooms', () => {
 
 it('should add one room', () => {
   const state = reducer(INITIAL_STATE.redTetris, setRooms(createRooms()));
-  const newRoom = new Room({ name: 'Nice', player: new Player('Bruce Wayne') });
+  const newRoom = new Room({ name: 'Nice', player: new Player('BruceWayne') });
   const newState = reducer(state, addRoom(newRoom));
 
   expect(newState.rooms.length).toEqual(11);

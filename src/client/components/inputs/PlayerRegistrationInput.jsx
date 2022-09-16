@@ -19,7 +19,7 @@ const PlayerRegistrationInput = () => {
     if (value.match(/^[a-zA-Z0-9]{1,16}$/)) {
       setErrorText('');
     } else {
-      setErrorText('Invalid room name.');
+      setErrorText('Invalid username.');
     }
   };
 
@@ -43,7 +43,7 @@ const PlayerRegistrationInput = () => {
         size="small"
         variant="contained"
         onClick={onClick}
-        disabled={!!errorText}
+        disabled={!!errorText || !username}
       >
         Create
       </Button>

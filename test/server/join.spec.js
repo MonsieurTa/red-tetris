@@ -29,12 +29,12 @@ afterAll(async () => {
 });
 
 it('should join a room', async () => {
-  const dummyPlayer = new Player('Bruce Wayne');
+  const dummyPlayer = new Player('BruceWayne');
   const room = new Room({ name: '1234', host: dummyPlayer, capacity: 3 });
   room.addPlayer(dummyPlayer);
   getRedTetrisSingleton().storeRoom(room);
 
-  const player = await registerPlayer(clientSocket, { username: 'Clark Kent' });
+  const player = await registerPlayer(clientSocket, { username: 'ClarkKent' });
 
   clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
 
@@ -45,7 +45,7 @@ it('should join a room', async () => {
 });
 
 it('should not join an inexistant room', async () => {
-  const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+  const player = await registerPlayer(clientSocket, { username: 'BruceWayne' });
 
   clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, name: '1234' });
 
@@ -54,13 +54,13 @@ it('should not join an inexistant room', async () => {
 });
 
 it('should not join if room is full', async () => {
-  const dummyPlayer = new Player('Bruce Wayne');
+  const dummyPlayer = new Player('BruceWayne');
   const room = new Room({ id: '1234', host: dummyPlayer, capacity: 1 });
   room.addPlayer(dummyPlayer);
 
   redTetris.storeRoom(room);
 
-  const player = await registerPlayer(clientSocket, { username: 'Clark Kent' });
+  const player = await registerPlayer(clientSocket, { username: 'ClarkKent' });
 
   clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
 
@@ -70,11 +70,11 @@ it('should not join if room is full', async () => {
 });
 
 it('should not join if already added', async () => {
-  const dummyPlayer = new Player('Bruce Wayne');
+  const dummyPlayer = new Player('BruceWayne');
   const room = new Room({ id: '1234', host: dummyPlayer, capacity: 3 });
   getRedTetrisSingleton().storeRoom(room);
 
-  const player = await registerPlayer(clientSocket, { username: 'Clark Kent' });
+  const player = await registerPlayer(clientSocket, { username: 'ClarkKent' });
 
   clientSocket.emit(EVENTS.ROOM.JOIN, { playerId: player.id, id: room.id });
   room.addPlayer(player);

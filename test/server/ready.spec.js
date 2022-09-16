@@ -33,7 +33,7 @@ describe('Room ready', () => {
   });
 
   it('should start a game with one player', async () => {
-    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    const player = await registerPlayer(clientSocket, { username: 'BruceWayne' });
 
     clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
     const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);
@@ -54,8 +54,8 @@ describe('Room ready', () => {
     const ironManSocket = new Client(`http://${testServer.host}:${testServer.port}`);
 
     const [bruce, clark, spiderMan, ironMan] = await Promise.all([
-      registerPlayer(clientSocket, { username: 'Bruce Wayne' }),
-      registerPlayer(clarkSocket, { username: 'Clark Kent' }),
+      registerPlayer(clientSocket, { username: 'BruceWayne' }),
+      registerPlayer(clarkSocket, { username: 'ClarkKent' }),
       registerPlayer(spiderManSocket, { username: 'Spider Man' }),
       registerPlayer(ironManSocket, { username: 'Iron Man' }),
     ]);

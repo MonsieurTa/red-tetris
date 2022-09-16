@@ -31,7 +31,7 @@ describe('Game starting', () => {
   });
 
   it('should get initial red-tetris data', async () => {
-    const player = await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    const player = await registerPlayer(clientSocket, { username: 'BruceWayne' });
 
     clientSocket.emit(EVENTS.ROOM.CREATE, { playerId: player.id, name: '1234' });
     const room = await waitEvent(clientSocket, EVENTS.ROOM.CREATE);

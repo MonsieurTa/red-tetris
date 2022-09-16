@@ -26,6 +26,6 @@ describe('Room creation', () => {
   });
 
   it('should end test normally', async () => {
-    await registerPlayer(clientSocket, { username: 'Bruce Wayne' });
+    await registerPlayer(clientSocket, { username: 'BruceWayne' });
   });
 });

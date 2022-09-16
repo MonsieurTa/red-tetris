@@ -56,7 +56,7 @@ class RedTetris {
       }
     }
 
-    const game = this.findAllGames().find((v) => v.room.id === roomId);
+    const game = this.findAllGames().find((v) => !v.room || v.room.id === roomId);
     if (game) {
       game.destroy();
       this.deleteGame(game.id);

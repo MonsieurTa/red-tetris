@@ -23,7 +23,7 @@ import createRooms from '../helpers/entities';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useParams: jest.fn().mockReturnValue({ roomId: 'Nice Room' }),
+  useParams: jest.fn().mockReturnValue({ roomId: 'NiceRoom' }),
 }));
 
 it('should render Board', () => {
@@ -35,14 +35,14 @@ it('should render Board', () => {
 });
 
 it('should render RoomInfo with a room', () => {
-  const player = new Player('Clark Kent');
-  const room = new Room({ name: 'Nice room', host: player.id });
+  const player = new Player('ClarkKent');
+  const room = new Room({ name: 'NiceRoom', host: player.id });
   room.addPlayer(player);
 
   const utils = render(<RoomInfoCard room={room.toDto()} />);
 
-  utils.getByText('Nice room');
-  utils.getByText('host: Clark Kent');
+  utils.getByText('NiceRoom');
+  utils.getByText('host: ClarkKent');
   utils.getByText('players: 1/5');
 });
 
@@ -71,8 +71,8 @@ it('should render RoomList with rooms but no player', async () => {
 });
 
 it('should render with player', () => {
-  const player = new Player('Bruce Wayne');
-  const room = new Room({ name: 'Nice Room', host: player });
+  const player = new Player('BruceWayne');
+  const room = new Room({ name: 'NiceRoom', host: player });
   room.addPlayer(player);
 
   store.dispatch(register(player.toDto()));

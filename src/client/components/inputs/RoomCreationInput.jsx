@@ -44,7 +44,7 @@ const RoomCreationInput = () => {
           size="small"
           variant="contained"
           onClick={onClick}
-          disabled={!!errorText}
+          disabled={!!errorText || !roomName}
         >
           Create
         </Button>

@@ -22,23 +22,23 @@ it('should start and stop loop', () => {
 it('should add a game', () => {
   const engine = new Engine();
 
-  const player = new Player('Bruce Wayne');
+  const player = new Player('BruceWayne');
   const room = new Room({ name: 'Cool Room' });
   const pieceGenerator = new PieceGenerator();
   const game = new Game({ player, room, pieceGenerator });
 
-  engine.add(game);
+  engine.addGames(room.id, [game]);
   expect(engine._gamesByRoomId.get(room.id)).toEqual([game]);
 });
 
 it('should return true if game is in the loop', () => {
   const engine = new Engine();
 
-  const player = new Player('Bruce Wayne');
+  const player = new Player('BruceWayne');
   const room = new Room({ name: 'Cool Room' });
   const pieceGenerator = new PieceGenerator();
   const game = new Game({ player, room, pieceGenerator });
 
-  engine.add(game);
+  engine.addGames(room.id, [game]);
   expect(engine.hasAlreadyStarted(room.id)).toBeTruthy();
 });

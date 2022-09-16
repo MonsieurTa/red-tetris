@@ -22,8 +22,8 @@ it('should dispatch events', () => {
     getState: () => ({ player: { id: 'Some Id ' } }),
   };
 
-  const player = new Player('Bruce Wayne');
-  const room = new Room({ name: 'Nice room', host: player });
+  const player = new Player('BruceWayne');
+  const room = new Room({ name: 'NiceRoom', host: player });
   const rooms = createRooms();
 
   onRegister(store)(player);

@@ -2,7 +2,7 @@ import Player from '../../src/server/entities/Player';
 import RedTetris from '../../src/server/entities/RedTetris';
 
 it('should unregister a player', () => {
-  const player = new Player('Bruce Wayne');
+  const player = new Player('BruceWayne');
   player.socket = { id: 'some id' };
 
   const redTetris = new RedTetris();

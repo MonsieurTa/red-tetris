@@ -7,6 +7,7 @@ import {
   setCurrentRoom,
   setSocket,
   setError,
+  setRoomRunning,
 } from '../reducers/red-tetris';
 
 export const socketIoListenerMiddleware = (store) => (next) => (action) => {
@@ -69,6 +70,7 @@ export const socketIoEmitterMiddleware = (store) => (next) => (action) => {
         roomId: action.roomId,
       });
       store.dispatch(setCurrentRoom(null));
+      store.dispatch(setRoomRunning(false));
       break;
     case EVENTS.ROOM.READY:
       socket.emit(EVENTS.ROOM.READY, {
